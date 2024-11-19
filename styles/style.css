@@ -1,0 +1,486 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    background-color: #1D1D1B;
+    color: #000;
+    overflow: hidden;
+}
+
+.background {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFFFFF;
+    overflow: hidden;
+}
+
+.background::before, .background::after{
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background-color: #FFE14E;
+}
+
+.background::before {
+    width: 750px;
+    height: 750px;
+    top: -22%;
+    left: -4%;
+}
+
+.background::after{
+    width: 760px;
+    height: 760px;
+    bottom: -30%;
+    right: -5%;
+}
+
+.background .circle{
+    position: absolute;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.circle-1{
+    width: 260px;
+    height: 260px;
+    background-color: #FFFFFF;
+    top: 15%;
+    left: 32%;
+}
+
+.circle-2{
+    width: 50px;
+    height: 50px;
+    border: 7px solid #FFFFFF; 
+    border-radius: 50%; 
+    background-color: #FFE14E;
+    top: 10%;
+    left: 2%;
+}
+
+.circle-3{
+    width: 40px;
+    height: 40px;
+    border: 7px solid #FFFFFF; 
+    border-radius: 50%; 
+    background-color: #FFE14E;
+    top: 84%;
+    left: 90%;
+}
+
+.circle-4{
+    width: 20px;
+    height: 20px;
+    top: 10%;
+    left: 50%;
+    background-color: #FFFFFF;
+    border: 4px solid #DD233F;
+}
+
+.circle-5{
+    width: 150px;
+    height: 150px;
+    top: -10%;
+    left: 60%;
+    background-color: #FFE14E;
+}
+
+.circle-6 {
+    width: 180px;
+    height: 180px;
+    top: 75%;
+    right: 5%;
+}
+
+.circle-7{
+    width: 20px;
+    height: 20px;
+    top: 54%;
+    left: 22%;
+    background-color: #FFFFFF;
+}
+
+.circle-8{
+    width: 20px;
+    height: 20px;
+    top: 54%;
+    left: 26%;
+    background-color: #FFFFFF;
+}
+
+.circle-9{
+    width: 20px;
+    height: 20px;
+    top: 54%;
+    left: 30%;
+    background-color: #FFFFFF;
+}
+
+.circle-10{
+    width: 20px;
+    height: 20px;
+    top: 60%;
+    left: 22%;
+    background-color: #FFFFFF;
+}
+
+.circle-11{
+    width: 20px;
+    height: 20px;
+    top: 60%;
+    left: 26%;
+    background-color: #FFFFFF;
+}
+
+.circle-12{
+    width: 20px;
+    height: 20px;
+    top: 60%;
+    left: 30%;
+    background-color: #FFFFFF;
+}
+
+.circle-13{
+    width: 20px;
+    height: 20px;
+    top: 66%;
+    left: 22%;
+    background-color: #FFFFFF;
+}
+
+.circle-14{
+    width: 20px;
+    height: 20px;
+    top: 66%;
+    left: 26%;
+    background-color: #FFFFFF;
+}
+
+.circle-15{
+    width: 20px;
+    height: 20px;
+    top: 66%;
+    left: 30%;
+    background-color: #FFFFFF;
+}
+
+.circle-16{
+    width: 100px;
+    height: 100px;
+    top: 90%;
+    left: -1%;
+    background-color: #FFE14E;
+}
+
+.circle-17{
+    width: 30px;
+    height: 30px;
+    top: 76%;
+    left: 2%;
+    background-color: #FFFFFF;
+    border: 5px solid #DD233F;
+}
+
+.circle-18{
+    width: 50px;
+    height: 50px;
+    top: 86%;
+    left: 10%;
+    background-color: #DD233F;
+}
+
+.circle-19{
+    width: 50px;
+    height: 50px;
+    top: 86%;
+    left: 10%;
+    background-color: #DD233F;
+}
+
+.circle-20{
+    width: 20px;
+    height: 20px;
+    top: 81%;
+    left: 62%;
+    background-color: #fff;
+}
+
+.circle-21{
+    width: 20px;
+    height: 20px;
+    top: 81%;
+    left: 66%;
+    background-color: #fff;
+}
+
+.circle-22{
+    width: 20px;
+    height: 20px;
+    top: 81%;
+    left: 70%;
+    background-color: #fff;
+}
+
+.circle-23{
+    width: 20px;
+    height: 20px;
+    top: 87%;
+    left: 62%;
+    background-color: #fff;
+}
+
+.circle-24{
+    width: 20px;
+    height: 20px;
+    top: 87%;
+    left: 66%;
+    background-color: #fff;
+}
+
+.circle-25{
+    width: 20px;
+    height: 20px;
+    top: 87%;
+    left: 70%;
+    background-color: #fff;
+}
+
+.circle-26{
+    width: 20px;
+    height: 20px;
+    top: 93%;
+    left: 62%;
+    background-color: #fff;
+}
+
+.circle-27{
+    width: 20px;
+    height: 20px;
+    top: 93%;
+    left: 66%;
+    background-color: #fff;
+}
+
+.circle-28{
+    width: 20px;
+    height: 20px;
+    top: 93%;
+    left: 70%;
+    background-color: #fff;
+}
+
+.circle-29{
+    width: 30px;
+    height: 30px;
+    top: 5%;
+    left: 95%;
+    background-color: #FFFFFF;
+    border: 5px solid #DD233F;
+}
+
+.circle-30{
+    width: 40px;
+    height: 40px;
+    top: 15%;
+    left: 75%;
+    background-color: #DD233F;
+}
+
+.circle-31{
+    width: 300px;
+    height: 300px;
+    top: 20%;
+    left: 95%;
+    background-color: #DD233F;
+}
+
+.circle-32{
+    width: 20px;
+    height: 20px;
+    top: 30%;
+    left: 98%;
+    background-color: #fff;
+}
+
+.circle-33{
+    width: 20px;
+    height: 20px;
+    top: 35%;
+    left: 98%;
+    background-color: #fff;
+}
+
+.circle-34{
+    width: 20px;
+    height: 20px;
+    top: 40%;
+    left: 98%;
+    background-color: #fff;
+}
+
+.login-container{
+    z-index: 2;
+    background-color: #FDFDFD;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+}
+
+.logo img{
+    width: 180px;
+    height: 80px;
+    margin-bottom: 1rem;
+}
+
+h1{
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+}
+
+p{
+    font-size: 0.9rem;
+    color: #5A5A5A;
+    margin-bottom: 1.5rem;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+input{
+    width: 60%;
+    padding: 0.8rem;
+    border: 1px solid #000;
+    border-radius: 20px;
+    background-color: #FDFDFD;
+    color: #000;
+}
+
+input::placeholder{
+    color: #A6A6A6;
+    font-weight: bold;
+}
+
+.login-btn{
+    background-color: #f7b731;
+    color: #000;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 30%;
+    font-weight: bold;
+}
+
+.login-btn:hover{
+    background-color: #F7C100;
+}
+
+@media (min-width: 471px) {
+    .circle-23{
+        display: none;
+    }
+
+    .circle-24{
+        display: none;
+    }
+
+    .circle-25{
+        display: none;
+    }
+
+    .circle-26{
+        left: 60%;
+    }
+
+    .circle-27{
+        display: none;
+    }
+    
+}
+
+@media (max-width: 768px) {
+    .background::before {
+        width: 70vw;
+        height: 70vw;
+        top: -25%;
+        left: -10%;
+    }
+
+    .background::after {
+        width: 70vw;
+        height: 70vw;
+        bottom: -35%;
+        right: -10%;
+    }
+    
+    .circle-2 {
+        width: 4vw;
+        height: 4vw;
+        border: 0.6vw solid #FFFFFF;
+        top: 5%;
+        left: 10%;
+    }
+    
+    .circle-3 {
+        width: 3vw;
+        height: 3vw;
+        top: 90%;
+        left: 90%;
+    }
+
+    .circle-4{
+        top: 50%;
+        left: 10%;
+    }
+
+    .circle-5{
+        top: -10%;
+        left: 65%;
+    }
+
+    .circle-17{
+        top: 70%;
+        left: 5%;
+    }
+
+    .circle-19{
+        top: 80%;
+        left: 30%;
+    }
+
+    .circle-29{
+        left: 90%;
+    }
+
+    .circle-31{
+        left: 91%;
+    }
+    
+    .circle-32{
+        left: 97%;
+    }
+
+    .circle-33{
+        left: 97%;
+    }
+
+    .circle-34{
+        left: 97%;
+    }
+}
