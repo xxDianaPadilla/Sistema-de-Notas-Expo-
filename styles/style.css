@@ -59,7 +59,7 @@ body, html {
 .circle-2{
     width: 50px;
     height: 50px;
-    border: 7px solid #FFFFFF; 
+    border: 7px solid #ffffff; 
     border-radius: 50%; 
     background-color: #FFE14E;
     top: 10%;
@@ -69,7 +69,7 @@ body, html {
 .circle-3{
     width: 40px;
     height: 40px;
-    border: 7px solid #FFFFFF; 
+    border: 7px solid #ffffff; 
     border-radius: 50%; 
     background-color: #FFE14E;
     top: 84%;
@@ -81,7 +81,7 @@ body, html {
     height: 20px;
     top: 10%;
     left: 50%;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     border: 4px solid #DD233F;
 }
 
@@ -185,7 +185,7 @@ body, html {
     height: 30px;
     top: 76%;
     left: 2%;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     border: 5px solid #DD233F;
 }
 
@@ -282,7 +282,7 @@ body, html {
     height: 30px;
     top: 5%;
     left: 95%;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     border: 5px solid #DD233F;
 }
 
@@ -409,7 +409,7 @@ input::placeholder{
     .circle-2 {
         width: 4vw;
         height: 4vw;
-        border: 0.6vw solid #FFFFFF;
+        border: 0.6vw solid #ffffff;
         top: 5%;
         left: 10%;
     }
@@ -459,5 +459,152 @@ input::placeholder{
 
     .circle-34{
         left: 97%;
+    }
+}
+
+/* Existing media query for smaller screens */
+@media (max-width: 968px) {
+    .background::before {
+        width: 70vw;
+        height: 70vw;
+        top: -25%;
+        left: -10%;
+    }
+
+    .background::after {
+        width: 70vw;
+        height: 70vw;
+        bottom: -35%;
+        right: -10%;
+    }
+    
+    .circle-2 {
+        width: 4vw;
+        height: 4vw;
+        border: 0.6vw solid #FFFFFF;
+        top: 5%;
+        left: 10%;
+    }
+    
+    .circle-3 {
+        width: 3vw;
+        height: 3vw;
+        top: 90%;
+        left: 90%;
+    }
+
+    .circle-4 {
+        top: 50%;
+        left: 10%;
+    }
+
+    .circle-5 {
+        top: -10%;
+        left: 65%;
+    }
+
+    .circle-17 {
+        top: 70%;
+        left: 5%;
+    }
+
+    .circle-19 {
+        top: 80%;
+        left: 30%;
+    }
+
+    .circle-29 {
+        left: 90%;
+    }
+
+    .circle-31 {
+        left: 91%;
+    }
+    
+    .circle-32 {
+        left: 97%;
+    }
+
+    .circle-33 {
+        left: 97%;
+    }
+
+    .circle-34 {
+        left: 97%;
+    }
+}
+
+
+@media (min-width: 969px) and (max-width: 1920px) {
+    .background::before {
+        width: 50vw;
+        height: 50vw; 
+        top: -20%;
+        left: -7%;
+    }
+
+    .background::after {
+        width: 50vw; 
+        height: 50vw; 
+        bottom: -30%;
+        right: -5%;
+    }
+    
+    .circle-2 {
+        width: 3vw; 
+        height: 3vw; 
+        border: 0.4vw solid #FFFFFF; 
+        top: 10%;
+        left: 2%;
+    }
+    
+    .circle-3 {
+        width: 2.5vw; 
+        height: 2.5vw; 
+        top: 85%;
+        left: 92%;
+    }
+
+    .circle-4 {
+        top: 10%;
+        left: 50%;
+    }
+
+    .circle-5 {
+        top: -5%;
+        left: 70%;
+    }
+
+    .circle-17 {
+        top: 80%;
+        left: 2%;
+    }
+
+    
+
+    .circle-29 {
+        left: 96%;
+    }
+    
+    .circle-30 {
+        left: 80%;
+        top: 15%;
+    }
+    
+
+    .circle-31 {
+        left: 93%;
+    }
+    
+    .circle-32 {
+        left: 98%;
+    }
+
+    .circle-33 {
+        left: 98%;
+    }
+
+    .circle-34 {
+        left: 98%;
     }
 }
