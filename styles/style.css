@@ -391,29 +391,6 @@ input::placeholder{
     background-color: #F7C100;
 }
 
-@media (min-width: 471px) {
-    .circle-23{
-        display: none;
-    }
-
-    .circle-24{
-        display: none;
-    }
-
-    .circle-25{
-        display: none;
-    }
-
-    .circle-26{
-        left: 60%;
-    }
-
-    .circle-27{
-        display: none;
-    }
-    
-}
-
 @media (max-width: 768px) {
     .background::before {
         width: 70vw;
