@@ -41,12 +41,12 @@ body {
 }
 
 #categoriaBox section {
-    width: 50%;
+    width: 50vw;
     font-family: poppinsExtraLight;
-    font-size: 14px;
+    font-size: 12px;
     text-align: center;
     letter-spacing: 2.5px;
-    padding: 0.5% 0%;
+    padding: 1% 0%;
 }
 
 .tipoCat1 {
@@ -54,6 +54,55 @@ body {
 }
 
 .tipoCat2 {
-    background-color: #a6a6a6;
+    background-color: #c0c0c0;
+    box-shadow: inset #a4a3a3 7px -7px 10px;
+}
+
+main {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100vw;
+    justify-content: center;
+    padding: 3% 0%;
+}
+
+#roles {
+    width: 76vw;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    font-family: poppinsLight;
+    font-size: 16px;
+}
+
+#roles p {
+    padding-bottom: 2vh;
+    text-align: center;
+}
+
+#roles button {
+    margin-bottom: 2vh;
+}
+
+#newUser {
+    width: 10vw;
+    background-color: #4CAF50;
+    font-family: poppinsMedium;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    padding: 1vh;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#cardContainer {
+    width: 80vw;
+    height: 75vh;
+    background-color: #fff;
+    border-radius: 20px;
 }
 
