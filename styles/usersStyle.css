@@ -1,0 +1,59 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+@font-face {
+    font-family: poppinsThin;
+    src: url(fonts/Poppins-Thin.ttf);
+}
+
+@font-face {
+    font-family: poppinsExtraLight;
+    src: url(fonts/Poppins-ExtraLight.ttf);
+}
+
+@font-face {
+    font-family: poppinsLight;
+    src: url(fonts/Poppins-Light.ttf);
+}
+
+@font-face {
+    font-family: poppinsMedium;
+    src: url(fonts/Poppins-Medium.ttf);
+}
+
+@font-face {
+    font-family: poppinsRegular;
+    src: url(fonts/Poppins-Regular.ttf);
+}
+
+body {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #f2f2f2;
+}
+
+#categoriaBox {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+#categoriaBox section {
+    width: 50%;
+    font-family: poppinsExtraLight;
+    font-size: 14px;
+    text-align: center;
+    letter-spacing: 2.5px;
+    padding: 0.5% 0%;
+}
+
+.tipoCat1 {
+    background-color: #f2f2f2;
+}
+
+.tipoCat2 {
+    background-color: #a6a6a6;
+}
+
