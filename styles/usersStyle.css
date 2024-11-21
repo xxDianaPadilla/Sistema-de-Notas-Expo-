@@ -106,3 +106,63 @@ main {
     border-radius: 20px;
 }
 
+/* estilos de formulario de agregar
+
+/* Ocultar el formulario */
+.hidden {
+    display: none;
+}
+
+/* Estilos generales del contenedor */
+#modalContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Estilo del formulario modal */
+.form-modal {
+    background: #3a3a3a;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    width: 300px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+input {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Botón cancelar */
+.btn-cancelar {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* Botón guardar */
+.btn-guardar {
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+}
