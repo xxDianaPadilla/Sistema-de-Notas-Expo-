@@ -1,0 +1,31 @@
+/* Style para evaluaciones */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    color: #1D1D1B;
+    overflow: hidden;
+}
+
+.evaluations {
+    text-decoration: none;
+    color: #262626;
+    background-color: #E0E0E0;
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    font-size: 18px;
+    font-weight: 700;
+    width: 100%;
+    box-sizing: border-box;
+}

@@ -1,11 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
 /*Menú lateral*/
+body,
+html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    color: #1D1D1B;
+    overflow: hidden;
+}
+
 .menu-lateral {
     width: 250px;
     height: 100vh;
     background-color: #FFFFFF;
     flex-direction: column;
     align-items: center;
-    position: relative;
+    position: fixed; /* Hace que el menú esté fijo en la pantalla */
+    top: 0; /* Se posiciona en la parte superior */
+    left: 0; /* Se posiciona en el lado izquierdo */
     padding: 20px 0;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
