@@ -148,7 +148,7 @@ main {
 
 #formAgregarDatos label {
     color: #000;
-} 
+}
 
 input {
     font-size: 16px;
@@ -218,28 +218,26 @@ input {
 
 #btnAddEstud {
     box-shadow: 0px 5px 0px #4E8FFF;
-} 
+}
 
 #btnAddDocen {
     box-shadow: 0px 5px 0px #FF4E8C;
-} 
+}
 
 #btnAddEvalu {
     box-shadow: 0px 5px 0px #FFAD65;
-} 
+}
 
 /*FORMULARIO DONDE SE VE LA INFORMACION*/
 
-#formInfoSelected {
-    
-}
+#formInfoSelected {}
 
 #formInfoSelected p {
     color: #000;
     font-size: 20px;
 }
 
-#actions{
+#actions {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
