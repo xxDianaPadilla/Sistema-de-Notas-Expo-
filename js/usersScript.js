@@ -2,29 +2,104 @@
 const openFormBtn = document.getElementById("newUser");
 const modalContainer = document.getElementById("modalContainer");
 
-// Abrir el formulario cargando el archivo HTML externo
+// Abrir el formulario para elegir rol
 openFormBtn.addEventListener("click", () => {
-    // Hacer una petición para obtener el contenido del archivo HTML
-    fetch("../pages/usersForms.html")
-        .then((response) => response.text()) // Convertir la respuesta a texto
+    // Cargar el archivo HTML del formulario para elegir rol
+    fetch("../pages/formsUsers/formChooseRol.html")
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.text();
+        })
         .then((html) => {
-            modalContainer.innerHTML = html; // Insertar el contenido en el contenedor
-            modalContainer.classList.remove("hidden"); // Mostrar el modal
+            modalContainer.innerHTML = html;
+            modalContainer.style.width = "100%";
+            modalContainer.style.height = "100%";
+            modalContainer.classList.remove("hidden");
 
-            // Agregar funcionalidad al botón "Cancelar"
-            const closeFormBtn = document.getElementById("closeFormBtn");
-            closeFormBtn.addEventListener("click", () => {
-                modalContainer.classList.add("hidden");
-                modalContainer.innerHTML = ""; // Limpiar el contenido del modal
-            });
-
-            // Agregar funcionalidad al botón "Guardar"
-            const saveFormBtn = document.getElementById("saveFormBtn");
-            saveFormBtn.addEventListener("click", () => {
-                alert("Datos guardados correctamente.");
-                modalContainer.classList.add("hidden");
-                modalContainer.innerHTML = ""; // Limpiar el contenido del modal
-            });
+            // Inicializar listeners para los botones dentro del formulario
+            initializeRoleSelectionListeners();
         })
         .catch((error) => console.error("Error cargando el formulario:", error));
 });
+
+// Inicializar listeners para los botones de selección de rol
+function initializeRoleSelectionListeners() {
+    const btnAdmin = document.getElementById("btnAddAdmin");
+    const btnEstud = document.getElementById("btnAddEstud");
+    const btnDocen = document.getElementById("btnAddDocen");
+    const btnEvalu = document.getElementById("btnAddEvalu");
+    const closeFormBtn = document.getElementById("closeFormBtn");
+
+    // Listener para el botón de cerrar
+    if (closeFormBtn) {
+        closeFormBtn.addEventListener("click", () => {
+            closeModal();
+        });
+    }
+
+    // Listener para cada botón de rol
+    if (btnAdmin) {
+        btnAdmin.addEventListener("click", () => {
+            loadForm("../pages/formsUsers/formAddUser.html");
+        });
+    }
+    if (btnEstud) {
+        btnEstud.addEventListener("click", () => {
+            loadForm("../pages/formsUsers/formAddEstud.html");
+        });
+    }
+    if (btnDocen) {
+        btnDocen.addEventListener("click", () => {
+            loadForm("../pages/formsUsers/formAddDocen.html");
+        });
+    }
+    if (btnEvalu) {
+        btnEvalu.addEventListener("click", () => {
+            loadForm("../pages/formsUsers/formAddEvalu.html");
+        });
+    }
+}
+
+// Función para cargar el formulario de un rol específico
+function loadForm(formUrl) {
+    fetch(formUrl)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then((html) => {
+            modalContainer.innerHTML = html;
+
+            // Mantener el tamaño del modal (ya abierto)
+            modalContainer.style.width = "100%";
+            modalContainer.style.height = "100%";
+
+            // Reasignar funcionalidad al botón de cerrar
+            initializeCloseButton();
+        })
+        .catch((error) => console.error("Error cargando el formulario:", error));
+}
+
+// Función para cerrar el modal
+function closeModal() {
+    modalContainer.style.width = "0%";
+    modalContainer.style.height = "0%";
+    modalContainer.classList.add("hidden");
+    setTimeout(() => {
+        modalContainer.innerHTML = ""; // Limpiar contenido después de cerrar
+    }, 500); // Coincidir con la duración de la transición
+}
+
+// Inicializar botón de cerrar en los formularios cargados dinámicamente
+function initializeCloseButton() {
+    const closeFormBtn = document.getElementById("closeFormBtn");
+    if (closeFormBtn) {
+        closeFormBtn.addEventListener("click", () => {
+            closeModal();
+        });
+    }
+}

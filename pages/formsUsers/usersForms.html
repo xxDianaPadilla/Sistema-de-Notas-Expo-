@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../styles/usersStyle.css">
+    <title>Document</title>
+</head>
+<body>
+    <main id="mainForms">
+        <div id="formAgregarDatos" class="forms">
+            <button id="closeFormBtn" class="btn-cancelar" style="margin-bottom: 20px;">Cancelar</button>
+            <form id="form">
+                <label for="apellido">Nombre completo</label>
+                <input type="text" id="apellido" placeholder="Ingresa ambos apellidos">
+                <input type="text" id="nombre" placeholder="Ingresa ambos nombres" style="margin-bottom: 10px;">
+            
+                <label for="correo">Correo:</label>
+                <input type="email" id="correo" placeholder="Ingresa el correo electrónico" style="margin-bottom: 10px;">
+            
+                <label for="contraseña">Contraseña:</label>
+                <input type="password" id="contraseña" placeholder="Ingresa una contraseña">
+                <input type="password" id="confirmarContraseña" placeholder="Confirma la contraseña" style="margin-bottom: 10px;">
+            
+                <button type="button" id="saveFormBtn" class="btn-guardar" style="margin-top: 20px;">Guardar</button>
+            </form>
+        </div>
+        <div id="formElegirRol" class="forms">
+            <button id="closeFormBtn" class="btn-cancelar" style="margin-bottom: 20px;">Cancelar</button>
+            <h3 style="width: 100%; text-align: center; padding-bottom: 20px; color: #000;">Elige el rol del nuevo usuario</h3>
+            <div id="divRoles">
+                <button id="btnAddAdmin">Administrador</button>
+                <button id="btnAddEstud">Estudiante</button>
+                <button id="btnAddDocen">Docente</button>
+                <button id="btnAddEvalu">Evaluador</button>
+            </div>
+        </div>
+        <div id="formInfoSelected" class="forms">
+            <img src="../../img/atras.png" alt="">
+
+            <div id="info">
+                <section>
+                    <p style="color: #888888; font-size: 15px; margin-top: 20px;">Nombre completo</p>
+                    <p id="txtApellidos">Apellido Apellido</p>
+                    <p id="txtNombres">Nombre Nombre</p>
+                </section>
+                <section>
+                    <p style="color: #888888; font-size: 15px; margin-top: 20px;">correo electronico</p>
+                    <p id="txtCorreo">20200001@ricaldone.edu.sv</p>
+                </section>
+                <section>
+                    <p style="color: #888888; font-size: 15px; margin-top: 20px;">contraseña</p>
+                    <p id="txtContrasena">contraseña001</p>
+                </section>
+            </div>
+            <div id="actions">
+                <button id="btnEditar">Editar</button>
+                <button id="btnEliminar">Eliminar</button>
+            </div>
+        </div>
+        <div id="card">
+            <section>
+                <p id="txtNombreCardEst">Nombre nombre</p><p style="padding-right: 10px;">, </p><p id="txtApellidoCardEst">Apellido apellido</p>
+            </section>
+            <p id="txtCorreoCardEst">2020001@ricaldone.edu.sv</p>
+        </div>
+    </main>
+    
+</body>
+</html>

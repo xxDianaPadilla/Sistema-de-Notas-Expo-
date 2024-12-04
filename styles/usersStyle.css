@@ -79,6 +79,7 @@ main {
 #roles p {
     padding-bottom: 2vh;
     text-align: center;
+    cursor: pointer;
 }
 
 #roles button {
@@ -97,6 +98,7 @@ main {
     flex-wrap: nowrap;
     align-items: center;
     justify-content: space-around;
+    cursor: pointer;
 }
 
 #cardContainer {
@@ -106,63 +108,184 @@ main {
     border-radius: 20px;
 }
 
-/* estilos de formulario de agregar
+#modalContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 0%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#mainForms {
+    align-content: space-between;
+    height: 300vh;
+    width: 80vw;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    background-color: #fff;
+}
 
 /* Ocultar el formulario */
 .hidden {
     display: none;
 }
 
-/* Estilos generales del contenedor */
-#modalContainer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7); /* Fondo semitransparente */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 /* Estilo del formulario modal */
-.form-modal {
-    background: #3a3a3a;
+.forms {
+    width: 25%;
+    font-family: poppinsLight;
+    background: #E8E8E8;
     padding: 20px;
     border-radius: 10px;
     color: white;
-    width: 300px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0px 15px rgba(0, 0, 0, 0.5);
 }
 
+#formAgregarDatos label {
+    color: #000;
+} 
+
 input {
+    font-size: 16px;
     width: 100%;
-    margin-bottom: 10px;
-    padding: 10px;
+    margin-bottom: 5px;
+    padding: 5px 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
 }
 
-/* Botón cancelar */
 .btn-cancelar {
-    background-color: #d9534f;
+    background-color: #dd233f;
     color: white;
     border: none;
     padding: 10px 15px;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px;
     margin-bottom: 10px;
 }
 
-/* Botón guardar */
 .btn-guardar {
-    background-color: #5cb85c;
+    background-color: #4caf50;
     color: white;
     border: none;
     padding: 10px 15px;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 8px;
     width: 100%;
+}
+
+/*FORMULARIO DE ELECCION DEL ROL*/
+
+#formElegirRol {
+    padding: 20px;
+    background-color: #E8E8E8;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#formElegirRol h3 {
+    font-family: poppinsLight;
+}
+
+#divRoles {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+}
+
+#divRoles button {
+    width: 100%;
+    padding: 7px 0px;
+    margin: 10px 0px;
+    background-color: #fff;
+    border-radius: 8px;
+    border: none;
+    font-size: 18px;
+    font-family: poppinsLight;
+    cursor: pointer;
+}
+
+#btnAddAdmin {
+    box-shadow: 0px 5px 0px #ffe14e;
+}
+
+#btnAddEstud {
+    box-shadow: 0px 5px 0px #4E8FFF;
+} 
+
+#btnAddDocen {
+    box-shadow: 0px 5px 0px #FF4E8C;
+} 
+
+#btnAddEvalu {
+    box-shadow: 0px 5px 0px #FFAD65;
+} 
+
+/*FORMULARIO DONDE SE VE LA INFORMACION*/
+
+#formInfoSelected {
+    
+}
+
+#formInfoSelected p {
+    color: #000;
+    font-size: 20px;
+}
+
+#actions{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 5%;
+}
+
+#btnEliminar {
+    background-color: #dd233f;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    width: 47.5%;
+}
+
+#btnEditar {
+    background-color: #06AECC;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    width: 47.5%;
+}
+
+/*ESTILOS DE LAS CARDS*/
+
+#card {
+    width: 90%;
+    padding: 15px;
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    font-family: poppinsLight;
+}
+
+#card section {
+    display: flex;
+    flex-wrap: wrap;
+    width: 50%;
+    font-size: 20px;
 }
