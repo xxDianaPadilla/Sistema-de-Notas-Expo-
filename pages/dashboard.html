@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Notas Expo</title>
-    <link rel="icon" href="../img/content.png" type="icon/png">
+    <title>SPTC | Inicio</title>
+    <link rel="icon" href="../img/logoRedondo.png" type="icon/png">
     <!--Estilo propio-->
     <link rel="stylesheet" href="../styles/dashboardStyle.css">
 
@@ -34,6 +34,48 @@
         </nav>
         <button class="cerrar-sesion"><img src="../img/logout.svg" alt="home"> Cerrar Sesión</button>
     </aside>
+
+    <!--Content-->
+    <main class="bienvenida">
+        <div class="containerUp">
+        <header class="header">
+          <h1 id="saludo">¡Buenos días, Eduardo! 🌞</h1>
+          <p class="date">Lunes 04 de noviembre, 2024</p>
+          <p class="time">10:45 a.m.</p>
+          <img src="../img/iconoTuerca.svg" alt="Icon" class="icon">
+        </header>
+        
+        <section class="estadoPTC">
+            <div class="card">
+            <h1>Etapa Actual:</h1>
+            <h2 class="stage">30%</h2>
+          </div>
+        </section>
+    </div>
+        <section class="description">
+          <h3>Descripción</h3>              
+          <p>El <strong>Proyecto Técnico Científico</strong> es un proceso de aprendizaje significativo...</p>
+            <button class="btn-primary" id="leer-mas">Leer Más</button>
+        </section>
+      
+        <section class="connected-users">
+          <h3>Usuarios Conectados</h3>
+          <ul>                
+            <li>Juan Pérez <span class="status-dot online"></span></li>
+            <li>Bryan Miranda <span class="status-dot online"></span></li>
+            <li>Luis Amaya <span class="status-dot online"></span></li>
+            <li>Carlos Rodríguez <span class="status-dot online"></span></li>
+            </ul>
+        </section>
+      
+        <section class="actions">
+            <button class="btn-action" id="ver-proyectos">Ver Proyectos</button>
+            <button class="btn-action" id="crear-evaluacion">Crear Evaluación</button>
+            <button class="btn-action" id="generar-reporte">Generar Reporte</button>
+        </section>
+    </main>
+    
+    <script src="../js/dashboardScript.js"></script>
 </body>
 
 

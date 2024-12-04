@@ -12,6 +12,7 @@ body,
 html {
     margin: 0;
     padding: 0;
+    background-color: #E0E0E0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
     color: #1D1D1B;
@@ -29,4 +30,80 @@ html {
     font-weight: 700;
     width: 100%;
     box-sizing: border-box;
+}
+
+main{
+    margin-left: 250px;
+    padding: 40px;
+}
+
+.containerUp {
+    display: flex; 
+    justify-content: space-between;
+    align-items: flex-start; 
+}
+
+/*Bienvenida con nombre y fecha*/
+.header {
+    background-color: #f2f2f2;
+    padding: 20px;
+    border-radius: 10px; 
+    position: relative; 
+    margin-bottom: 20px; 
+    width: 600px;
+}
+
+.header h1, .header p {
+    margin: 0;
+    color: #1D1D1B; 
+}
+
+.header h1 {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.header .date {
+    font-size: 16px;
+    font-weight: 600;
+    color: #5A5A5A;
+}
+
+.header .time {
+    margin-top: 20px;
+    font-size: 52px;
+    font-weight: normal;
+}
+
+.header .icon {
+    position: absolute; 
+    bottom: -105px; 
+    right: -80px; 
+    width: 300px; 
+    height: 300px; 
+}
+
+/*Progreso PTC*/
+.estadoPTC {
+    background-color: #f2f2f2;
+    padding: 20px;
+    border-radius: 10px; 
+    position: relative; 
+    margin-bottom: 20px; 
+    width: 400px;
+}
+
+.estadoPTC h1, .estadoPTC p {
+    margin: 0;
+    color: #1D1D1B; 
+}
+
+.estadoPTC h1 {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.estadoPTC h2 {
+    font-size: 75px;
+    font-weight: bold;
 }
