@@ -37,6 +37,14 @@ html {
 main{
     margin-left: 250px;
     padding: 40px;
+    /* Esto hace que no exceda la altura visible de la ventana */
+    max-height: 100vh;
+    /* Esto activa el scroll vertical :) */ 
+    overflow-y: auto;
+    /* Esto evita el scroll horizontal :)*/ 
+    overflow-x: hidden; 
+    /* Esto asegura que el padding no expanda el tamaño del contenedor */
+    box-sizing: border-box;
 }
 
 .containerUp {
