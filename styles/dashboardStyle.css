@@ -16,7 +16,9 @@ html {
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
     color: #1D1D1B;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
 }
 
 .inicio {
@@ -52,6 +54,8 @@ main{
     margin-bottom: 20px; 
     width: 600px;
     height: 160px;
+    overflow: hidden; 
+    z-index: 1;
 }
 
 .header h1, .header p {
@@ -82,6 +86,8 @@ main{
     right: -80px; 
     width: 300px; 
     height: 300px; 
+    z-index: 1;
+    pointer-events: none;
 }
 
 /*Progreso PTC*/
