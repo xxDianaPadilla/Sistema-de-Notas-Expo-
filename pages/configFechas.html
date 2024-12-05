@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPTC | Inicio</title>
+    <link rel="icon" href="../img/logoRedondo.png" type="icon/png">
+    <!--Estilo propio-->
+    <link rel="stylesheet" href="../styles/calendarStyle.css">
+
+    <!--Estilo menú-->
+    <link rel="stylesheet" href="../styles/menu.css">
+</head>
+
+<body>
+    <!--Menú lateral-->
+    <aside class="menu-lateral">
+        <div class="logo">
+            <img src="../img/logoRedondo.png" alt="Logo Salesianos Ricaldone">
+            <br>
+            <h2>
+                <span class="logoSalesianos">Salesianos</span>
+                <span class="logoRical">Ricaldone</span>
+            </h2>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../pages/dashboard.html" class="inicio"><img src="../img/homeIcon.svg" alt="home">
+                        Inicio</a></li>
+                <li><a href="../pages/users.html" class="users"><img src="../img/usersIcon.svg" alt="users">
+                        Usuarios</a></li>
+                <li><a href="../pages/projects.html" class="projects"><img src="../img/projectsIcon.svg" alt="projects">
+                        Proyectos</a></li>
+                <li><a href="../pages/evaluation.html" class="evaluaciones"><img src="../img/evaluacionesIcon.svg"
+                            alt="evaluaciones"> Evaluaciones</a></li>
+            </ul>
+        </nav>
+        <button class="cerrar-sesion"><img src="../img/logout.svg" alt="home"> Cerrar Sesión</button>
+    </aside>
+
+    <!--Content-->
+    <div class="container"></div>
+    <main>
+        <div class="up">
+            <div class="parte1">
+                <h1>Calendario</h1>
+                <h3>Fechas y actividades importantes</h3>
+            </div>
+            <div class="boton">
+                <button class="btnNuevo">+</button>
+            </div>
+        </div>
+        <br>
+        <div class="calendar">
+            <div class="header">
+            <button id="prevBtn"><img src="../img/arrow1.svg" alt="Anterior"></button>
+            <div class="monthYear" id="monthYear"></div>
+            <button id="nextBtn"><img src="../img/arrow2.svg" alt="Siguiente"></button>
+        </div>
+        <div class="days">
+            <div class="day">Lunes</div>
+            <div class="day">Martes</div>
+            <div class="day">Miércoles</div>
+            <div class="day">Jueves</div>
+            <div class="day">Viernes</div>
+            <div class="day">Sábado</div>
+            <div class="day">Domingo</div>
+        </div>
+        <div class="dates" id="dates"></div>
+        </div>
+    </main>
+    <section class="actividades">
+        <div class="card">
+            <h1>Próximas actividades:</h1>
+        </div>
+    </section>
+    </div>
+    <script src="../js/configFechas.js"></script>
+</body>
+</html>

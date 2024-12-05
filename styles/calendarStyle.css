@@ -1,0 +1,184 @@
+/*CONFIGURACIÓN DE FECHAS*/
+
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    box-sizing: border-box;
+    min-height: 100vh;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    background: #E0E0E0;
+  }
+
+.inicio {
+    text-decoration: none;
+    color: #262626;
+    background-color: #E0E0E0;
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    font-size: 18px;
+    font-weight: 700;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+main{
+    margin-left: 250px;
+    padding: 40px;
+    /* Esto hace que no exceda la altura visible de la ventana */
+    max-height: 100vh;
+    /* Esto activa el scroll vertical :) */ 
+    overflow-y: auto;
+    /* Esto evita el scroll horizontal :)*/ 
+    overflow-x: hidden; 
+    /* Esto asegura que el padding no expanda el tamaño del contenedor */
+    box-sizing: border-box;
+}
+
+.container{
+    display: flex; 
+    justify-content: space-between;
+    align-items: flex-start; 
+}
+
+.actividades{
+    margin-top: 60px;
+    margin-right: 20px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    border-radius: 10px; 
+    position: relative; 
+    margin-bottom: 20px; 
+    width: 300px;
+    height: 650px;
+    justify-content: center; 
+    align-items: center; 
+    text-align: center;
+}
+
+.actividades h1{
+    font-size: 16px;
+    font-weight: normal;
+    color: #5A5A5A;
+}
+
+.up{
+    display: flex; 
+    justify-content: space-between;
+    align-items: flex-start; 
+}
+
+.btnNuevo{
+    margin-top: 20px;
+    padding-top: 5%;
+    background-color: #1d1d1d;
+    color: #fefefe;
+    border-radius: 100%;
+    border: none;
+    width: 40px;
+    height: 40px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btnNuevo:hover{
+    background-color: #3f3f3f;
+}
+
+.up h3{
+    font-size: 16px;
+    font-weight: normal;
+    color: #5A5A5A;
+}
+
+.calendar {
+    width: 880px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background: #f2f2f2;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #1d1d1d;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.monthYear {
+    text-align: center;
+    font-weight: 600;
+    width: 250px;
+}
+  
+.header button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    box-shadow: 0 0 4px #1d1d1d;
+}
+
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+  
+.day {
+    text-align: center;
+    padding: 5px;
+    color: #999FA6;
+    font-weight: 500;
+}
+
+.dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+  }
+  
+  .date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+    margin: auto;
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    transition: 0.2s;
+  }
+
+.date:hover, .date.active {
+  background: #1d1d1d;
+  color: #fff;
+}
+
+.date.inactive {
+  color: #d2d2d2;
+}
+
+.date.inactive:hover {
+  color: #fff;
+}
