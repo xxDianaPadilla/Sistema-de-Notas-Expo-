@@ -26,10 +26,14 @@
         </div>
         <nav>
             <ul>
-                <li><a href="../pages/dashboard.html" class="inicio"><img src="../img/homeIcon.svg" alt="home"> Inicio</a></li>
-                <li><a href="../pages/users.html" class="users"><img src="../img/usersIcon.svg" alt="users"> Usuarios</a></li>
-                <li><a href="../pages/projects.html" class="projects"><img src="../img/projectsIcon.svg" alt="projects"> Proyectos</a></li>
-                <li><a href="../pages/evaluation.html" class="evaluaciones"><img src="../img/evaluacionesIcon.svg" alt="evaluaciones"> Evaluaciones</a></li>
+                <li><a href="../pages/dashboard.html" class="inicio"><img src="../img/homeIcon.svg" alt="home">
+                        Inicio</a></li>
+                <li><a href="../pages/users.html" class="users"><img src="../img/usersIcon.svg" alt="users">
+                        Usuarios</a></li>
+                <li><a href="../pages/projects.html" class="projects"><img src="../img/projectsIcon.svg" alt="projects">
+                        Proyectos</a></li>
+                <li><a href="../pages/evaluation.html" class="evaluaciones"><img src="../img/evaluacionesIcon.svg"
+                            alt="evaluaciones"> Evaluaciones</a></li>
             </ul>
         </nav>
         <button class="cerrar-sesion"><img src="../img/logout.svg" alt="home"> Cerrar Sesión</button>
@@ -38,43 +42,59 @@
     <!--Content-->
     <main class="bienvenida">
         <div class="containerUp">
-        <header class="header">
-          <h1 id="saludo">¡Buenos días, Eduardo! 🌞</h1>
-          <p class="date">Lunes 04 de noviembre, 2024</p>
-          <p class="time">10:45 a.m.</p>
-          <img src="../img/iconoTuerca.svg" alt="Icon" class="icon">
-        </header>
-        
-        <section class="estadoPTC">
-            <div class="card">
-            <h1>Etapa Actual:</h1>
-            <h2 class="stage">30%</h2>
-          </div>
-        </section>
-    </div>
-        <section class="description">
-          <h3>Descripción</h3>              
-          <p>El <strong>Proyecto Técnico Científico</strong> es un proceso de aprendizaje significativo...</p>
-            <button class="btn-primary" id="leer-mas">Leer Más</button>
-        </section>
-      
-        <section class="connected-users">
-          <h3>Usuarios Conectados</h3>
-          <ul>                
-            <li>Juan Pérez <span class="status-dot online"></span></li>
-            <li>Bryan Miranda <span class="status-dot online"></span></li>
-            <li>Luis Amaya <span class="status-dot online"></span></li>
-            <li>Carlos Rodríguez <span class="status-dot online"></span></li>
-            </ul>
-        </section>
-      
+            <header class="header">
+                <h1 id="saludo">¡Buenos días, Eduardo! 🌞</h1>
+                <p class="date">Lunes 04 de noviembre, 2024</p>
+                <p class="time">10:45 a.m.</p>
+                <img src="../img/iconoTuerca.svg" alt="Icon" class="icon">
+            </header>
+
+            <section class="estadoPTC">
+                <div class="card">
+                    <h1>Etapa Actual:</h1>
+                    <h2 class="stage">30%</h2>
+                    <img src="../img/settings.svg" alt="Icon" class="icon">
+                </div>
+            </section>
+        </div>
+        <br>
+
+        <div class="container2">
+            <div class="containerMiddle">
+                <h3>Descripción</h3>
+                <div class="containerMiddle2">
+                    <section class="description">
+                        <p>El <strong>Proyecto Técnico Científico</strong> es un proceso de aprendizaje significativo
+                            que
+                            integra las competencias adquiridas durante el año lectivo para ser aplicadas en la
+                            propuesta de
+                            <strong>solución a una necesidad del entorno social, industrial, económico o
+                                cultural.</strong>
+                        </p>
+
+                        <button class="btnMas" id="leer-mas">Leer Más</button>
+                    </section>
+                </div>
+                </div>
+                <div class="usuarios">
+                    <h4>Usuarios Conectados</h4>
+                    <section class="connected-users">
+                        <p>No hay ningún usuario en línea.</p>
+                    </section>
+            </div>
+        </div>
+
+        <br>
+        <div class="containerDown">
+            <h3>Acciones</h3>
+        </div>
         <section class="actions">
-            <button class="btn-action" id="ver-proyectos">Ver Proyectos</button>
-            <button class="btn-action" id="crear-evaluacion">Crear Evaluación</button>
-            <button class="btn-action" id="generar-reporte">Generar Reporte</button>
+            <button class="btn-action" id="ver-proyectos"><img src="../img/ojoIcon.svg" alt="Ver">Ver Proyectos</button>
+            <button class="btn-action" id="crear-evaluacion"><img src="../img/starIcon.svg" alt="Evaluacion">Crear Evaluación</button>
+            <button class="btn-action" id="generar-reporte"><img src="../img/printIcon.svg" alt="Reporte">Generar Reporte</button>
         </section>
     </main>
-    
+
     <script src="../js/dashboardScript.js"></script>
 </body>
 

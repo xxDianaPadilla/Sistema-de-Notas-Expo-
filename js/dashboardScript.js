@@ -49,3 +49,21 @@ function updateGreeting() {
 }
 
 window.onload = updateGreeting;
+
+/*Cambiar color dependiendo el progreso*/
+const stageElement = document.querySelector('.stage');
+
+function updateStageColor() {
+    const percentage = parseInt(stageElement.textContent);
+
+    if (percentage < 50) {
+        stageElement.style.color = '#E00526';
+    } else if (percentage >= 50 && percentage < 75) {
+        stageElement.style.color = '#F7C100'; 
+    } else {
+        stageElement.style.color = '#4CAF50';
+    }
+}
+
+// Llamar a la función para actualizar el color
+updateStageColor();
