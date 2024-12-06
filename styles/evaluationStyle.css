@@ -12,6 +12,7 @@ html {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    background-color: #E0E0E0;
     font-family: 'Poppins', sans-serif;
     color: #1D1D1B;
     overflow: hidden;
@@ -28,4 +29,97 @@ html {
     font-weight: 700;
     width: 100%;
     box-sizing: border-box;
+}
+
+main{
+    margin-left: 250px;
+    padding: 40px;
+    /* Esto hace que no exceda la altura visible de la ventana */
+    max-height: 100vh;
+    /* Esto activa el scroll vertical :) */ 
+    overflow-y: auto;
+    /* Esto evita el scroll horizontal :)*/ 
+    overflow-x: hidden; 
+    /* Esto asegura que el padding no expanda el tamaño del contenedor */
+    box-sizing: border-box;
+}
+
+.evaluations{
+    display: flex; 
+    justify-content: space-between;
+    align-items: flex-start; 
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.evaluations a{
+    text-decoration: none;
+    color: inherit;
+}
+
+/*Botón para crear evaluación*/
+.newEva{
+    margin-top: -8px;
+    width:13vw;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #fefefe;
+    padding: 1vh;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    justify-content: space-around;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/*Subrayado del texto*/
+#instrumento {
+    text-decoration: underline;
+    text-decoration-color: #1D1D1B;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 10px;
+    cursor: pointer;
+}
+
+#evaluar{
+    color: #5A5A5A;
+    cursor: pointer;
+}
+
+/*Div en donde se muestran las cards*/
+.content {
+    margin-top: 2%;
+    background-color: #f2f2f2;
+    padding: 20px;
+    border-radius: 10px; 
+    position: relative; 
+    margin-bottom: 20px; 
+    width: auto;
+    height: 500px;
+}
+
+/*Botón para filtrar proyectos*/
+.filtro{
+    margin-top: -8px;
+    width:13vw;
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #5A5A5A;
+    padding-top: 1vh;
+    margin-bottom: 0.5vh;
+    padding-left: 7vh;
+    padding-right: 7vh;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    justify-content: space-around;
+    cursor: pointer;
+    font-weight: normal;
 }
