@@ -35,6 +35,17 @@
         <button class="cerrar-sesion"><img src="../img/logout.svg" alt="home"> Cerrar Sesión</button>
     </aside>
 
+    <!--Alerta para cerrar sesión-->
+    <div class="alert" id="alert">
+        <div class="alert-box">
+            <p>¿Estás seguro de que quieres cerrar sesión?</p>
+            <div class="alert-buttons">
+                <button id="btnConfirmar">Sí</button>
+                <button id="btnCancelar">No</button>
+            </div>
+        </div>
+    </div>
+    
     <main>
         <div class="evaluations">
             <a href="../pages/evaluation.html"><p id="evaluar">Instrumentos de evaluación</p></a>
@@ -46,6 +57,6 @@
             
         </div>
     </main>
-
+    <script src="../js/cerrarSesion.js"></script>
 </body>
 </html>
