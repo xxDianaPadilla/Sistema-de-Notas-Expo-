@@ -7,13 +7,18 @@
     padding: 0;
   }
   
-  body {
+  body , html{
     box-sizing: border-box;
-    min-height: 100vh;
+    height: 100%;
     display: flex;
     align-items: start;
     justify-content: start;
     background: #E0E0E0;
+    overflow-y: scroll;
+  }
+
+  body{
+    overflow-y: auto !important;
   }
 
 .inicio {
@@ -32,14 +37,6 @@
 main{
     margin-left: 250px;
     padding: 40px;
-    /* Esto hace que no exceda la altura visible de la ventana */
-    max-height: 100vh;
-    /* Esto activa el scroll vertical :) */ 
-    overflow-y: auto;
-    /* Esto evita el scroll horizontal :)*/ 
-    overflow-x: hidden; 
-    /* Esto asegura que el padding no expanda el tamaño del contenedor */
-    box-sizing: border-box;
 }
 
 .container{
@@ -181,4 +178,120 @@ main{
 
 .date.inactive:hover {
   color: #fff;
+}
+
+@media (min-width: 969px) and (max-width: 1920px) {
+
+    .calendar{
+        width: 820px;
+    }
+
+    .actividades{
+        height: 620px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1240px){
+    .calendar{
+        width: 580px;
+    }
+
+    .actividades{
+        width: 300px;
+        height: 535px;
+    }
+}
+
+@media (min-width: 480px) and (max-width: 1045px){
+
+    .calendar{
+        width: 500px;
+    }
+
+    .actividades{
+        width: 300px;
+        height: 535px;
+    }
+}
+
+@media (min-width: 380px) and (max-width: 985px){
+
+    .calendar{
+        width: 600px;
+    }
+
+    .actividades{
+        top: 600px;
+        right: 660px;
+        height: 100px;
+        width: 580px !important;
+    }
+
+    .card{
+        width: 580px !important;
+    }
+}
+
+@media (min-width: 320px) and (max-width: 905px){
+    .calendar{
+        width: 580px;
+    }
+}
+
+@media (min-width: 310px) and (max-width: 875px){
+    .calendar{
+        width: 540px;
+    }
+}
+
+@media (min-width: 290px) and (max-width: 868px){
+    .actividades{
+        width: 520px !important;
+        right: 600px;
+    }
+
+    .card{
+        width: 520px !important;
+    }
+}
+
+@media (min-width: 310px) and (max-width: 845px){
+    .actividades{
+        width: 500px !important;
+        right: 595px;
+    }
+
+    .card{
+        width: 500px !important;
+    }
+}
+
+@media (min-width: 310px) and (max-width: 833px){
+    .calendar{
+        width: 520px;
+    }
+
+    .actividades{
+        width: 495px !important;
+        right: 580px;
+    }
+
+    .card{
+        width: 495px !important;
+    }
+}
+
+@media (min-width: 290px) and (max-width: 815px){
+    .calendar{
+        width: 495px;
+    }
+
+    .actividades{
+        width: 480px !important;
+        right: 560px;
+    }
+
+    .card{
+        width: 480px !important;
+    }
 }
