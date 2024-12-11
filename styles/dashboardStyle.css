@@ -265,3 +265,64 @@ main{
     border-color: #1D1D1B; 
     color: #1D1D1B;
 }
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    /* Ocultar el margen izquierdo de 250px y hacer que el contenido se ajuste */
+    main {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .header, .estadoPTC, .description, .connected-users {
+        width: 100%;
+    }
+
+    .btnMas {
+        width: 100%;
+    }
+
+    /* Ajustar el tamaño de las fuentes en pantallas pequeñas */
+    .header h1 {
+        font-size: 22px;
+    }
+
+    .header .time {
+        font-size: 38px;
+    }
+
+    .estadoPTC h2 {
+        font-size: 75px;
+    }
+
+    .containerUp {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .containerMiddle, .containerMiddle2, .container2 {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Ajustar el tamaño de las fuentes más para pantallas muy pequeñas */
+    .header h1 {
+        font-size: 20px;
+    }
+
+    .header .time {
+        font-size: 30px;
+    }
+
+    .estadoPTC h2 {
+        font-size: 60px;
+    }
+}

@@ -39,6 +39,16 @@
         <button class="cerrar-sesion"><img src="../img/logout.svg" alt="home"> Cerrar Sesión</button>
     </aside>
 
+    <!--Menú hamburguesa-->
+    <div class="menu-hamburguesa" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <!--Fondo cuando se muestra el Menú hamburguesa-->
+    <div class="overlay"></div>
+
     <!--Alerta para cerrar sesión-->
     <div class="alert" id="alert">
         <div class="alert-box">
@@ -106,6 +116,7 @@
         </section>
     </main>
 
+    <script src="../js/menu.js"></script>
     <script src="../js/dashboardScript.js"></script>
     <script src="../js/cerrarSesion.js"></script>
 </body>
