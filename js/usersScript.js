@@ -42,7 +42,7 @@ function initializeRoleSelectionListeners() {
     // Listener para cada botón de rol
     if (btnAdmin) {
         btnAdmin.addEventListener("click", () => {
-            loadForm("../pages/formsUsers/formAddUser.html");
+            loadForm("../pages/formsUsers/formAddAdmin.html");
         });
     }
     if (btnEstud) {
@@ -103,3 +103,17 @@ function initializeCloseButton() {
         });
     }
 }
+
+// Seleccionar todos los elementos <p> con la clase "role"
+const roles = document.querySelectorAll('.role');
+
+// Agregar un event listener a cada <p>
+roles.forEach(role => {
+    role.addEventListener('click', () => {
+        // Eliminar la clase "active" de todos los elementos
+        roles.forEach(r => r.classList.remove('active'));
+        
+        // Agregar la clase "active" al elemento clicado
+        role.classList.add('active');
+    });
+});
