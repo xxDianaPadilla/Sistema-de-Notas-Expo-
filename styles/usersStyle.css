@@ -109,6 +109,8 @@ main {
 
 .role.active {
     border-bottom: 3px solid #000;
+    font-family: poppinsMedium;
+    font-size: 17px;
 }
 
 
