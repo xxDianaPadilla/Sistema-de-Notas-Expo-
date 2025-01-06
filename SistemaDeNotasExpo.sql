@@ -102,3 +102,5 @@ references tbEstudiantes(Codigo_Carnet)
 on update cascade 
 on delete cascade
 );
+
+SELECT * FROM tbProyectos;
