@@ -266,6 +266,58 @@ main{
     color: #1D1D1B;
 }
 
+.connected-users{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.user-card{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f5f5f5;
+    border-radius: 8px;
+    padding: 10px 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-info strong{
+    font-size: 14px;
+    color: #333;
+}
+
+.user-info span{
+    font-size: 12px;
+    color: #666;
+}
+
+.user-status{
+    position: relative;
+}
+
+.status-dot{
+    width: 12px;
+    height: 12px;
+    background-color: #28a745;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.status-dot:hover::after{
+    content: attr(title);
+    position: absolute;
+    top: -30px;
+    left: -20px;
+    background-color: #28a745;
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 
 /* Responsive Design */
 @media (max-width: 768px) {

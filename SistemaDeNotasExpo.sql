@@ -7,6 +7,13 @@ Id_Rol Int primary key,
 nombreRol Text 
 );
 
+INSERT INTO tbRol(Id_Rol, nombreRol) VALUES (1, 'Administrador');
+INSERT INTO tbRol(Id_Rol, nombreRol) VALUES (2, 'Estudiante');
+INSERT INTO tbRol(Id_Rol, nombreRol) VALUES (3, 'Docente');
+INSERT INTO tbRol(Id_Rol, nombreRol) VALUES (4, 'Evaluador');
+
+SELECT * FROM tbRol;
+
 create table tbUsuario(
 Id_Usuario Int primary key,
 Nombre_Usuario Text,
@@ -21,6 +28,26 @@ ON Update cascade
 on delete cascade
 );
 
+INSERT INTO tbUsuario(Id_Usuario, Nombre_Usuario, Apellido_Usuario, Correo_Usuario, Contra_Usuario, Id_Rol, FechaHora_Conexion) VALUES (1, 'Juan', 'Pérez', 'juanperez@ricaldone.edu.sv', 'juanperez#123', 2, '2025-01-15 19:00:00');
+INSERT INTO tbUsuario(Id_Usuario, Nombre_Usuario, Apellido_Usuario, Correo_Usuario, Contra_Usuario, Id_Rol, FechaHora_Conexion) VALUES (2, 'Bryan', 'Miranda', 'bryanmiranda@ricaldone.edu.sv', 'bryanmiranda#123', 3, '2025-01-01 16:00:00');
+INSERT INTO tbUsuario(Id_Usuario, Nombre_Usuario, Apellido_Usuario, Correo_Usuario, Contra_Usuario, Id_Rol, FechaHora_Conexion) VALUES (3, 'Luis', 'Amaya', 'luisamaya@ricaldone.edu.sv', 'luisamaya#123', 3, '2025-01-01 14:00:00');
+INSERT INTO tbUsuario(Id_Usuario, Nombre_Usuario, Apellido_Usuario, Correo_Usuario, Contra_Usuario, Id_Rol, FechaHora_Conexion) VALUES (4, 'Carlos', 'Rodríguez', 'carlosrodriguez@ricaldone.edu.sv', 'carlosrodriguez#123', 4, '2025-01-07 17:30:00');
+
+SELECT * FROM tbUsuario;
+
+SELECT 
+   tbUsuario.Nombre_Usuario AS Nombre,
+   tbUsuario.Apellido_Usuario AS Apellido,
+   tbRol.nombreRol AS Rol,
+   tbUsuario.FechaHora_Conexion AS FechaConexion
+FROM
+   tbUsuario
+INNER JOIN
+   tbRol
+ON
+   tbUsuario.Id_Rol = tbRol.Id_Rol
+ORDER BY
+   tbUsuario.FechaHora_Conexion DESC;
 
 create table tbNivel(
 Id_Nivel int primary key,
