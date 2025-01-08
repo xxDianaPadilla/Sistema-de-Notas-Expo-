@@ -9,6 +9,11 @@ app.use(express.static('pages'));
 app.use(express.static('styles'));
 app.use(express.static('img'));
 app.use(express.static('js'));
+app.use(express.static('pages/formsUsers'));
+
+app.get('/index', (req, res) => {
+    res.sendFile(__dirname + '/pages/index.html');
+});
 
 app.get('/usuarios-conectados', async (req, res ) => {
     const db = new DBConnection();

@@ -11,7 +11,7 @@ const cerrarSesionBtn = document.querySelector('.cerrar-sesion');
     btnConfirmar.addEventListener('click', () => {
         history.replaceState(null, null, '../index.html');
         //Redirige al login
-        window.location.href = '../index.html';
+        window.location.href = '/index';
     });
 
     btnCancelar.addEventListener('click', () => {
