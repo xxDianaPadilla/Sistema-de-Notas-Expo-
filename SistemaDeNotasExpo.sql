@@ -32,8 +32,7 @@ INSERT INTO tbUsuario(Id_Usuario, Nombre_Usuario, Apellido_Usuario, Correo_Usuar
 INSERT INTO tbUsuario(Id_Usuario, Nombre_Usuario, Apellido_Usuario, Correo_Usuario, Contra_Usuario, Id_Rol, FechaHora_Conexion) VALUES (2, 'Bryan', 'Miranda', 'bryanmiranda@ricaldone.edu.sv', 'bryanmiranda#123', 3, '2025-01-01 16:00:00');
 INSERT INTO tbUsuario(Id_Usuario, Nombre_Usuario, Apellido_Usuario, Correo_Usuario, Contra_Usuario, Id_Rol, FechaHora_Conexion) VALUES (3, 'Luis', 'Amaya', 'luisamaya@ricaldone.edu.sv', 'luisamaya#123', 3, '2025-01-01 14:00:00');
 INSERT INTO tbUsuario(Id_Usuario, Nombre_Usuario, Apellido_Usuario, Correo_Usuario, Contra_Usuario, Id_Rol, FechaHora_Conexion) VALUES (4, 'Carlos', 'Rodríguez', 'carlosrodriguez@ricaldone.edu.sv', 'carlosrodriguez#123', 4, '2025-01-07 17:30:00');
-
-SELECT * FROM tbUsuario;
+INSERT INTO tbUsuario(Id_Usuario, Nombre_Usuario, Apellido_Usuario, Correo_Usuario, Contra_Usuario, Id_Rol, FechaHora_Conexion) VALUES (5, 'Diana', 'Padilla', 'dianapadilla@ricaldone.edu.sv', 'dianapadilla#123', 2, '2025-01-08 16:30:00');
 
 SELECT 
    tbUsuario.Nombre_Usuario AS Nombre,
