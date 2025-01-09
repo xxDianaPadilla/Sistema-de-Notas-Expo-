@@ -43,6 +43,28 @@ app.get('/usuarios-conectados', async (req, res ) => {
     }
 });
 
+app.get('/etapas', async (req, res) => {
+    const db = new DBConnection();
+    try{
+        const query = `
+            SELECT 
+                id_etapa,
+                porcentaje_etapa,
+                fecha_fin
+            FROM 
+                tbEtapa
+            ORDER BY fecha_fin ASC
+        `;
+        const etapas = await db.query(query);
+        res.json(etapas);
+    }catch(err){
+        console.error('Error obteniendo las etapas: ', err.message);
+        res.status(500).send('Error del servidor');
+    }finally{
+        db.close();
+    }
+});
+
 app.listen(PORT, () =>{
     console.log(`Servidor escuchando en el puerto ${PORT}`);
 });

@@ -272,7 +272,7 @@ main{
     gap: 10px;
     overflow-y: auto;
     overflow-x: hidden;
-    max-height: 100%; /* Asegura que ocupe toda la altura disponible */
+    max-height: 100%; 
     padding-top: 35px;
 }
 
