@@ -65,6 +65,28 @@ app.get('/etapas', async (req, res) => {
     }
 });
 
+app.get('/actividades', async(req, res) =>{
+    const db = new DBConnection();
+    try{
+        const query = `
+            SELECT 
+                Id_Actividad,
+                Titulo_Actividad,
+                Fecha_Inicio,
+                Fecha_Fin
+            FROM 
+                tbActividad
+        `;
+        const actividades = await db.query(query);
+        res.json(actividades);
+    }catch(err){
+        console.error('Error obteniendo las actividades:', err.message);
+        res.status(500).send('Error del servidor');
+    }finally{
+        db.close();
+    }
+});
+
 app.listen(PORT, () =>{
     console.log(`Servidor escuchando en el puerto ${PORT}`);
 });

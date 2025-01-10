@@ -206,6 +206,25 @@ main{
     font-size: 1.2em;
 }
 
+.date.actividad{
+    color: #ffffff;
+    border: 50%;
+    position: relative;
+}
+
+.tooltip{
+    position: absolute;
+    color: #ffff;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    z-index: 500;
+    white-space: nowrap;
+    pointer-events: none;
+    top: 80px; 
+    transform: translateY(60px);
+}
+
 @media (min-width: 969px) and (max-width: 1920px) {
 
     .calendar{

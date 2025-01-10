@@ -12,7 +12,7 @@ async function obtenerEtapas(){
 
 function renderizarCards(etapas){
     const contenedor = document.querySelector('.actividades');
-    contenedor.innerHTML = `<h1>Próximas actividades:</h1>`;
+    contenedor.innerHTML = `<h1>Etapas Próximas:</h1>`;
 
     etapas.forEach(etapa => {
         const color = obtenerColor(etapa.porcentaje_etapa);
