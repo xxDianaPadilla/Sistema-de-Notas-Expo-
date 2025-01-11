@@ -7,6 +7,8 @@ const API_ACTIVIDADES_URL = 'http://localhost:5501/actividades';
 
 let currentDate = new Date();
 let actividadesGlobales = [];
+const colores = ['#F38E39', '#F64382', '#06AECC'];
+const colorMap = new Map();
 
 const updateCalendar = () => {
   const currentYear = currentDate.getFullYear();
@@ -75,8 +77,6 @@ function marcarActividadesEnCalendario(actividades) {
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
   const diasInactivosInicio = (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1); 
 
-  const colores = ['#F38E39', '#F64382', '#06AECC'];
-
   const actividadesDelMes = actividades.filter(actividad => {
     const inicio = new Date(actividad.Fecha_Inicio);
     const fin = new Date(actividad.Fecha_Fin);
@@ -98,7 +98,12 @@ function marcarActividadesEnCalendario(actividades) {
     let rangoInicio = inicioDentroDelMes ? inicio.getDate() : 1; 
     let rangoFin = finDentroDelMes ? fin.getDate() : new Date(currentYear, currentMonth + 1, 0).getDate(); 
 
-    const colorActividad = colores[Math.floor(Math.random() * colores.length)];
+    if(!colorMap.has(actividad.Titulo_Actividad)){
+      const colorIndex = colorMap.size % colores.length;
+      colorMap.set(actividad.Titulo_Actividad, colores[colorIndex]);
+    }
+
+    const colorActividad = colorMap.get(actividad.Titulo_Actividad);
     actividad.color = colorActividad;
 
     for (let dia = rangoInicio; dia <= rangoFin; dia++) {
