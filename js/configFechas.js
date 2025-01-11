@@ -1,4 +1,5 @@
 /*CALENDARIO PARA PROGRAMAR ACTIVIDADES IMPORTANTES*/
+
 const monthYearElement = document.getElementById('monthYear');
 const datesElement = document.getElementById('dates');
 const prevBtn = document.getElementById('prevBtn');
@@ -9,6 +10,14 @@ let currentDate = new Date();
 let actividadesGlobales = [];
 const colores = ['#F38E39', '#F64382', '#06AECC'];
 const colorMap = new Map();
+
+document.addEventListener('DOMContentLoaded', async () => {
+  updateCalendar();
+
+  await obtenerActividades();
+
+  agregarClickActividades();
+});
 
 const updateCalendar = () => {
   const currentYear = currentDate.getFullYear();
@@ -45,6 +54,8 @@ const updateCalendar = () => {
   datesElement.innerHTML = datesHTML;
 
   marcarActividadesEnCalendario(actividadesGlobales);
+
+  agregarClickActividades();
 };
 
 prevBtn.addEventListener('click', () => {
@@ -154,7 +165,54 @@ function agregarHoverActividades() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  updateCalendar();
-  obtenerActividades();
-});
+function agregarClickActividades(){
+  const actividadElements = document.querySelectorAll('.date.actividad');
+
+  console.log('Elementos de actividades encontrados:', actividadElements.length);
+
+  actividadElements.forEach(element => {
+    element.addEventListener('click', (event) =>{
+      const titulo = event.target.dataset.titulo;
+      const fechaInicio = event.target.dataset.fechaInicio;
+      const fechaFin = event.target.dataset.fechaFin;
+
+      console.log('Se hizo clic en:', { titulo, fechaInicio, fechaFin });
+
+      mostrarAlertaActividad(titulo, fechaInicio, fechaFin);
+    });
+  });
+}
+
+function mostrarAlertaActividad(titulo, fechaInicio, fechaFin){
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+
+  modal.innerHTML = `
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Actividad: ${titulo}</h2>
+      <p><strong>Inicia:</strong> ${fechaInicio}</p>
+      <p><strong>Finaliza:</strong> ${fechaFin}</p>
+      <div class="modal-buttons">
+        <button class="edit-btn">Editar</button>
+        <button class="delete-btn">Eliminar</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  modal.querySelector('.close').addEventListener('click', () =>{
+    modal.remove();
+  });
+
+  modal.querySelector('.edit-btn').addEventListener('click', () =>{
+    alert(`Editar actividad: ${titulo}`);
+    modal.remove();
+  });
+
+  modal.querySelector('.delete-btn').addEventListener('click', () =>{
+    alert(`Eliminar actividad: ${titulo}`);
+    modal.remove();
+  });
+}
