@@ -97,7 +97,6 @@ Fecha_Fin date
 INSERT INTO tbActividad (Titulo_Actividad, Fecha_Inicio, Fecha_Fin) VALUES ('Introducción al Proyecto Técnico Científico', '2025-01-13', '2025-01-17');
 INSERT INTO tbActividad (Titulo_Actividad, Fecha_Inicio, Fecha_Fin) VALUES ('Conformación de equipos EXPO', '2025-01-21', '2025-01-22');
 INSERT INTO tbActividad (Titulo_Actividad, Fecha_Inicio, Fecha_Fin) VALUES ('Presentación de anteproyecto', '2025-01-31', '2025-02-07');
-
 SELECT * FROM tbActividad;
 
 create table tbCriterios(

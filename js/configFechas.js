@@ -183,6 +183,16 @@ function agregarClickActividades(){
   });
 }
 
+function formatearFechaISO(fecha) {
+  const partes = fecha.split('/');
+  return `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
+}
+
+function obtenerIdActividadPorTitulo(titulo) {
+  const actividad = actividadesGlobales.find(act => act.Titulo_Actividad === titulo);
+  return actividad ? actividad.Id_Actividad : null;
+}
+
 function mostrarAlertaActividad(titulo, fechaInicio, fechaFin){
   const modal = document.createElement('div');
   modal.className = 'modal';
@@ -194,8 +204,8 @@ function mostrarAlertaActividad(titulo, fechaInicio, fechaFin){
       <p><strong>Inicia:</strong> ${fechaInicio}</p>
       <p><strong>Finaliza:</strong> ${fechaFin}</p>
       <div class="modal-buttons">
-        <button class="edit-btn">Editar</button>
-        <button class="delete-btn">Eliminar</button>
+        <button class="edit-btn"><strong>Editar</strong></button>
+        <button class="delete-btn"><strong>Eliminar</strong></button>
       </div>
     </div>
   `;
@@ -207,12 +217,107 @@ function mostrarAlertaActividad(titulo, fechaInicio, fechaFin){
   });
 
   modal.querySelector('.edit-btn').addEventListener('click', () =>{
-    alert(`Editar actividad: ${titulo}`);
+    modal.innerHTML = `
+    <div class="modal-content2">
+    <span class="close2">&times;</span>
+    <h2>Editar actividad:</h2>
+    <p>Completa los campos solicitados.</p>
+    <form id="editar-form">
+    <label for="titulo" class="form-label">Título de la actividad:</label>
+    <input 
+      type="text" 
+      id="titulo" 
+      class="form-input" 
+      placeholder="Título de la actividad" 
+      value="${titulo}" 
+     />
+
+    <label class="form-label">Fechas estipuladas:</label>
+    <div class="date-picker-container">
+      <div>
+        <label for="fechaInicio" class="date-label">Inicio</label>
+        <input 
+          type="date" 
+          id="fechaInicio" 
+          class="date-input" 
+          value="${formatearFechaISO(fechaInicio)}" 
+        />
+      </div>
+      <div>
+        <label for="fechaFin" class="date-label">Fin</label>
+        <input 
+          type="date" 
+          id="fechaFin" 
+          class="date-input" 
+          value="${formatearFechaISO(fechaFin)}" 
+        />
+      </div>
+    </div>
+
+    <button type="submit" class="form-button">GUARDAR</button>
+    </form>
+    </div>
+  `;
+
+  modal.querySelector('.close2').addEventListener('click', () =>{
     modal.remove();
   });
 
-  modal.querySelector('.delete-btn').addEventListener('click', () =>{
-    alert(`Eliminar actividad: ${titulo}`);
-    modal.remove();
+  modal.querySelector('#editar-form').addEventListener('submit', async (e) =>{
+    e.preventDefault();
+
+    const nuevoTitulo = document.getElementById('titulo').value;
+    const nuevaFechaInicio = document.getElementById('fechaInicio').value;
+    const nuevaFechaFin = document.getElementById('fechaFin').value;
+
+    try{
+      const idActividad = obtenerIdActividadPorTitulo(titulo);
+      const response = await fetch(`${API_ACTIVIDADES_URL}/${idActividad}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          Titulo_Actividad: nuevoTitulo,
+          Fecha_Inicio: nuevaFechaInicio,
+          Fecha_Fin: nuevaFechaFin,
+        }),
+      });
+
+      if(response.ok){
+        const actividadActualizada = await response.json();
+
+        actividadesGlobales = actividadesGlobales.map(act => act.Id_Actividad === idActividad ? actividadActualizada : act);
+
+        await obtenerActividades(); 
+        updateCalendar();
+
+        alert('Actividad actualizada correctamente');
+        modal.remove();
+      }else{
+        console.error('Error al actualizar la actividad:', await response.json());
+      }
+    }catch(error){
+      console.error('Error al actualizar la actividad:', error);
+    }
+  });
+  });
+
+  modal.querySelector('.delete-btn').addEventListener('click', async () =>{
+    try{
+      const idActividad = obtenerIdActividadPorTitulo(titulo);
+
+      const response = await fetch(`${API_ACTIVIDADES_URL}/${idActividad}`, {method: 'DELETE'});
+      if(response.ok){
+        alert('Actividad eliminada correctamente');
+
+        actividadesGlobales = actividadesGlobales.filter(act => act.Titulo_Actividad !== titulo);
+        updateCalendar();
+
+        modal.remove();
+      }else{
+        console.error('Error al eliminar actividad:', await response.json());
+      }
+    }catch(error){
+      console.error('Error al eliminar actividad', error);
+    }
   });
 }

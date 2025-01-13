@@ -4,6 +4,8 @@ const app = express();
 const PORT = 5501;
 const cors = require('cors');
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('pages'));
 app.use(express.static('styles'));
@@ -84,6 +86,45 @@ app.get('/actividades', async(req, res) =>{
         res.status(500).send('Error del servidor');
     }finally{
         db.close();
+    }
+});
+
+app.delete('/actividades/:id', async (req, res) =>{
+    const db = new DBConnection();
+    console.log('Datos recibidos:', req.body);
+    const { id } = req.params;
+    try{
+        await db.query('DELETE FROM tbActividad WHERE Id_Actividad = ?', [id]);
+        res.status(200).json({message: 'Actividad eliminada correctamente'});
+    }catch (error){
+        res.status(500).json({message: 'Error al eliminar la actividad', error});
+    }
+});
+
+app.put('/actividades/:id', async (req, res) =>{
+    const db = new DBConnection();
+    const { id } = req.params;
+    const { Titulo_Actividad, Fecha_Inicio, Fecha_Fin} = req.body;
+
+    if (!Titulo_Actividad || !Fecha_Inicio || !Fecha_Fin) {
+        return res.status(400).json({ message: 'Faltan datos en la solicitud' });
+    }
+
+    try{
+        await db.query('UPDATE tbActividad SET Titulo_Actividad = ?, Fecha_Inicio = ?, Fecha_Fin = ? WHERE Id_Actividad = ?',
+        [Titulo_Actividad, Fecha_Inicio, Fecha_Fin, id]);
+
+        const actividadActualizada = {
+            Id_Actividad: id,
+            Titulo_Actividad,
+            Fecha_Inicio,
+            Fecha_Fin
+        };
+
+
+        res.status(200).json(actividadActualizada);
+    }catch(error){
+        res.status(500).json({message: 'Error al actualizar la actividad', error});
     }
 });
 
