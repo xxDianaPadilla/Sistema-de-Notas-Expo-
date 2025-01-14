@@ -321,3 +321,68 @@ function mostrarAlertaActividad(titulo, fechaInicio, fechaFin){
     }
   });
 }
+
+document.getElementById('btnNuevo').addEventListener('click', () =>{
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+
+  modal.innerHTML = `
+    <div class="modal-content2">
+      <span class="close2">&times;</span>
+      <h2>Agregar nueva actividad</h2>
+      <form id="nueva-actividad-form">
+        <label for="nuevoTitulo" class="form-label">Título de la actividad:</label>
+        <input 
+          type="text" 
+          id="nuevoTitulo" 
+          class="form-input" 
+          placeholder="Título de la actividad" 
+          required 
+        />
+        
+        <label class="form-label">Fechas estipuladas:</label>
+        <div class="date-picker-container">
+          <div>
+            <label for="nuevoFechaInicio" class="date-label">Inicio</label>
+            <input type="date" id="nuevoFechaInicio" class="date-input" required />
+          </div>
+          <div>
+            <label for="nuevoFechaFin" class="date-label">Fin</label>
+            <input type="date" id="nuevoFechaFin" class="date-input" required />
+          </div>
+        </div>
+        <button type="submit" class="form-button">GUARDAR</button>
+      </form>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  modal.querySelector('.close2').addEventListener('click', () => modal.remove());
+
+  modal.querySelector('#nueva-actividad-form').addEventListener('submit', async(e) =>{
+    e.preventDefault();
+    const titulo = document.getElementById('nuevoTitulo').value;
+    const fechaInicio = document.getElementById('nuevoFechaInicio').value;
+    const fechaFin = document.getElementById('nuevoFechaFin').value;
+
+    try{
+      const response = await fetch('http://localhost:5501/actividades', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({Titulo_Actividad: titulo, Fecha_Inicio: fechaInicio, Fecha_Fin: fechaFin}),
+      });
+
+      if(response.ok){
+        alert('Actividad agregada exitosamente');
+        await obtenerActividades();
+        updateCalendar();
+        modal.remove();
+      }else{
+        console.error('Error al agregar la actividad:', await response.json());
+      }
+    }catch(error){
+      console.error('Error al agregar la actividad', error);
+    }
+  });
+});

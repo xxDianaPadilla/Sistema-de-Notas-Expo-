@@ -74,7 +74,7 @@ main{
     align-items: flex-start; 
 }
 
-.btnNuevo{
+#btnNuevo{
     margin-top: 20px;
     padding-top: 5%;
     background-color: #1d1d1d;
@@ -89,7 +89,7 @@ main{
     transition: all 0.3s ease;
 }
 
-.btnNuevo:hover{
+#btnNuevo:hover{
     background-color: #3f3f3f;
 }
 

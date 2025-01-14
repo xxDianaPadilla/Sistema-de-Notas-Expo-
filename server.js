@@ -128,6 +128,27 @@ app.put('/actividades/:id', async (req, res) =>{
     }
 });
 
+app.post('/actividades', async (req, res) =>{
+    const db = new DBConnection();
+    const { Titulo_Actividad, Fecha_Inicio, Fecha_Fin } = req.body;
+
+    if (!Titulo_Actividad || !Fecha_Inicio || !Fecha_Fin) {
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+      }
+
+    try{
+        const query = `INSERT INTO tbActividad (Titulo_Actividad, Fecha_Inicio, Fecha_Fin) VALUES (?, ?, ?)`;
+
+        await db.query(query, [Titulo_Actividad, Fecha_Inicio, Fecha_Fin]);
+        res.status(201).json({message: 'Actividad agregada exitosamente'});
+    }catch(err){
+        console.error('Error al insertar actividad:', err.message);
+        res.status(500).send('Error del servidor');
+    }finally{
+        db.close();
+    }
+});
+
 app.listen(PORT, () =>{
     console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
