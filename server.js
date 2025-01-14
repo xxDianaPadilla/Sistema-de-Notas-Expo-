@@ -52,6 +52,7 @@ app.get('/etapas', async (req, res) => {
             SELECT 
                 id_etapa,
                 porcentaje_etapa,
+                fecha_inicio,
                 fecha_fin
             FROM 
                 tbEtapa
@@ -144,6 +145,27 @@ app.post('/actividades', async (req, res) =>{
     }catch(err){
         console.error('Error al insertar actividad:', err.message);
         res.status(500).send('Error del servidor');
+    }finally{
+        db.close();
+    }
+});
+
+app.put('/etapas/:id', async (req, res) =>{
+    const db = new DBConnection();
+    const { id } = req.params;
+    const { fecha_inicio, fecha_fin } = req.body;
+
+    if(!fecha_inicio || !fecha_fin){
+        return res.status(400).json({message: 'Faltan datos en la solicitud'});
+    }
+
+    try{
+        await db.query('UPDATE tbEtapa SET fecha_inicio = ?, fecha_fin = ? WHERE id_etapa = ?', [fecha_inicio, fecha_fin, id]);
+
+        res.status(200).json({message: 'Etapa actualizada correctamente'});
+    }catch(error){
+        console.error('Error al actualizar la etapa:', error.message);
+        res.status(500).json({message: 'Error del servidor'});
     }finally{
         db.close();
     }
