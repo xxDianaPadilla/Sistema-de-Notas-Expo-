@@ -123,9 +123,7 @@ main{
 }
 
 .estadoPTC h2 {
-    font-size: 105px;
     font-weight: bold;
-    margin-top: -12px;
 }
 
 .estadoPTC .icon {

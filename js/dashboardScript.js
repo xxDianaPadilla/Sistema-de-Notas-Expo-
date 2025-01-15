@@ -53,17 +53,63 @@ window.onload = updateGreeting;
 /*Cambiar color dependiendo el progreso*/
 const stageElement = document.querySelector('.stage');
 
-function updateStageColor() {
-    const percentage = parseInt(stageElement.textContent);
-
-    if (percentage < 50) {
-        stageElement.style.color = '#E00526';
-    } else if (percentage >= 50 && percentage < 75) {
-        stageElement.style.color = '#F7C100'; 
-    } else {
-        stageElement.style.color = '#4CAF50';
+function obtenerColor(etapa){
+    switch(etapa){
+        case 'Anteproyecto':
+            return 'gray';
+        case '30%':
+            return '#E00526';
+        case '50%':
+            return '#F7C100';
+        case '80%':
+            return 'purple';
+        case '100%':
+            return '#4CAF50';
+        default:
+            return 'white';
     }
 }
 
-// Llamar a la función para actualizar el color
-updateStageColor();
+async function actualizarEtapaActual(){
+    try{
+        const response = await fetch('http://localhost:5501/etapas');
+        const etapas = await response.json();
+
+        const fechaActual = new Date();
+
+        const etapaActual = etapas.find(etapa =>{
+            const fechaInicio = new Date(etapa.fecha_inicio);
+            const fechaFin = new Date(etapa.fecha_fin);
+            return fechaActual >= fechaInicio && fechaActual <= fechaFin;
+        });
+
+        if(etapaActual){
+            stageElement.textContent = etapaActual.porcentaje_etapa;
+
+            stageElement.style.color = obtenerColor(etapaActual.porcentaje_etapa);
+
+            if(etapaActual.porcentaje_etapa === 'Anteproyecto'){
+                stageElement.style.fontSize = '50px';
+                stageElement.style.marginTop = '20px';
+            }else{
+                stageElement.style.fontSize = '105px';
+                stageElement.style.marginTop = '-12px';
+            }
+        }else{
+            stageElement.textContent = 'Sin etapa actual';
+            stageElement.style.color = 'black';
+            stageElement.style.fontSize = '50px';
+            stageElement.style.marginTop = '20px';
+        }
+    }catch(error){
+        console.error('Error actualizando la etapa actual:', error);
+        stageElement.textContent = 'Error al cargar etapa';
+        stageElement.style.color = 'red';
+        stageElement.style.fontSize = '50px';
+        stageElement.style.marginTop = '20px';
+    }
+}
+
+actualizarEtapaActual();
+
+setInterval(actualizarEtapaActual, 60000);
