@@ -171,6 +171,34 @@ app.put('/etapas/:id', async (req, res) =>{
     }
 });
 
+app.get('/etapa-actual', async (req, res) =>{
+    const db = new DBConnection();
+    const fechaHoy = new Date().toISOString().split('T')[0];
+
+    try{
+        const query = `
+            SELECT 
+                id_etapa,
+                porcentaje_etapa
+            FROM 
+                tbEtapa
+            WHERE 
+                fecha_inicio <= ? AND fecha_fin >= ?
+        `;
+        const [etapaActual] = await db.query(query, [fechaHoy, fechaHoy]);
+        if(etapaActual){
+            res.json(etapaActual);
+        }else{
+            res.json({porcentaje_etapa: 'Sin etapa activa'});
+        }
+    }catch (err){
+        console.error('Error obteniendo la etapa actual:', err.message);
+        res.status(500).send('Error del servidor');
+    }finally{
+        db.close();
+    }
+});
+
 app.listen(PORT, () =>{
     console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
