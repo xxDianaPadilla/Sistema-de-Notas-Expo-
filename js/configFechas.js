@@ -366,6 +366,11 @@ document.getElementById('btnNuevo').addEventListener('click', () =>{
     const fechaInicio = document.getElementById('nuevoFechaInicio').value;
     const fechaFin = document.getElementById('nuevoFechaFin').value;
 
+    if(!fechaInicio || !fechaFin || !titulo){
+      alert('Por favor, completa todos los campos');
+      return;
+  }
+
     try{
       const response = await fetch('http://localhost:5501/actividades', {
         method: 'POST',
@@ -373,13 +378,16 @@ document.getElementById('btnNuevo').addEventListener('click', () =>{
         body: JSON.stringify({Titulo_Actividad: titulo, Fecha_Inicio: fechaInicio, Fecha_Fin: fechaFin}),
       });
 
+      const result = await response.json();
+
       if(response.ok){
         alert('Actividad agregada exitosamente');
         await obtenerActividades();
         updateCalendar();
         modal.remove();
       }else{
-        console.error('Error al agregar la actividad:', await response.json());
+        alert(result.message);
+        console.log(result.message);
       }
     }catch(error){
       console.error('Error al agregar la actividad', error);

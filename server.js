@@ -138,6 +138,33 @@ app.post('/actividades', async (req, res) =>{
       }
 
     try{
+
+        const checkQuery = `
+            SELECT Titulo_Actividad, Fecha_Inicio, Fecha_Fin
+            FROM tbActividad
+            WHERE (? BETWEEN Fecha_Inicio AND Fecha_Fin) 
+            OR (? BETWEEN Fecha_Inicio AND Fecha_Fin) 
+            OR (Fecha_Inicio BETWEEN ? AND ?) 
+            OR (Fecha_Fin BETWEEN ? AND ?)
+        `;
+
+        const conflicts = await db.query(checkQuery, [Fecha_Inicio, Fecha_Fin, Fecha_Inicio, Fecha_Fin, Fecha_Inicio, Fecha_Fin]);
+
+        if (conflicts.length > 0) {
+            let conflictMessages = conflicts.map(conflict => {
+                let conflictDate = "";
+                if (Fecha_Inicio >= conflict.Fecha_Inicio && Fecha_Inicio <= conflict.Fecha_Fin) {
+                    conflictDate = `Inicio: ${Fecha_Inicio}`;
+                }
+                if (Fecha_Fin >= conflict.Fecha_Inicio && Fecha_Fin <= conflict.Fecha_Fin) {
+                    conflictDate += (conflictDate ? " y " : "") + `Fin: ${Fecha_Fin}`;
+                }
+                return `Conflicto de fechas con "${conflict.Titulo_Actividad}".`;
+            });
+
+            return res.status(400).json({ message: conflictMessages.join(". ") });
+        }
+
         const query = `INSERT INTO tbActividad (Titulo_Actividad, Fecha_Inicio, Fecha_Fin) VALUES (?, ?, ?)`;
 
         await db.query(query, [Titulo_Actividad, Fecha_Inicio, Fecha_Fin]);
