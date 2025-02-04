@@ -282,10 +282,11 @@ function mostrarAlertaActividad(titulo, fechaInicio, fechaFin){
         }),
       });
 
-      if(response.ok){
-        const actividadActualizada = await response.json();
+      const result = await response.json();
 
-        actividadesGlobales = actividadesGlobales.map(act => act.Id_Actividad === idActividad ? actividadActualizada : act);
+      if(response.ok){
+
+        actividadesGlobales = actividadesGlobales.map(act => act.Id_Actividad === idActividad ? result : act);
 
         await obtenerActividades(); 
         updateCalendar();
@@ -293,6 +294,8 @@ function mostrarAlertaActividad(titulo, fechaInicio, fechaFin){
         alert('Actividad actualizada correctamente');
         modal.remove();
       }else{
+        alert(result.message);
+        console.log(result.message);
         console.error('Error al actualizar la actividad:', await response.json());
       }
     }catch(error){
