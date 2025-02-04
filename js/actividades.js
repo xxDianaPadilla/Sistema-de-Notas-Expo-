@@ -105,8 +105,13 @@ function mostrarFormularioModal(etapa){
             return;
         }
 
-        await actualizarEtapa(etapa.id_etapa, fechaInicio, fechaFin);
-        modal.remove();
+        const actualizado = await actualizarEtapa(etapa.id_etapa, fechaInicio, fechaFin);
+
+
+        if (actualizado) {
+            modal.remove(); 
+        }
+
         obtenerEtapas();
     });
 }
@@ -124,17 +129,20 @@ async function actualizarEtapa(id, fechaInicio, fechaFin){
             }),
         });
 
+        const result = await response.json();
+
         if(!response.ok){
-            const error = await response.json();
-            console.error('Error al actualizar la etapa:', error.message);
-            alert('Hubo un problema al actualizar la etapa');
-            return;
+            console.error('Error al actualizar la etapa:', result.message);
+            alert(result.message);
+            return false;
         }
 
         await obtenerEtapas();
         alert('Etapa actualizada correctamente.');
+        return true;
     }catch(error){
         console.error('Error en la solicitud:', error);
         alert('Hubo un problema con el servidor.');
+        return false;
     }
 }

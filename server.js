@@ -217,6 +217,37 @@ app.put('/etapas/:id', async (req, res) =>{
     }
 
     try{
+
+        const checkQuery = `
+            SELECT id_etapa, porcentaje_etapa, fecha_inicio, fecha_fin
+            FROM tbEtapa
+            WHERE 
+                id_etapa != ? AND
+                ((? BETWEEN fecha_inicio AND fecha_fin) 
+                OR (? BETWEEN fecha_inicio AND fecha_fin) 
+                OR (fecha_inicio BETWEEN ? AND ?) 
+                OR (fecha_fin BETWEEN ? AND ?))
+        `;
+
+        const conflicts = await db.query(checkQuery, [id, fecha_inicio, fecha_fin, fecha_inicio, fecha_fin, fecha_inicio, fecha_fin]);
+
+        let conflictMessages = [];
+
+        if (conflicts.length > 0) {
+            conflictMessages = conflicts.map(conflict => {
+                let conflictDate = "";
+                if (fecha_inicio >= conflict.fecha_inicio && fecha_inicio <= conflict.fecha_fin) {
+                    conflictDate = `Inicio: ${fecha_inicio}`;
+                }
+                if (fecha_fin >= conflict.fecha_inicio && fecha_fin <= conflict.fecha_fin) {
+                    conflictDate += (conflictDate ? " y " : "") + `Fin: ${fecha_fin}`;
+                }
+                return `Conflicto de fechas con la etapa del: ${conflict.porcentaje_etapa}.`;
+            });
+
+            return res.status(400).json({ message: conflictMessages.join(". ") });
+        }
+        
         await db.query('UPDATE tbEtapa SET fecha_inicio = ?, fecha_fin = ? WHERE id_etapa = ?', [fecha_inicio, fecha_fin, id]);
 
         res.status(200).json({message: 'Etapa actualizada correctamente'});
