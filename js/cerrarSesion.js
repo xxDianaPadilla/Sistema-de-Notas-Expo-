@@ -18,4 +18,15 @@ const cerrarSesionBtn = document.querySelector('.cerrar-sesion');
     customAlert.style.display = 'none';
 });
 
+function togglePassword(){
+    const passwordInput = document.getElementById('password');
+    const passwordIcon = document.getElementById('password-icon');
 
+    if(passwordInput.type == "password"){
+        passwordInput.type = "text";
+        passwordIcon.src = "/ver_contrasena.png";
+    }else{
+        passwordInput.type = "password";
+        passwordIcon.src = "/no_ver_contrasena.png";
+    }
+}

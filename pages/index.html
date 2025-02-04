@@ -53,11 +53,16 @@
             <p>Accede al sistema con tus credenciales.</p>
             <form>
                 <input type="text" placeholder="Usuario" required>
-                <input type="password" placeholder="Contraseña" required>
+                <div class="password-container">
+                    <input type="password" id="password" placeholder="Contraseña" required>
+                <span class="toggle-password" onclick="togglePassword()">
+                    <img id="password-icon" src="/no_ver_contrasena.png" alt="">
+                </span>
+                </div>
                 <button type="submit" class="login-btn">Acceder</button>
             </form>
         </div>
     </div>
+    <script src="/cerrarSesion.js"></script>
 </body>
-
 </html>
