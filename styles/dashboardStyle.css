@@ -123,9 +123,7 @@ main{
 }
 
 .estadoPTC h2 {
-    font-size: 105px;
     font-weight: bold;
-    margin-top: -12px;
 }
 
 .estadoPTC .icon {
@@ -264,6 +262,65 @@ main{
     background-color: #f2f2f2; 
     border-color: #1D1D1B; 
     color: #1D1D1B;
+}
+
+.connected-users{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 100%; 
+    padding-top: 35px;
+}
+
+.user-card{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #F2F2F2;
+    border-radius: 8px;
+    padding: 15px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    min-height: 50px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.user-info strong{
+    font-size: 14px;
+    color: #1D1D1B;
+}
+
+.user-info span{
+    font-size: 12px;
+    color: #5A5A5A;
+}
+
+.user-status{
+    position: relative;
+}
+
+.status-dot{
+    width: 16px;
+    height: 16px;
+    background-color: #4CAF50;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.status-dot:hover::after{
+    content: attr(title);
+    position: absolute;
+    top: -30px;
+    left: -70px;
+    background-color: #4CAF50;
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 

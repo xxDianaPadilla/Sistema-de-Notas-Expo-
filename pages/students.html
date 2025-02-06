@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPTC | Usuarios</title>
-    <link rel="icon" href="../img/logoRedondo.png" type="icon/png">
+    <link rel="icon" href="/logoRedondo.png" type="icon/png">
     <!--Estilo propio-->
-    <link rel="stylesheet" href="../styles/studentsStyle.css">
+    <link rel="stylesheet" href="/studentsStyle.css">
 
     <!--Estilo menú-->
-    <link rel="stylesheet" href="../styles/menu.css">
+    <link rel="stylesheet" href="/menu.css">
 </head>
 <body>
     <!--Menú lateral-->
     <aside class="menu-lateral">
         <div class="logo">
-            <img src="../img/logoRedondo.png" alt="Logo Salesianos Ricaldone">
+            <img src="/logoRedondo.png" alt="Logo Salesianos Ricaldone">
             <br>
             <h2>
                 <span class="logoSalesianos">Salesianos</span>
@@ -24,13 +24,20 @@
         </div>
         <nav>
             <ul>
-                <li><a href="../pages/dashboard.html" class="inicio"><img src="../img/homeIcon.svg" alt="home"> Inicio</a></li>
-                <li><a href="../pages/users.html" class="users"><img src="../img/usersIcon.svg" alt="users"> Usuarios</a></li>
-                <li><a href="../pages/projects.html" class="projects"><img src="../img/projectsIcon.svg" alt="projects"> Proyectos</a></li>
-                <li><a href="../pages/evaluation.html" class="evaluaciones"><img src="../img/evaluacionesIcon.svg" alt="evaluaciones"> Evaluaciones</a></li>
+                <li><a href="/dashboard.html" class="inicio"><img src="/homeIcon.svg" alt="home"> Inicio</a></li>
+                <li><a href="/users.html" class="users"><img src="/usersIcon.svg" alt="users"> Usuarios</a></li>
+                <li><a href="/projects.html" class="projects"><img src="/projectsIcon.svg" alt="projects"> Proyectos</a></li>
+                <li><a href="/evaluation.html" class="evaluaciones"><img src="/evaluacionesIcon.svg" alt="evaluaciones"> Evaluaciones</a></li>
             </ul>
         </nav>
-        <button class="cerrar-sesion"><img src="../img/logout.svg" alt="home"> Cerrar Sesión</button>
+        <div class="barra-progreso">
+            <h3>Progreso Expo</h3>
+            <div class="barra">
+                <div class="progreso" id="progreso"></div>
+            </div>
+            <span id="porcentaje"></span>
+        </div>
+        <button class="cerrar-sesion"><img src="/logout.svg" alt="home"> Cerrar Sesión</button>
     </aside>
 
     <!--Alerta para cerrar sesión-->
@@ -56,7 +63,7 @@
         <div id="roles">
             <p class="role">Bachillerato</p>
             <p class="role">Tercer ciclo</p>
-            <button id="newUser">agregar alumno<img src="../img/mas.png" width="16px"></button>
+            <button id="newUser">agregar alumno<img src="/mas.png" width="16px"></button>
         </div>
         
         <div id="modalContainer" class="hidden"></div>
@@ -66,7 +73,8 @@
         </div>
     </main>
 
-    <script src="../js/studentsScript.js"></script>
-    <script src="../js/cerrarSesion.js"></script>
+    <script src="/studentsScript.js"></script>
+    <script src="/cerrarSesion.js"></script>
+    <script src="/menu.js"></script>
 </body>
 </html>

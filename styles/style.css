@@ -376,6 +376,35 @@ input::placeholder{
     font-weight: bold;
 }
 
+.password-container{
+    position: relative;
+    width: 70%;
+}
+
+.password-container input{
+    width: 73.5%;
+    padding: 0.8rem;
+    border: 1px solid #000;
+    border-radius: 20px;
+    background-color: #fdfdfd;
+    color: #000;
+    padding-right: 50px;
+}
+
+.toggle-password{
+    position: absolute;
+    top: 52%;
+    right: 15px;
+    transform: translateY(-40%);
+    cursor: pointer;
+}
+
+.toggle-password img{
+    width: 25px;
+    height: 25px;
+    transition: opacity 0.3s ease;
+}
+
 .login-btn{
     background-color: #f7b731;
     color: #000;
