@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPTC | Proyectos</title>
+    <link rel="icon" href="../img/logoRedondo.png" type="icon/png">
+    <!--Estilo propio-->
+    <link rel="stylesheet" href="../styles/projectsStyle.css">
+
+    <!--Estilo menú-->
+    <link rel="stylesheet" href="../styles/menu.css">
+
+    <!--Estilo de activeProjects-->
+    <link rel="stylesheet" href="../styles/activeStyle.css">
+
+    
+    
+</head>
+<body>
+    <!--Menú lateral-->
+    <aside class="menu-lateral">
+        <div class="logo">
+            <img src="../img/logoRedondo.png" alt="Logo Salesianos Ricaldone">
+            <br>
+            <h2>
+                <span class="logoSalesianos">Salesianos</span>
+                <span class="logoRical">Ricaldone</span>
+            </h2>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="../pages/dashboard.html" class="inicio"><img src="../img/homeIcon.svg" alt="home">
+                        Inicio</a></li>
+                <li><a href="../pages/users.html" class="users"><img src="../img/usersIcon.svg" alt="users">
+                        Usuarios</a></li>
+                <li><a href="../pages/projects.html" class="projects"><img src="../img/projectsIcon.svg" alt="projects">
+                        Proyectos</a></li>
+                <li><a href="../pages/evaluation.html" class="evaluaciones"><img src="../img/evaluacionesIcon.svg"
+                            alt="evaluaciones"> Evaluaciones</a></li>
+            </ul>
+        </nav>
+        <button class="cerrar-sesion"><img src="../img/logout.svg" alt="home"> Cerrar Sesión</button>
+    </aside>
+
+    <!--Alerta para cerrar sesión-->
+    <div class="alert" id="alert">
+        <div class="alert-box">
+            <p>¿Estás seguro de que quieres cerrar sesión?</p>
+            <div class="alert-buttons">
+                <button id="btnConfirmar">Sí</button>
+                <button id="btnCancelar">No</button>
+            </div>
+        </div>
+    </div>
+
+      <!--Protocolo Rueditas de Bici-->
+        <div class="content">
+            <h1>Proyectos Activos</h1>
+            <div class="search-filter">
+                <input type="text" placeholder="Buscar...">
+                <span class="filter-icon">&#x1F50D;</span>
+            </div>
+            <table class="project-table">
+                <thead>
+                    <tr>
+                        <th>Nombre del Proyecto</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>La numeración maya</td>
+                        <td class="status"><span class="dot"></span> Activo</td>
+                        <td><button class="btn">Editar</button></td>
+                    </tr>
+                    <tr>
+                        <td>Simulador de Frecuencias</td>
+                        <td class="status"><span class="dot"></span> Activo</td>
+                        <td><button class="btn">Editar</button></td>
+                    </tr>
+                    <tr>
+                        <td>Ambilight</td>
+                        <td class="status"><span class="dot"></span> Activo</td>
+                        <td><button class="btn">Editar</button></td>
+                    </tr>
+                    <tr>
+                        <td>Cinematografía</td>
+                        <td class="status"><span class="dot"></span> Activo</td>
+                        <td><button class="btn">Editar</button></td>
+                    </tr>
+                    <tr>
+                        <td>Emprendimiento con el Cacao</td>
+                        <td class="status"><span class="dot"></span> Activo</td>
+                        <td><button class="btn">Editar</button></td>
+                    </tr>
+                    <tr>
+                        <td>El brazo robótico</td>
+                        <td class="status"><span class="dot"></span> Activo</td>
+                        <td><button class="btn">Editar</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+  
+</body>
+</html>

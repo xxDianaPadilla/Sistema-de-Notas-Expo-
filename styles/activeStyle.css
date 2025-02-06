@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1e1e1e;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    background-color: #2a2a2a;
+    width: 80%;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 20%;
+    background-color: #1a1a1a;
+    padding: 20px;
+}
+
+.sidebar img {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar ul li {
+    margin: 15px 0;
+}
+
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.sidebar ul li a:hover {
+    background-color: #333;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    margin-left: 10px; /* Añadido margen para separar del menú lateral */
+}
+
+.content h1 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+}
+
+.project-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #292929;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.project-table th, .project-table td {
+    text-align: left;
+    padding: 10px;
+}
+
+.project-table th {
+    background-color: #333;
+}
+
+.project-table tbody tr:nth-child(even) {
+    background-color: #3a3a3a;
+}
+
+.project-table tbody tr:hover {
+    background-color: #444;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status .dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background-color: #00ff00;
+}
+
+.btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.search-filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-filter input {
+    padding: 10px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background-color: #1e1e1e;
+    color: #fff;
+}
+
+.filter-icon {
+    cursor: pointer;
+}
+

@@ -11,6 +11,10 @@
 
     <!--Estilo menú-->
     <link rel="stylesheet" href="../styles/menu.css">
+
+
+    <!--Estilo de MenuProjects-->
+    <link rel="stylesheet" href="../styles/ProjStyle.css">
 </head>
 
 <body>
@@ -26,10 +30,14 @@
         </div>
         <nav>
             <ul>
-                <li><a href="../pages/dashboard.html" class="inicio"><img src="../img/homeIcon.svg" alt="home"> Inicio</a></li>
-                <li><a href="../pages/users.html" class="users"><img src="../img/usersIcon.svg" alt="users"> Usuarios</a></li>
-                <li><a href="../pages/projects.html" class="projects"><img src="../img/projectsIcon.svg" alt="projects"> Proyectos</a></li>
-                <li><a href="../pages/evaluation.html" class="evaluaciones"><img src="../img/evaluacionesIcon.svg" alt="evaluaciones"> Evaluaciones</a></li>
+                <li><a href="../pages/dashboard.html" class="inicio"><img src="../img/homeIcon.svg" alt="home">
+                        Inicio</a></li>
+                <li><a href="../pages/users.html" class="users"><img src="../img/usersIcon.svg" alt="users">
+                        Usuarios</a></li>
+                <li><a href="../pages/projects.html" class="projects"><img src="../img/projectsIcon.svg" alt="projects">
+                        Proyectos</a></li>
+                <li><a href="../pages/evaluation.html" class="evaluaciones"><img src="../img/evaluacionesIcon.svg"
+                            alt="evaluaciones"> Evaluaciones</a></li>
             </ul>
         </nav>
         <button class="cerrar-sesion"><img src="../img/logout.svg" alt="home"> Cerrar Sesión</button>
@@ -45,7 +53,28 @@
             </div>
         </div>
     </div>
-    
+
+    <!--Código Da Vinci-->
+    <div class="MenuOProyecto">
+        <button class="btnCrearProj"><a href="CreateProj.html">Crear Proyecto</a></button>
+
+
+        <div class="CajitaActivos">
+            <div class="Caja">
+                <div id="titulo">
+                    <h3>Proyectos Activos</h3>
+                </div>
+                <div id="sub-texto">
+                    <h4>Se han dectatdo # de proyectos</h4>
+                </div>
+                <div id="verMas">
+                    <button><a href="activeProjects.html">Ver más</a></button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
     <script src="../js/cerrarSesion.js"></script>
 </body>
 

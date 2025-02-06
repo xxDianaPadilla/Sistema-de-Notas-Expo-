@@ -1,0 +1,113 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+.contenedor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.fromContenedor {
+    background-color: #e4e4e4;
+    padding: 50px;
+    border-radius: 10px;
+    width: 400px;
+
+}
+
+h2 {
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #b0b0b0;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #3a3a3a;
+    color: #ffffff;
+}
+
+.dropdown-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.dropdown {
+    flex: 1;
+}
+
+.students-list {
+    background-color: #3a3a3a;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.students-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.students-list li {
+    margin: 5px 0;
+    color: #ffffff;
+}
+
+.add-student-btn {
+    background-color: transparent;
+    color: #00aaff;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: left;
+    padding: 5px 0;
+}
+
+.switch-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.update-btn {
+    background-color: #00aaff;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background-color: #ff4c4c;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+} 
