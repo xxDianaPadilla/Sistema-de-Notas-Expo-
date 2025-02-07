@@ -15,6 +15,7 @@ html {
     font-family: 'Poppins', sans-serif;
     color: #1D1D1B;
     overflow: hidden;
+    background-color: #E0E0E0;
 }
 
 .projects {
@@ -29,5 +30,3 @@ html {
     width: 100%;
     box-sizing: border-box;
 }
-
-

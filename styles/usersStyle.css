@@ -33,7 +33,7 @@
 body {
     display: flex;
     flex-wrap: wrap;
-    background-color: #f2f2f2;
+    background-color: #E0E0E0;
     width: 100vw;
 }
 
@@ -67,7 +67,7 @@ body {
 }
 
 .tipoCat1 {
-    background-color: #f2f2f2;
+    background-color: #E0E0E0;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
@@ -261,8 +261,6 @@ input {
 }
 
 /*FORMULARIO DONDE SE VE LA INFORMACION*/
-
-#formInfoSelected {}
 
 #formInfoSelected p {
     color: #000;
