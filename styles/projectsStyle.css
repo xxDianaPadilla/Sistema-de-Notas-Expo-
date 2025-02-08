@@ -5,6 +5,7 @@
 * {
     margin: 0;
     padding: 0;
+    font-family: 'Poppins', sans-serif;
 }
 
 body,
@@ -29,4 +30,105 @@ html {
     font-weight: 700;
     width: 100%;
     box-sizing: border-box;
+}
+
+main{
+    margin-left: 230px;
+    padding: 40px;
+    /* Esto hace que no exceda la altura visible de la ventana */
+    max-height: 100vh;
+    /* Esto activa el scroll vertical :) */ 
+    overflow-y: auto;
+    /* Esto evita el scroll horizontal :)*/ 
+    overflow-x: hidden; 
+    /* Esto asegura que el padding no expanda el tamaño del contenedor */
+    box-sizing: border-box;
+}
+
+.container{
+    width: 95%;
+    margin: -20px auto;
+    background: #E0E0E0;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.tabs{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.tab{
+    background: none;
+    border: none;
+    font-size: 18px;
+    padding: -10px;
+    cursor: pointer;
+}
+
+.tab.active{
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.add-button{
+    background: #CA8708;
+    border: none;
+    font-size: 18px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.add-button img{
+    width: 25px;
+    height: 25px;
+    margin-bottom: -6px;
+}
+
+.proyecto{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #ffffff;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.proyecto button{
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+#btn-editar{
+    background-color: #06AECC;
+    color: #ffffff;
+    width: 160px;
+    height: 30px;
+    border-radius: 5px;
+}
+
+#btn-editar img{
+    width: 15px;
+    height: 15px;
+    margin-bottom: -1px;
+}
+
+#btn-link{
+    background-color: #F64382;
+    color: #ffffff;
+    width: 160px;
+    height: 30px;
+    border-radius: 5px;
+}
+
+#btn-link img{
+    width: 20px;
+    height: 20px;
+    margin-bottom: -5px;
 }
