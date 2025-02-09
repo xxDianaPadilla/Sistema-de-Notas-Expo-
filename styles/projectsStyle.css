@@ -53,6 +53,99 @@ main{
     border-radius: 10px;
 }
 
+.container-2{
+    background-color: #ffffff;
+    margin: -20px auto;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+h2{
+    margin-bottom: 5px;
+}
+
+.search-filter{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+#buscar{
+    width: 30%;
+    height: 30%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 2px solid #444;
+}
+
+#filtrarBtn{
+    color: #000000;
+    background-color: #ffffff;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+#filtrarBtn img{
+    width: 20px;
+    height: 20px;
+    margin-bottom: -5px;
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+thead{
+    background-color: #ffffff;
+    color: #000000;
+}
+
+th, td{
+    padding: 10px;
+    text-align: left;
+    width: auto;
+}
+
+th:nth-child(1), td:nth-child(1) {
+    width: 50%; 
+}
+
+th:nth-child(2), td:nth-child(2) {
+    width: 30%; 
+}
+
+th:nth-child(3), td:nth-child(3) {
+    width: 40%; 
+}
+
+tr{
+    border-bottom: 1px solid #444;
+}
+
+.estado{
+    display: flex;
+    align-items: center;
+}
+
+.estado .circulo{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.verde{
+    background-color: green;
+}
+
+.rojo{
+    background-color: red;
+}
+
 .tabs{
     display: flex;
     justify-content: space-between;
@@ -99,18 +192,14 @@ main{
     border-radius: 5px;
 }
 
-.proyecto button{
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
 #btn-editar{
     background-color: #06AECC;
     color: #ffffff;
     width: 160px;
     height: 30px;
     border-radius: 5px;
+    border: none;
+    cursor: pointer;
 }
 
 #btn-editar img{
@@ -125,6 +214,8 @@ main{
     width: 160px;
     height: 30px;
     border-radius: 5px;
+    border: none;
+    cursor: pointer;
 }
 
 #btn-link img{

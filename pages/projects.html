@@ -64,7 +64,27 @@
                 <button class="tab" data-tab="bachillerato">Bachillerato</button>
                 <button class="add-button"><img src="/Add box.png" alt=""> Agregar proyecto</button>
             </div>
-            <div id="proyectos-container"></div>
+            <br>
+            <div class="container-2">
+                <h2>Proyectos Activos</h2>
+                <p>Se han detectado <span id="totalProyectos"></span> proyectos</p>
+                <br>
+                <div class="search-filter">
+                    <input type=" text" id="buscar" placeholder="Buscar..." onkeyup="filtrarProyectos()">
+                    <button id="filtrarBtn">Filtrar por <img src="/filtrar.png" alt="Filtro"></button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre del Proyecto</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="proyectos-container"></tbody>
+                </table>
+                <!--<div id="proyectos-container"></div> -->
+            </div>
         </div>
     </main>
 
