@@ -57,12 +57,45 @@
         </div>
     </div>
 
+    <div id="projectFormModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Nuevo Proyecto</h2>
+            <form id="projectForm">
+                <label>Nombre del proyecto</label>
+                <input type="text" id="projectName" required>
+                <label>Nivel</label>
+                <select id="projectLevel">
+                    <option value="1">Pendiente</option>
+                </select>
+                <label class="labels">Sección/Grupo</label>
+                <select id="projectSection">
+                    <option value="A">Pendiente</option>
+                </select>
+                <label class="labels">ID del Proyecto</label>
+                <input type="text" id="projectID" readonly>
+                <label>Estudiantes</label>
+                <div id="studentList"></div>
+                <button type="button" id="addStudentBtn">Agregar Estudiante</button>
+                <label>Estado</label>
+                <label class="switch">
+                    <input type="checkbox" id="projectStatus">
+                    <span class="slider"></span>
+                </label>
+                <div class="form-buttons">
+                    <button type="submit" class="insert-btn">Crear Proyecto</button>&nbsp;
+                    <button type="button" id="cancelBtn" class="cancel-btn">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <main>
         <div class="container">
             <div class="tabs">
                 <button class="tab active" data-tab="tercerCiclo">Tercer Ciclo</button>
                 <button class="tab" data-tab="bachillerato">Bachillerato</button>
-                <button class="add-button"><img src="/Add box.png" alt=""> Agregar proyecto</button>
+                <button id="add-button"><img src="/Add box.png" alt=""> Agregar proyecto</button>
             </div>
             <br>
             <div class="container-2">

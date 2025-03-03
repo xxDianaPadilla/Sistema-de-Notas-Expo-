@@ -168,7 +168,7 @@ tr{
     text-decoration: underline;
 }
 
-.add-button{
+#add-button{
     background: #CA8708;
     border: none;
     font-size: 18px;
@@ -178,7 +178,7 @@ tr{
     color: #ffffff;
 }
 
-.add-button img{
+#add-button img{
     width: 25px;
     height: 25px;
     margin-bottom: -6px;
@@ -254,4 +254,163 @@ tr{
 
 .filtro-opcion:hover{
     background: #aaa;
+}
+
+.modal{
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content{
+    background-color: #1c1c1c;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+    color: #ffffff;
+    margin-top: 80px;
+    margin-right: 300px;
+}
+
+.close-btn{
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.switch{
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    cursor: pointer;
+}
+
+.slider{
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #4caf50;
+    transition: .4s;
+    border-radius: 40px;
+}
+
+.slider::before{
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #ffffff;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider{
+    background-color: #4caf50;
+}
+
+input:checked + .slider::before{
+    transform: translateX(14px);
+}
+
+.form-buttons{
+    display: flex;
+    margin-top: 20px;
+}
+
+.insert-btn{
+    background-color: #06AECCDB;
+    padding: 10px;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.cancel-btn{
+    background-color: #F38E39;
+    padding: 10px;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+#projectName{
+    width: 96%;
+    padding: 10px;
+    height: 20px;
+    background-color: #1D1D1B;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    color: #ffffff;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+#projectLevel{
+    width: 19%;
+    padding: 10px;
+    height: 40px;
+    background-color: #1D1D1B;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    color: #ffffff;
+}
+
+#projectSection{
+    width: 19%;
+    padding: 10px;
+    height: 40px;
+    background-color: #1D1D1B;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    color: #ffffff;
+}
+
+#projectID{
+    width: 19%;
+    padding: 10px;
+    height: 20px;
+    background-color: #1D1D1B;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+#studentList{
+    width: 96%;
+    padding: 10px;
+    height: 100px;
+    background-color: #1D1D1B;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    color: #ffffff;
+    margin-top: 10px;
+}
+
+#addStudentBtn{
+    width: 30%;
+    height: 50px;
+    background-color: #1D1D1B;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    color: #ffffff;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+#addStudentBtn:hover{
+    background-color: #D9D9D926;
 }

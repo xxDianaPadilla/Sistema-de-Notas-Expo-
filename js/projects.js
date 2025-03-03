@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', () =>{
     const tabs = document.querySelectorAll('.tab');
     const filtrarBtn = document.getElementById('filtrarBtn');
     const filtroMenu = document.getElementById('filtro-menu');
+    const addProjectBtn = document.getElementById('add-button');
+    const modal = document.getElementById('projectFormModal');
+    const closeBtn = document.querySelector('.close-btn');
+    const cancelBtn = document.getElementById('cancelBtn');
 
     let proyectosData = {tercerCiclo: [], bachillerato: []};
     let tipoActual = 'tercerCiclo';
@@ -107,4 +111,24 @@ document.addEventListener('DOMContentLoaded', () =>{
 
     cargarProyectos('tercerCiclo');
     actualizarFiltroMenu();
+
+    if (addProjectBtn && modal) {
+        addProjectBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
 });
