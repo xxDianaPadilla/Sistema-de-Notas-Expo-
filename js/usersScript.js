@@ -5,7 +5,7 @@ const modalContainer = document.getElementById("modalContainer");
 // Abrir el formulario para elegir rol
 openFormBtn.addEventListener("click", () => {
     // Cargar el archivo HTML del formulario para elegir rol
-    fetch("../pages/formsUsers/formChooseRol.html")
+    fetch("/formsUsers/formChooseRol.html")
         .then((response) => {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -42,22 +42,22 @@ function initializeRoleSelectionListeners() {
     // Listener para cada botón de rol
     if (btnAdmin) {
         btnAdmin.addEventListener("click", () => {
-            loadForm("../pages/formsUsers/formAddAdmin.html");
+            loadForm("/formsUsers/formAddAdmin.html");
         });
     }
     if (btnEstud) {
         btnEstud.addEventListener("click", () => {
-            loadForm("../pages/formsUsers/formAddEstud.html");
+            loadForm("/formsUsers/formAddEstud.html");
         });
     }
     if (btnDocen) {
         btnDocen.addEventListener("click", () => {
-            loadForm("../pages/formsUsers/formAddDocen.html");
+            loadForm("/formsUsers/formAddDocen.html");
         });
     }
     if (btnEvalu) {
         btnEvalu.addEventListener("click", () => {
-            loadForm("../pages/formsUsers/formAddEvalu.html");
+            loadForm("/formsUsers/formAddEvalu.html");
         });
     }
 }

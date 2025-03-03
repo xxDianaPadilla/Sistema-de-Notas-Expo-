@@ -11,7 +11,7 @@ app.use(express.static('pages'));
 app.use(express.static('styles'));
 app.use(express.static('img'));
 app.use(express.static('js'));
-app.use(express.static('pages/formsUsers'));
+app.use('/formsUsers', express.static('pages/formsUsers'));
 
 app.get('/index', (req, res) => {
     res.sendFile(__dirname + '/pages/index.html');
@@ -285,6 +285,38 @@ app.get('/etapa-actual', async (req, res) =>{
     }finally{
         db.close();
     }
+});
+
+app.get('/proyectos', (req, res) =>{
+    const db = new DBConnection();
+    const query = `
+        SELECT 
+            tbProyectos.id_nivel AS Id_Nivel,  
+            tbProyectos.nombre_Proyecto AS Nombre_Proyecto,
+            tbProyectos.link_google_sites AS Google_Sites,
+            tbEstadoProyectos.tipo_estado AS Estado
+        FROM
+            tbProyectos
+        INNER JOIN
+            tbEstadoProyectos
+        ON
+            tbProyectos.id_estado = tbEstadoProyectos.id_estado
+    `;
+
+    db.query(query, (err, results) =>{
+        if(err){
+            console.error('Error ejecutando la consulta: ', err);
+            res.status(500).json({error: 'Error obteniemdo los proyectos'});
+            return;
+        }
+
+        const proyectos = {
+            tercerCiclo: results.filter(p => p.Id_Nivel && p.Id_Nivel >= 1 && p.Id_Nivel <= 3),
+            bachillerato: results.filter(p => p.Id_Nivel && p.Id_Nivel >= 4 && p.Id_Nivel <= 6)
+        };
+
+        res.json(proyectos);
+    });
 });
 
 app.listen(PORT, () =>{
