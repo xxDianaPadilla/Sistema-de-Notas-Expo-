@@ -50,26 +50,63 @@ ORDER BY
 
 create table tbNivel(
 Id_Nivel int primary key,
-Nombre_Nivel Text 
+Nombre_Nivel Text,
+letra_nivel text null
 );
+
+INSERT INTO tbNivel (Id_Nivel, Nombre_Nivel, letra_nivel) VALUES (1, 'Séptimo', 'A');
+INSERT INTO tbNivel (Id_Nivel, Nombre_Nivel, letra_nivel) VALUES (2, 'Octavo', 'B');
+INSERT INTO tbNivel (Id_Nivel, Nombre_Nivel, letra_nivel) VALUES (3, 'Noveno', 'C');
+INSERT INTO tbNivel (Id_Nivel, Nombre_Nivel, letra_nivel) VALUES (4, '1° Bachillerato', '1');
+INSERT INTO tbNivel (Id_Nivel, Nombre_Nivel, letra_nivel) VALUES (5, '2° Bachillerato', '2');
+INSERT INTO tbNivel (Id_Nivel, Nombre_Nivel, letra_nivel) VALUES (6, '3° Bachillerato', '3');
+
+SELECT * FROM tbNivel;
 
 create table tbSeccionGrupo(
 Id_SeccionGrupo Int primary key,
 Nombre_SeccionGrupo Text
 );
 
+INSERT INTO tbSeccionGrupo (Id_SeccionGrupo, Nombre_SeccionGrupo) VALUES (1, 'A');
+INSERT INTO tbSeccionGrupo (Id_SeccionGrupo, Nombre_SeccionGrupo) VALUES (2, 'B');
+INSERT INTO tbSeccionGrupo (Id_SeccionGrupo, Nombre_SeccionGrupo) VALUES (3, 'C');
+INSERT INTO tbSeccionGrupo (Id_SeccionGrupo, Nombre_SeccionGrupo) VALUES (4, 'D');
+INSERT INTO tbSeccionGrupo (Id_SeccionGrupo, Nombre_SeccionGrupo) VALUES (5, 'E');
+INSERT INTO tbSeccionGrupo (Id_SeccionGrupo, Nombre_SeccionGrupo) VALUES (6, 'F');
+INSERT INTO tbSeccionGrupo (Id_SeccionGrupo, Nombre_SeccionGrupo) VALUES (7, '1A');
+INSERT INTO tbSeccionGrupo (Id_SeccionGrupo, Nombre_SeccionGrupo) VALUES (8, '1B');
+INSERT INTO tbSeccionGrupo (Id_SeccionGrupo, Nombre_SeccionGrupo) VALUES (9, '2A');
+INSERT INTO tbSeccionGrupo (Id_SeccionGrupo, Nombre_SeccionGrupo) VALUES (10, '2B');
+
+SELECT * FROM tbSeccionGrupo;
+
 create table tbEspecialidad(
 Id_Especialidad int primary key,
-Nombre_Especialidad text
+Nombre_Especialidad text, 
+letra_especialidad text
 );
 
+INSERT INTO tbEspecialidad (Id_Especialidad, Nombre_Especialidad, letra_especialidad) VALUES (1, 'Arquitectura', 'B');
+INSERT INTO tbEspecialidad (Id_Especialidad, Nombre_Especialidad, letra_especialidad) VALUES (2, 'Mantenimiento Automotriz', 'G');
+INSERT INTO tbEspecialidad (Id_Especialidad, Nombre_Especialidad, letra_especialidad) VALUES (3, 'Diseño Gráfico', 'D');
+INSERT INTO tbEspecialidad (Id_Especialidad, Nombre_Especialidad, letra_especialidad) VALUES (4, 'Electrónica', 'E');
+INSERT INTO tbEspecialidad (Id_Especialidad, Nombre_Especialidad, letra_especialidad) VALUES (5, 'Administrativo Contable', 'A');
+INSERT INTO tbEspecialidad (Id_Especialidad, Nombre_Especialidad, letra_especialidad) VALUES (6, 'Desarrollo de Software', 'C');
+INSERT INTO tbEspecialidad (Id_Especialidad, Nombre_Especialidad, letra_especialidad) VALUES (7, 'Electromecánica', 'F');
+INSERT INTO tbEspecialidad (Id_Especialidad, Nombre_Especialidad, letra_especialidad) VALUES (8, 'Sistemas Eléctricos con Especialización en Energías Renovables y Eficiencia Energética', 'H');
+
+SELECT * FROM tbEspecialidad;
+
 create table tbEstudiantes(
-Codigo_Carnet Int primary key,
+id_Estudiante int auto_increment primary key,
+Codigo_Carnet Int,
 nombre_Estudiante Text,
 apellido_Estudiante text,
 Id_Nivel int,
 Id_SeccionGrupo int,
 Id_Especialidad int null,
+id_Proyecto varchar(7) null,
 
 foreign key(Id_Nivel)
 references tbNivel(Id_Nivel)
@@ -84,8 +121,32 @@ on delete cascade,
 Foreign key(Id_Especialidad)
 references tbEspecialidad(Id_Especialidad)
 on update cascade 
+on delete cascade,
+
+Foreign key(id_Proyecto)
+references tbProyectos(id_Proyecto)
+on update cascade 
 on delete cascade
 );
+
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, id_Proyecto) VALUES (20200001, 'Walter Samuel', 'Castellanos Sunley', 3, 1, 'CA01-25');
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, id_Proyecto) VALUES (20200002, 'Daniel José', 'Quijano Espino', 3, 1, 'CA01-25');
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, id_Proyecto) VALUES (20200003, 'Lucia Alejandra', 'Salinas Morales', 3, 1, 'CA01-25');
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, id_Proyecto) VALUES (20200004, 'Aimee Vanessa', 'Osorio Canales', 3, 1, 'CA01-25');
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad, id_Proyecto) VALUES (20200005, 'Diana Gabriela', 'Padilla Fuentes', 4, 7, 6, 'C101-25');
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad, id_Proyecto) VALUES (20200006, 'Amaris Lourdes', 'Osorio Canales', 4, 7, 6, 'C101-25');
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad, id_Proyecto) VALUES (20200007, 'Daniel Isaac', 'Granados Cañas', 4, 7, 6, 'C101-25');
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, id_Proyecto) VALUES (20200008, 'José Luis', 'Iraheta Marroquín', 3, 4, 'CD01-25');
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, id_Proyecto) VALUES (20200009, 'Edenilson Alexander', 'Amaya Benítez', 3, 4, 'CD01-25');
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, id_Proyecto) VALUES (20200010, 'Adriel Levi', 'Moreno Solano', 3, 4, 'CD01-25');
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad, id_Proyecto) VALUES (202000011, 'Ana Sofía', 'Mendoza Torres', 6, 7, 3, 'D301-25');
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad, id_Proyecto) VALUES (202000012, 'Juan Pablo', 'Rodríguez López', 6, 7, 3, 'D301-25');
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, id_Proyecto) VALUES (20200013, 'María Fernanda', 'Pérez Gómez', 2, 1, 'BA01-25');
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, id_Proyecto) VALUES (20200014, 'Carlos Andrés', 'Sánchez Díaz', 2, 1, 'BA01-25');
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad) VALUES (20200015, 'Sofía Isabel', 'Martínez Ruiz', 3, 7, 6);
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad) VALUES (20200016, 'Luis Fernando', 'García Castro', 3, 7, 6);
+
+SELECT * FROM tbEstudiantes;
 
 create table tbActividad(
 Id_Actividad int auto_increment primary key,
@@ -96,6 +157,7 @@ Fecha_Fin date
 
 INSERT INTO tbActividad (Titulo_Actividad, Fecha_Inicio, Fecha_Fin) VALUES ('Introducción al Proyecto Técnico Científico', '2025-01-13', '2025-01-17');
 INSERT INTO tbActividad (Titulo_Actividad, Fecha_Inicio, Fecha_Fin) VALUES ('Presentación de anteproyecto', '2025-01-31', '2025-02-07');
+
 SELECT * FROM tbActividad;
 
 create table tbCriterios(
@@ -140,17 +202,54 @@ on update cascade
 on delete cascade
 );
 
+create table tbEstadoProyectos(
+id_estado int primary key,
+tipo_estado text
+);
+
+INSERT INTO tbEstadoProyectos(id_estado, tipo_estado) VALUES (1, 'Activo');
+INSERT INTO tbEstadoProyectos(id_estado, tipo_estado) VALUES (2, 'Inactivo');
+
 create table tbProyectos(
-id_Proyecto int primary key,
+id_Proyecto varchar(7) primary key,
 nombre_Proyecto text,
+link_google_sites text,
 Id_Nivel int,
 Id_SeccionGrupo int,
-carnet_Estudiante int,
+id_estado int,
 
-foreign key(carnet_Estudiante)
-references tbEstudiantes(Codigo_Carnet)
+foreign key(Id_Nivel)
+references tbNivel(Id_Nivel)
+on update cascade 
+on delete cascade,
+
+foreign key(Id_SeccionGrupo)
+references tbSeccionGrupo(Id_SeccionGrupo)
+on update cascade 
+on delete cascade,
+
+foreign key(id_estado)
+references tbEstadoProyectos(id_estado)
 on update cascade 
 on delete cascade
 );
 
+INSERT INTO tbProyectos (id_Proyecto, nombre_Proyecto, link_google_sites, Id_Nivel, Id_SeccionGrupo, id_estado) VALUES ('CA01-25', 'Ambilight', 'https://sites.google.com/ricaldone.edu.sv/CA01-25', 3, 1, 1);
+INSERT INTO tbProyectos (id_Proyecto, nombre_Proyecto, link_google_sites, Id_Nivel, Id_SeccionGrupo, id_estado) VALUES ('C101-25', 'The Friendly Pet', 'https://sites.google.com/ricaldone.edu.sv/C101-25', 4, 7, 1);
+INSERT INTO tbProyectos (id_Proyecto, nombre_Proyecto, link_google_sites, Id_Nivel, Id_SeccionGrupo, id_estado) VALUES ('CD01-25', 'Cinematografía', 'https://sites.google.com/ricaldone.edu.sv/CD01-25', 3, 4, 1);
+INSERT INTO tbProyectos (id_Proyecto, nombre_Proyecto, link_google_sites, Id_Nivel, Id_SeccionGrupo, id_estado) VALUES ('D301-25', 'Kairo Detalles', 'https://sites.google.com/ricaldone.edu.sv/D301-25', 6, 7, 1);
+INSERT INTO tbProyectos (id_Proyecto, nombre_Proyecto, link_google_sites, Id_Nivel, Id_SeccionGrupo, id_estado) VALUES ('BA01-25', 'Simulador de Frecuencias', 'https://sites.google.com/ricaldone.edu.sv/BA01-25', 2, 1, 1);
+
 SELECT * FROM tbProyectos;
+   
+SELECT 
+   tbProyectos.id_nivel AS Id_Nivel,  
+   tbProyectos.nombre_Proyecto AS Nombre,
+   tbProyectos.link_google_sites AS Google_Sites,
+   tbEstadoProyectos.tipo_estado AS Estado
+FROM
+   tbProyectos
+INNER JOIN
+   tbEstadoProyectos
+ON
+   tbProyectos.id_estado = tbEstadoProyectos.id_estado;

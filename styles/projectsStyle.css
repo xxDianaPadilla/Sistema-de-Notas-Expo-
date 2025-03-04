@@ -5,6 +5,7 @@
 * {
     margin: 0;
     padding: 0;
+    font-family: 'Poppins', sans-serif;
 }
 
 body,
@@ -29,4 +30,387 @@ html {
     font-weight: 700;
     width: 100%;
     box-sizing: border-box;
+}
+
+main{
+    margin-left: 230px;
+    padding: 40px;
+    /* Esto hace que no exceda la altura visible de la ventana */
+    max-height: 100vh;
+    /* Esto activa el scroll vertical :) */ 
+    overflow-y: auto;
+    /* Esto evita el scroll horizontal :)*/ 
+    overflow-x: hidden; 
+    /* Esto asegura que el padding no expanda el tamaño del contenedor */
+    box-sizing: border-box;
+}
+
+.container{
+    width: 95%;
+    margin: -20px auto;
+    background: #E0E0E0;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.container-2{
+    background-color: #ffffff;
+    margin: -20px auto;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+h2{
+    margin-bottom: 5px;
+}
+
+.search-filter{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    position: relative;
+    overflow: visible;
+}
+
+#buscar{
+    width: 30%;
+    height: 30%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 2px solid #444;
+}
+
+#filtrarBtn{
+    color: #000000;
+    background-color: #ffffff;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+#filtrarBtn img{
+    width: 20px;
+    height: 20px;
+    margin-bottom: -5px;
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+thead{
+    background-color: #ffffff;
+    color: #000000;
+}
+
+th, td{
+    padding: 10px;
+    text-align: left;
+    width: auto;
+}
+
+th:nth-child(1), td:nth-child(1) {
+    width: 50%; 
+}
+
+th:nth-child(2), td:nth-child(2) {
+    width: 30%; 
+}
+
+th:nth-child(3), td:nth-child(3) {
+    width: 40%; 
+}
+
+tr{
+    border-bottom: 1px solid #444;
+}
+
+.estado{
+    display: flex;
+    align-items: center;
+}
+
+.estado .circulo{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.verde{
+    background-color: green;
+}
+
+.rojo{
+    background-color: red;
+}
+
+.tabs{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.tab{
+    background: none;
+    border: none;
+    font-size: 18px;
+    padding: -10px;
+    cursor: pointer;
+}
+
+.tab.active{
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#add-button{
+    background: #CA8708;
+    border: none;
+    font-size: 18px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+#add-button img{
+    width: 25px;
+    height: 25px;
+    margin-bottom: -6px;
+}
+
+.proyecto{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #ffffff;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+#btn-editar{
+    background-color: #06AECC;
+    color: #ffffff;
+    width: 160px;
+    height: 30px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+#btn-editar img{
+    width: 15px;
+    height: 15px;
+    margin-bottom: -1px;
+}
+
+#btn-link{
+    background-color: #F64382;
+    color: #ffffff;
+    width: 160px;
+    height: 30px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+#btn-link img{
+    width: 20px;
+    height: 20px;
+    margin-bottom: -5px;
+}
+
+#filtro-menu {
+    position: absolute;
+    background: #f0f0f0;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    min-width: 150px;
+    border: 1px solid #ccc;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    left: 70%;
+    transform: translateX(100%);
+    top: 100%; 
+}
+
+#filtro-menu.visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+.filtro-opcion{
+    padding: 5px;
+    cursor: pointer;
+}
+
+.filtro-opcion:hover{
+    background: #aaa;
+}
+
+.modal{
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content{
+    background-color: #1c1c1c;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+    color: #ffffff;
+    margin-top: 80px;
+    margin-right: 300px;
+}
+
+.close-btn{
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.switch{
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    cursor: pointer;
+}
+
+.slider{
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #4caf50;
+    transition: .4s;
+    border-radius: 40px;
+}
+
+.slider::before{
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #ffffff;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider{
+    background-color: #4caf50;
+}
+
+input:checked + .slider::before{
+    transform: translateX(14px);
+}
+
+.form-buttons{
+    display: flex;
+    margin-top: 20px;
+}
+
+.insert-btn{
+    background-color: #06AECCDB;
+    padding: 10px;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.cancel-btn{
+    background-color: #F38E39;
+    padding: 10px;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+#projectName{
+    width: 96%;
+    padding: 10px;
+    height: 20px;
+    background-color: #1D1D1B;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    color: #ffffff;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+#projectLevel{
+    width: 19%;
+    padding: 10px;
+    height: 40px;
+    background-color: #1D1D1B;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    color: #ffffff;
+}
+
+#projectSection{
+    width: 19%;
+    padding: 10px;
+    height: 40px;
+    background-color: #1D1D1B;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    color: #ffffff;
+}
+
+#projectID{
+    width: 19%;
+    padding: 10px;
+    height: 20px;
+    background-color: #1D1D1B;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+#studentList{
+    width: 96%;
+    padding: 10px;
+    height: 100px;
+    background-color: #1D1D1B;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    color: #ffffff;
+    margin-top: 10px;
+}
+
+#addStudentBtn{
+    width: 30%;
+    height: 50px;
+    background-color: #1D1D1B;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    color: #ffffff;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+#addStudentBtn:hover{
+    background-color: #D9D9D926;
 }
