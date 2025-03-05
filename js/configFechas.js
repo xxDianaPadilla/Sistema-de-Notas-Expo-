@@ -1,16 +1,19 @@
 /*CALENDARIO PARA PROGRAMAR ACTIVIDADES IMPORTANTES*/
 
+// Elementos del DOM
 const monthYearElement = document.getElementById('monthYear');
 const datesElement = document.getElementById('dates');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const API_ACTIVIDADES_URL = 'http://localhost:5501/actividades';
 
+// Variables globales
 let currentDate = new Date();
 let actividadesGlobales = [];
 const colores = ['#F38E39', '#F64382', '#06AECC'];
 const colorMap = new Map();
 
+// Carga inicial del calendario y actividades
 document.addEventListener('DOMContentLoaded', async () => {
   updateCalendar();
 
@@ -19,10 +22,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   agregarClickActividades();
 });
 
+// Actualiza el calendario con las fechas correspondientes
 const updateCalendar = () => {
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
 
+  // Formatear el mes y año
   const monthYearString = currentDate.toLocaleString('es-ES', {
     month: 'long',
     year: 'numeric'
@@ -34,17 +39,20 @@ const updateCalendar = () => {
 
   let datesHTML = '';
 
+  // Agregar días inactivos del mes anterior
   for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
     const prevDate = new Date(currentYear, currentMonth, -i);
     datesHTML = `<div class="date inactive">${prevDate.getDate()}</div>` + datesHTML;
   }
 
+  // Agregar los días activos del mes actual
   for (let i = 1; i <= lastDay; i++) {
     const date = new Date(currentYear, currentMonth, i);
     const activeClass = date.toDateString() === new Date().toDateString() ? 'active' : '';
     datesHTML += `<div class="date ${activeClass}">${i}</div>`;
   }
 
+  // Agregar días inactivos del próximo mes
   const remainingDays = 7 - ((firstDay + lastDay - 1) % 7 || 7);
   for (let i = 1; i <= remainingDays; i++) {
     const nextDate = new Date(currentYear, currentMonth + 1, i);
@@ -58,6 +66,7 @@ const updateCalendar = () => {
   agregarClickActividades();
 };
 
+// Event Listeners para cambiar de mes
 prevBtn.addEventListener('click', () => {
   currentDate.setMonth(currentDate.getMonth() - 1);
   updateCalendar();
@@ -70,6 +79,7 @@ nextBtn.addEventListener('click', () => {
 
 updateCalendar();
 
+// Obtiene las actividades desde la API
 async function obtenerActividades() {
   try {
     const response = await fetch(API_ACTIVIDADES_URL);
@@ -80,6 +90,7 @@ async function obtenerActividades() {
   }
 }
 
+// Marca las actividades en el calendario
 function marcarActividadesEnCalendario(actividades) {
   const dateElements = datesElement.querySelectorAll('.date');
   const currentYear = currentDate.getFullYear();
@@ -165,6 +176,7 @@ function agregarHoverActividades() {
   });
 }
 
+// Agrega eventos de clic en actividades
 function agregarClickActividades(){
   const actividadElements = document.querySelectorAll('.date.actividad');
 
@@ -289,6 +301,7 @@ function mostrarAlertaActividad(titulo, fechaInicio, fechaFin){
         actividadesGlobales = actividadesGlobales.map(act => act.Id_Actividad === idActividad ? result : act);
 
         await obtenerActividades(); 
+        // Actualiza el calendario al inicio
         updateCalendar();
 
         alert('Actividad actualizada correctamente');
