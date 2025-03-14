@@ -1,22 +1,28 @@
-const express = require('express');
-const DBConnection = require('./js/claseConexion');
-const app = express();
-const PORT = 5501;
-const cors = require('cors');
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Importando las dependencias necesarias
+const express = require('express'); // Framework para crear servidores web en Node.js
+const DBConnection = require('./js/claseConexion'); // Clase para manejar la conexión con la base de datos
+const app = express(); // Creando una instancia de Express
+const PORT = 5501; // Definiendo el puerto en el que correrá el servidor
+const cors = require('cors'); // Middleware para permitir solicitudes desde otros dominios
 
+// Configurando de middlewares
+app.use(cors()); // Habilitando CORS para permitir conexiones desde otros dominios
+app.use(express.json()); // Habilitando el uso de JSON en las solicitudes
+app.use(express.urlencoded({ extended: true })); // Habilitando el procesamiento de formularios URL-encoded
+
+// Configuración de archivos estáticos (frontend)
 app.use(express.static('pages'));
 app.use(express.static('styles'));
 app.use(express.static('img'));
 app.use(express.static('js'));
 app.use('/formsUsers', express.static('pages/formsUsers'));
 
+// Ruta para servir la página principal
 app.get('/index', (req, res) => {
     res.sendFile(__dirname + '/pages/index.html');
 });
 
+// Endpoint para obtener la lista de usuarios conectados (Un select)
 app.get('/usuarios-conectados', async (req, res ) => {
     const db = new DBConnection();
     try{
@@ -45,6 +51,7 @@ app.get('/usuarios-conectados', async (req, res ) => {
     }
 });
 
+// Endpoint para obtener las etapas (Un select)
 app.get('/etapas', async (req, res) => {
     const db = new DBConnection();
     try{
@@ -68,6 +75,7 @@ app.get('/etapas', async (req, res) => {
     }
 });
 
+// Endpoint para obtener actividades (Un select)
 app.get('/actividades', async(req, res) =>{
     const db = new DBConnection();
     try{
@@ -90,6 +98,7 @@ app.get('/actividades', async(req, res) =>{
     }
 });
 
+// Endpoint para eliminar una actividad por ID
 app.delete('/actividades/:id', async (req, res) =>{
     const db = new DBConnection();
     console.log('Datos recibidos:', req.body);
@@ -102,6 +111,7 @@ app.delete('/actividades/:id', async (req, res) =>{
     }
 });
 
+// Endpoint para actualizar una actividad por ID
 app.put('/actividades/:id', async (req, res) =>{
     const db = new DBConnection();
     const { id } = req.params;
@@ -159,6 +169,7 @@ app.put('/actividades/:id', async (req, res) =>{
     }
 });
 
+// Endpoint para agregar una nueva actividad 
 app.post('/actividades', async (req, res) =>{
     const db = new DBConnection();
     const { Titulo_Actividad, Fecha_Inicio, Fecha_Fin } = req.body;
@@ -207,6 +218,7 @@ app.post('/actividades', async (req, res) =>{
     }
 });
 
+// Endpoint para actualizar las etapas por ID
 app.put('/etapas/:id', async (req, res) =>{
     const db = new DBConnection();
     const { id } = req.params;
@@ -259,6 +271,7 @@ app.put('/etapas/:id', async (req, res) =>{
     }
 });
 
+// Endpoint para obtener la etapa actual según la fecha
 app.get('/etapa-actual', async (req, res) =>{
     const db = new DBConnection();
     const fechaHoy = new Date().toISOString().split('T')[0];
@@ -287,6 +300,7 @@ app.get('/etapa-actual', async (req, res) =>{
     }
 });
 
+// Endpoint para obtener los proyectos existentes
 app.get('/proyectos', (req, res) =>{
     const db = new DBConnection();
     const query = `
@@ -319,6 +333,7 @@ app.get('/proyectos', (req, res) =>{
     });
 });
 
+// Servidor escuchando en el puerto definido
 app.listen(PORT, () =>{
     console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
