@@ -333,6 +333,20 @@ app.get('/proyectos', (req, res) =>{
     });
 });
 
+app.get('/niveles', (req, res) =>{
+    const db = new DBConnection();
+    const query = `SELECT Id_Nivel, Nombre_Nivel FROM tbNivel`;
+
+    db.query(query, (err, results) =>{
+        if(err){
+            console.error('Error obteniendo los niveles:', err);
+            res.status(500).json({error: 'Error obteniendo los niveles'});
+            return;
+        }
+        res.json(results);
+    });
+});
+
 // Servidor escuchando en el puerto definido
 app.listen(PORT, () =>{
     console.log(`Servidor escuchando en el puerto ${PORT}`);

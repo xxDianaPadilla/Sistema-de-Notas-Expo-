@@ -240,7 +240,7 @@ INSERT INTO tbProyectos (id_Proyecto, nombre_Proyecto, link_google_sites, Id_Niv
 INSERT INTO tbProyectos (id_Proyecto, nombre_Proyecto, link_google_sites, Id_Nivel, Id_SeccionGrupo, id_estado) VALUES ('D301-25', 'Kairo Detalles', 'https://sites.google.com/ricaldone.edu.sv/D301-25', 6, 7, 1);
 INSERT INTO tbProyectos (id_Proyecto, nombre_Proyecto, link_google_sites, Id_Nivel, Id_SeccionGrupo, id_estado) VALUES ('BA01-25', 'Simulador de Frecuencias', 'https://sites.google.com/ricaldone.edu.sv/BA01-25', 2, 1, 1);
 
-SELECT * FROM tbProyectos;
+SELECT * FROM tbSeccionGrupo;
    
 SELECT 
    tbProyectos.id_nivel AS Id_Nivel,  

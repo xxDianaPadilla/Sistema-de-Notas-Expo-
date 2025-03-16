@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     const modal = document.getElementById('projectFormModal');
     const closeBtn = document.querySelector('.close-btn');
     const cancelBtn = document.getElementById('cancelBtn');
+    const projectLevelSelect = document.getElementById('projectLevel');
 
     let proyectosData = {tercerCiclo: [], bachillerato: []};
     let tipoActual = 'tercerCiclo';
@@ -131,4 +132,21 @@ document.addEventListener('DOMContentLoaded', () =>{
             }
         });
     }
+
+    function cargarNiveles(){
+        fetch('http://localhost:5501/niveles')
+        .then(response => response.json())
+        .then(niveles =>{
+            projectLevelSelect.innerHTML = '';
+            niveles.forEach(nivel =>{
+                const option = document.createElement('option');
+                option.value = nivel.Id_Nivel;
+                option.textContent = nivel.Nombre_Nivel;
+                projectLevelSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error cargando niveles:', error));
+    }
+
+    cargarNiveles();
 });
