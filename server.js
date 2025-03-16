@@ -335,7 +335,7 @@ app.get('/proyectos', (req, res) =>{
 
 app.get('/niveles', (req, res) =>{
     const db = new DBConnection();
-    const query = `SELECT Id_Nivel, Nombre_Nivel FROM tbNivel`;
+    const query = `SELECT Id_Nivel, Nombre_Nivel, letra_nivel FROM tbNivel`;
 
     db.query(query, (err, results) =>{
         if(err){
@@ -355,6 +355,20 @@ app.get('/seccionGrupo', (req, res) =>{
         if(err){
             console.error('Error obteniendo las secciones y grupos:', err);
             res.status(500).json({error: 'Error obteniendo las secciones y grupos'});
+            return;
+        }
+        res.json(results);
+    });
+});
+
+app.get('/especialidad', (req, res) =>{
+    const db = new DBConnection();
+    const query = `SELECT Id_Especialidad, Nombre_Especialidad, letra_especialidad FROM tbEspecialidad`;
+
+    db.query(query, (err, results) =>{
+        if(err){
+            console.error('Error obteniendo las especialidades:', err);
+            res.status(500).json({error: 'Error obteniendo las especialidades'});
             return;
         }
         res.json(results);

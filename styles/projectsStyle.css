@@ -369,7 +369,17 @@ input:checked + .slider::before{
 }
 
 #projectSection{
-    width: 19%;
+    width: 10%;
+    padding: 10px;
+    height: 40px;
+    background-color: #1D1D1B;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    color: #ffffff;
+}
+
+#projectEspecialidad{
+    width: 33%;
     padding: 10px;
     height: 40px;
     background-color: #1D1D1B;
@@ -387,6 +397,7 @@ input:checked + .slider::before{
     border-radius: 4px;
     color: #ffffff;
     margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 #studentList{

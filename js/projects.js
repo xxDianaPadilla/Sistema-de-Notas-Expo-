@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     const cancelBtn = document.getElementById('cancelBtn');
     const projectLevelSelect = document.getElementById('projectLevel');
     const projectSectionSelect = document.getElementById('projectSection');
+    const projectEspecialidadSelect = document.getElementById('projectEspecialidad');
 
     let proyectosData = {tercerCiclo: [], bachillerato: []};
     let tipoActual = 'tercerCiclo';
@@ -167,4 +168,21 @@ document.addEventListener('DOMContentLoaded', () =>{
     }
 
     cargarSeccionGrupo();
+
+    function cargarEspecialidad(){
+        fetch('http://localhost:5501/especialidad')
+        .then(response => response.json())
+        .then(especialidades =>{
+            projectEspecialidadSelect.innerHTML = '';
+            especialidades.forEach(especialidad =>{
+                const option = document.createElement('option');
+                option.value = especialidad.Id_Especialidad;
+                option.textContent = especialidad.Nombre_Especialidad;
+                projectEspecialidadSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error cargando las especialidades', error));
+    }
+
+    cargarEspecialidad();
 });
