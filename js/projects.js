@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () =>{
     const closeBtn = document.querySelector('.close-btn');
     const cancelBtn = document.getElementById('cancelBtn');
     const projectLevelSelect = document.getElementById('projectLevel');
+    const projectSectionSelect = document.getElementById('projectSection');
 
     let proyectosData = {tercerCiclo: [], bachillerato: []};
     let tipoActual = 'tercerCiclo';
@@ -149,4 +150,21 @@ document.addEventListener('DOMContentLoaded', () =>{
     }
 
     cargarNiveles();
+
+    function cargarSeccionGrupo(){
+        fetch('http://localhost:5501/seccionGrupo')
+        .then(response => response.json())
+        .then(secciones =>{
+            projectSectionSelect.innerHTML = '';
+            secciones.forEach(seccion =>{
+                const option = document.createElement('option');
+                option.value = seccion.Id_SeccionGrupo;
+                option.textContent = seccion.Nombre_SeccionGrupo;
+                projectSectionSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error cargando las secciones y grupos', error));
+    }
+
+    cargarSeccionGrupo();
 });

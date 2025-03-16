@@ -347,6 +347,20 @@ app.get('/niveles', (req, res) =>{
     });
 });
 
+app.get('/seccionGrupo', (req, res) =>{
+    const db = new DBConnection();
+    const query = `SELECT Id_SeccionGrupo, Nombre_SeccionGrupo FROM tbSeccionGrupo`;
+
+    db.query(query, (err, results) =>{
+        if(err){
+            console.error('Error obteniendo las secciones y grupos:', err);
+            res.status(500).json({error: 'Error obteniendo las secciones y grupos'});
+            return;
+        }
+        res.json(results);
+    });
+});
+
 // Servidor escuchando en el puerto definido
 app.listen(PORT, () =>{
     console.log(`Servidor escuchando en el puerto ${PORT}`);
