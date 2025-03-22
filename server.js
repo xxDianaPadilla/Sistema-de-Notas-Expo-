@@ -375,6 +375,26 @@ app.get('/especialidad', (req, res) =>{
     });
 });
 
+app.get('/proyectosId', (req, res) =>{
+    const prefijo = req.query.prefijo;
+
+    if(!prefijo){
+        return res.status(400).json({error: 'Se requiere un prefijo para la búsqueda de proyectos'});
+    }
+
+    const db = new DBConnection();
+    const query = `SELECT id_Proyecto FROM tbProyectos WHERE id_Proyecto LIKE '${prefijo}%'`;
+
+    db.query(query, (err, results) =>{
+        if(err){
+            console.error('Error obteniendo los proyectos:', err);
+            res.status(500).json({error: 'Error obteniendo los proyectos'});
+            return;
+        }
+        res.json(results);
+    });
+});
+
 // Servidor escuchando en el puerto definido
 app.listen(PORT, () =>{
     console.log(`Servidor escuchando en el puerto ${PORT}`);

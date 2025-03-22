@@ -217,6 +217,7 @@ link_google_sites text,
 Id_Nivel int,
 Id_SeccionGrupo int,
 id_estado int,
+Id_Especialidad int null,
 
 foreign key(Id_Nivel)
 references tbNivel(Id_Nivel)
@@ -231,17 +232,22 @@ on delete cascade,
 foreign key(id_estado)
 references tbEstadoProyectos(id_estado)
 on update cascade 
+on delete cascade,
+
+foreign key(Id_Especialidad)
+references tbEspecialidad(Id_Especialidad)
+on update cascade 
 on delete cascade
 );
 
 INSERT INTO tbProyectos (id_Proyecto, nombre_Proyecto, link_google_sites, Id_Nivel, Id_SeccionGrupo, id_estado) VALUES ('CA01-25', 'Ambilight', 'https://sites.google.com/ricaldone.edu.sv/CA01-25', 3, 1, 1);
-INSERT INTO tbProyectos (id_Proyecto, nombre_Proyecto, link_google_sites, Id_Nivel, Id_SeccionGrupo, id_estado) VALUES ('C101-25', 'The Friendly Pet', 'https://sites.google.com/ricaldone.edu.sv/C101-25', 4, 7, 1);
+INSERT INTO tbProyectos (id_Proyecto, nombre_Proyecto, link_google_sites, Id_Nivel, Id_SeccionGrupo, id_estado, Id_Especialidad) VALUES ('C101-25', 'The Friendly Pet', 'https://sites.google.com/ricaldone.edu.sv/C101-25', 4, 7, 1, 6);
 INSERT INTO tbProyectos (id_Proyecto, nombre_Proyecto, link_google_sites, Id_Nivel, Id_SeccionGrupo, id_estado) VALUES ('CD01-25', 'Cinematografía', 'https://sites.google.com/ricaldone.edu.sv/CD01-25', 3, 4, 1);
-INSERT INTO tbProyectos (id_Proyecto, nombre_Proyecto, link_google_sites, Id_Nivel, Id_SeccionGrupo, id_estado) VALUES ('D301-25', 'Kairo Detalles', 'https://sites.google.com/ricaldone.edu.sv/D301-25', 6, 7, 1);
+INSERT INTO tbProyectos (id_Proyecto, nombre_Proyecto, link_google_sites, Id_Nivel, Id_SeccionGrupo, id_estado, Id_Especialidad) VALUES ('D301-25', 'Kairo Detalles', 'https://sites.google.com/ricaldone.edu.sv/D301-25', 6, 7, 1, 3);
 INSERT INTO tbProyectos (id_Proyecto, nombre_Proyecto, link_google_sites, Id_Nivel, Id_SeccionGrupo, id_estado) VALUES ('BA01-25', 'Simulador de Frecuencias', 'https://sites.google.com/ricaldone.edu.sv/BA01-25', 2, 1, 1);
 
-SELECT * FROM tbSeccionGrupo;
-   
+SELECT * FROM tbProyectos;
+
 SELECT 
    tbProyectos.id_nivel AS Id_Nivel,  
    tbProyectos.nombre_Proyecto AS Nombre,

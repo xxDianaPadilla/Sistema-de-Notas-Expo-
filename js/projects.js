@@ -11,10 +11,14 @@ document.addEventListener('DOMContentLoaded', () =>{
     const projectLevelSelect = document.getElementById('projectLevel');
     const projectSectionSelect = document.getElementById('projectSection');
     const projectEspecialidadSelect = document.getElementById('projectEspecialidad');
+    const projectIdInput = document.getElementById('projectID');
 
     let proyectosData = {tercerCiclo: [], bachillerato: []};
     let tipoActual = 'tercerCiclo';
     let nivelSeleccionado = null;
+    let nivelesData = [];
+    let seccionesData = [];
+    let especialidadesData = [];
 
     function cargarProyectos(tipo, filtroNivel = null) {
         fetch('http://localhost:5501/proyectos')
@@ -139,13 +143,17 @@ document.addEventListener('DOMContentLoaded', () =>{
         fetch('http://localhost:5501/niveles')
         .then(response => response.json())
         .then(niveles =>{
+            nivelesData = niveles;
             projectLevelSelect.innerHTML = '';
             niveles.forEach(nivel =>{
                 const option = document.createElement('option');
                 option.value = nivel.Id_Nivel;
                 option.textContent = nivel.Nombre_Nivel;
+                option.dataset.letra = nivel.letra_nivel;
                 projectLevelSelect.appendChild(option);
             });
+
+            toggleEspecialidadSelect();
         })
         .catch(error => console.error('Error cargando niveles:', error));
     }
@@ -156,6 +164,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         fetch('http://localhost:5501/seccionGrupo')
         .then(response => response.json())
         .then(secciones =>{
+            seccionesData = secciones;
             projectSectionSelect.innerHTML = '';
             secciones.forEach(seccion =>{
                 const option = document.createElement('option');
@@ -173,16 +182,117 @@ document.addEventListener('DOMContentLoaded', () =>{
         fetch('http://localhost:5501/especialidad')
         .then(response => response.json())
         .then(especialidades =>{
+            especialidadesData = especialidades;
             projectEspecialidadSelect.innerHTML = '';
             especialidades.forEach(especialidad =>{
                 const option = document.createElement('option');
                 option.value = especialidad.Id_Especialidad;
                 option.textContent = especialidad.Nombre_Especialidad;
+                option.dataset.letra = especialidad.letra_especialidad;
                 projectEspecialidadSelect.appendChild(option);
             });
         })
         .catch(error => console.error('Error cargando las especialidades', error));
     }
 
+    function toggleEspecialidadSelect(){
+        const nivelId = parseInt(projectLevelSelect.value);
+
+        const esBachillerato = nivelId >= 4 && nivelId <= 6;
+
+        projectEspecialidadSelect.disabled = !esBachillerato;
+
+        generarIdProyecto();
+    }
+
+    async function obtenerNumeroProyecto(){
+        const nivelId = projectLevelSelect.value;
+        const seccionId = projectSectionSelect.value;
+        const especialidadId = projectEspecialidadSelect.value;
+
+        if(!nivelId || !seccionId || (projectEspecialidadSelect.disabled === false && !especialidadId)){
+            return "01";
+        }
+
+        try{
+            let prefijo;
+            if(parseInt(nivelId) >= 4 && parseInt(nivelId) <= 6){
+                const especialidad = especialidadesData.find(e => e.Id_SeccionGrupo == seccionId);
+                const nivel = nivelesData.find(n => n.Id_Nivel) == nivelId;
+                if(!especialidad || !nivel) return "01";
+                prefijo = especialidad.letra_especialidad + nivel.letra_nivel;
+            }else{
+                const nivel = nivelesData.find(n => n.Id_Nivel == nivelId);
+                const seccion = seccionesData.find(s => s.Id_SeccionGrupo == seccionId);
+                if(!nivel || !seccion) return "01";
+                prefijo = nivel.letra_nivel + seccion.Nombre_SeccionGrupo;
+            }
+
+            const response = await fetch(`http://localhost:5501/proyectosId?prefijo=${prefijo}`);
+            const proyectos = await response.json();
+
+            if(!proyectos || proyectos.length === 0){
+                return "01";
+            }
+
+            let maxNumero = 0;
+            proyectos.forEach(proyecto =>{
+                const match = proyecto.id_Proyecto.match(/[A-Z0-9]{2}(\d{2})-\d{2}/);
+                if(match && match[1]){
+                    const num = parseInt(match[1]);
+                    if(num > maxNumero){
+                        maxNumero = num;
+                    }
+                }
+            });
+
+            return (maxNumero + 1).toString().padStart(2, '0');
+        }catch(error){
+            console.error('Error obteniendo el número de proyectos:', error);
+            return "01";
+        }
+    }
+
+    async function generarIdProyecto() {
+        const nivelId = projectLevelSelect.value;
+        const seccionId = projectSectionSelect.value;
+        const especialidadId = projectEspecialidadSelect.value;
+        
+        if (!nivelId || !seccionId || (projectEspecialidadSelect.disabled === false && !especialidadId)) {
+            projectIdInput.value = "";
+            return;
+        }
+        
+        const year = "25";
+
+        const numeroProyecto = await obtenerNumeroProyecto();
+        
+        let idProyecto = "";
+        
+        if (parseInt(nivelId) >= 4 && parseInt(nivelId) <= 6) {
+            const especialidad = especialidadesData.find(e => e.Id_Especialidad == especialidadId);
+            const nivel = nivelesData.find(n => n.Id_Nivel == nivelId);
+            
+            if (especialidad && nivel) {
+                idProyecto = especialidad.letra_especialidad + nivel.letra_nivel + numeroProyecto + "-" + year;
+            }
+        } else {
+            const nivel = nivelesData.find(n => n.Id_Nivel == nivelId);
+            const seccion = seccionesData.find(s => s.Id_SeccionGrupo == seccionId);
+            
+            if (nivel && seccion) {
+                idProyecto = nivel.letra_nivel + seccion.Nombre_SeccionGrupo + numeroProyecto + "-" + year;
+            }
+        }
+    
+        projectIdInput.value = idProyecto;
+    }
+
+    projectLevelSelect.addEventListener('change', toggleEspecialidadSelect);
+    projectSectionSelect.addEventListener('change', generarIdProyecto);
+    projectEspecialidadSelect.addEventListener('change', generarIdProyecto);
+
+    cargarNiveles();
+    cargarSeccionGrupo();
     cargarEspecialidad();
 });
