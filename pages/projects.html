@@ -94,6 +94,39 @@
         </div>
     </div>
 
+    <div id="studentsModalOverlay" class="modal-overlay">
+        <div id="studentModal" class="modal-content2">
+            <div class="modal-header">
+                <h2>Seleccionar Estudiantes</h2>
+                <span class="close-btin">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="filter-container">
+                    <label for="nivelFilter">Filtrar por Nivel:</label>
+                    <select id="nivelFilter" class="filter-select">
+                        <option value="0">Todos los níveles</option>
+                        <option value="1">Séptimo</option>
+                        <option value="2">Octavo</option>
+                        <option value="3">Noveno</option>
+                        <option value="4">1° Bachillerato</option>
+                        <option value="5">2° Bachillerato</option>
+                        <option value="6">3° Bachillerato</option>
+                    </select>
+                </div>
+                <div class="search-container">
+                    <input type="text" id="studentSearch" placeholder="Buscar estudiante..." class="search-input">
+                </div>
+                <div class="students-container">
+                    <ul id="availableStudentsList" class="students-list"></ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="selectStudentBtn" class="btn primary-btn">Seleccionar</button>
+                <button type="button" id="cancelSelectionBtn" class="btn secondary-btn">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <main>
         <div class="container">
             <div class="tabs">

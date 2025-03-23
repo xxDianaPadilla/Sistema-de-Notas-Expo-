@@ -395,6 +395,139 @@ app.get('/proyectosId', (req, res) =>{
     });
 });
 
+app.get('/estudiantes', (req, res) =>{
+    const db = new DBConnection();
+    const query = `
+        SELECT 
+            id_Estudiante, 
+            Codigo_Carnet, 
+            nombre_Estudiante, 
+            apellido_Estudiante, 
+            Id_Nivel, 
+            Id_SeccionGrupo, 
+            Id_Especialidad,
+            id_Proyecto
+        FROM 
+            tbEstudiantes
+        ORDER BY 
+            Id_Nivel, 
+            apellido_Estudiante, 
+            nombre_Estudiante
+    `;
+
+    db.query(query, (err, results) =>{
+        if(err){
+            console.error('Error obteniendo los estudiantes:', err);
+            res.status(500).json({error: 'Error obteniendo los estudiantes'});
+            return;
+        }
+        res.json(results);
+    });
+});
+
+app.get('/estudiantes/nivel/:nivelId', (req, res) =>{
+    const nivelId = req.params.nivelId;
+
+    if(!nivelId){
+        return res.status(400).json({error: 'Se requiere un ID de nivel'});
+    }
+
+    const db = new DBConnection();
+    const query = `
+        SELECT 
+            id_Estudiante, 
+            Codigo_Carnet, 
+            nombre_Estudiante, 
+            apellido_Estudiante, 
+            Id_Nivel, 
+            Id_SeccionGrupo, 
+            Id_Especialidad,
+            id_Proyecto
+        FROM 
+            tbEstudiantes
+        WHERE 
+            Id_Nivel = ?
+        ORDER BY 
+            apellido_Estudiante, 
+            nombre_Estudiante
+    `;
+
+    db.query(query, [nivelId], (err, results) =>{
+        if(err){
+            console.error('Error obteniendo los estudiantes por nivel:', err);
+            res.status(500).json({error: 'Error obteniendo los estudiantes por nivel'});
+            return;
+        }
+        res.json(results);
+    });
+});
+
+app.get('/estudiantes/disponibles', (req, res) =>{
+    const db = new DBConnection();
+    const query = `
+        SELECT 
+            id_Estudiante, 
+            Codigo_Carnet, 
+            nombre_Estudiante, 
+            apellido_Estudiante, 
+            Id_Nivel, 
+            Id_SeccionGrupo, 
+            Id_Especialidad,
+            id_Proyecto
+        FROM 
+            tbEstudiantes
+        WHERE 
+            id_Proyecto IS NULL
+        ORDER BY 
+            Id_Nivel, 
+            apellido_Estudiante, 
+            nombre_Estudiante
+    `;
+
+    db.query(query, (err, results) =>{
+        if(err){
+            console.error('Error obteniendo los estudiantes disponibles:', err);
+            res.status(500).json({error: 'Error obteniendo los estudiantes disponibles'});
+            return;
+        }
+        res.json(results);
+    });
+});
+
+app.post('/proyectos/asignar-estudiantes', (req, res) =>{
+    const {proyectoId, estudiantesIds} = req.body;
+
+    if(!proyectoId || !estudiantesIds || !Array.isArray(estudiantesIds) || estudiantesIds.length === 0){
+        return res.status(400).json({error: 'Se requiere un ID de proyecto y al menos un ID de estudiante'});
+    }
+
+    const db = new DBConnection();
+
+    const placeholders = estudiantesIds.map(() => '?').join(',');
+    const query = `
+        UPDATE tbEstudiantes
+        SET id_Proyecto = ?
+        WHERE id_Estudiante IN (${placeholders})
+        AND id_Proyecto IS NULL
+    `;
+
+    const params = [proyectoId, ...estudiantesIds];
+
+    db.query(query, params, (err, results) =>{
+        if(err){
+            console.error('Error asignando estudiantes al proyecto:', err);
+            res.status(500).json({error: 'Error asignando estudiantes al proyecto'});
+            return;
+        }
+
+        res.json({
+            success: true,
+            message: `${results.affectedRows} estudiantes asignados al proyecto ${proyectoId}`,
+            affectedRows: results.affectedRows
+        });
+    });
+});
+
 // Servidor escuchando en el puerto definido
 app.listen(PORT, () =>{
     console.log(`Servidor escuchando en el puerto ${PORT}`);

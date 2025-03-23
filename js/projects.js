@@ -12,6 +12,14 @@ document.addEventListener('DOMContentLoaded', () =>{
     const projectSectionSelect = document.getElementById('projectSection');
     const projectEspecialidadSelect = document.getElementById('projectEspecialidad');
     const projectIdInput = document.getElementById('projectID');
+    const addStudentBtn = document.getElementById('addStudentBtn');
+    const studentModalOverlay = document.getElementById('studentsModalOverlay');
+    const nivelFilter = document.getElementById('nivelFilter');
+    const studentSearch = document.getElementById('studentSearch');
+    const availablesStudentesList = document.getElementById('availableStudentsList');
+    const selectStudentsBtn = document.getElementById('selectStudentBtn');
+    const cancelSelectionBtn = document.getElementById('cancelSelectionBtn');
+    const studentListContainer = document.getElementById('studentList');
 
     let proyectosData = {tercerCiclo: [], bachillerato: []};
     let tipoActual = 'tercerCiclo';
@@ -19,6 +27,16 @@ document.addEventListener('DOMContentLoaded', () =>{
     let nivelesData = [];
     let seccionesData = [];
     let especialidadesData = [];
+    let selectedStudents = [];
+    let availableStudents = [];
+    let nivelMapping = {
+        1: 'Séptimo',
+        2: 'Octavo',
+        3: 'Noveno',
+        4: '1° Bachillerato',
+        5: '2° Bachillerato',
+        6: '3° Bachillerato'
+    };
 
     function cargarProyectos(tipo, filtroNivel = null) {
         fetch('http://localhost:5501/proyectos')
@@ -295,4 +313,183 @@ document.addEventListener('DOMContentLoaded', () =>{
     cargarNiveles();
     cargarSeccionGrupo();
     cargarEspecialidad();
+
+    addStudentBtn.addEventListener('click', openStudentModal);
+
+    closeBtn.addEventListener('click', closeStudentModal);
+    cancelSelectionBtn.addEventListener('click', closeStudentModal);
+
+    studentModalOverlay.addEventListener('click', function(e){
+        if(e.target === studentModalOverlay){
+            closeStudentModal();
+        }
+    });
+
+    nivelFilter.addEventListener('change', filterStudents);
+    studentSearch.addEventListener('input', filterStudents);
+
+    function openStudentModal(){
+        fetchAvailablesStudents();
+        studentModalOverlay.style.display = 'flex';
+    }
+
+    function closeStudentModal(){
+        studentModalOverlay.style.display = 'none';
+
+        nivelFilter.value = '0';
+        studentSearch.value = '';
+    }
+
+    function fetchAvailablesStudents(){
+        availablesStudentesList.innerHTML = '<li class="student-item">Cargando estudiantes...</li>';
+
+        fetch('/estudiantes')
+        .then(response => {
+            if(!response.ok){
+                throw new Error('Error al obtener estudiantes');
+            }
+            return response.json();
+        })
+        .then(data =>{
+            availableStudents = data;
+            renderStudentList();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            availablesStudentesList.innerHTML = '<li class="student-item">Error al cargar estudiantes. Intente nuevamente.</li>';
+        });
+    }
+
+    function renderStudentList(){
+        if(!availableStudents.length){
+            availablesStudentesList.innerHTML = '<li class="student-item">No hay estudiantes disponibles</li>';
+            return;
+        }
+
+        filterStudents();
+    }
+
+    function filterStudents(){
+        const nivelId = parseInt(nivelFilter.value);
+        const searchTerm = studentSearch.value.toLowerCase();
+
+        let filteredStudents = availableStudents;
+
+        if(nivelId > 0){
+            filteredStudents = filteredStudents.filter(student => student.Id_Nivel === nivelId);
+        }
+
+        if(searchTerm){
+            filteredStudents = filteredStudents.filter(student =>{
+                const fullName = `${student.nombre_Estudiante} ${student.apellido_Estudiante}`.toLowerCase();
+                const carnet = student.Codigo_Carnet.toString();
+                return fullName.includes(searchTerm) || carnet.includes(searchTerm);
+            });
+        }
+
+        renderFilteredStudents(filteredStudents);
+    }
+
+    function renderFilteredStudents(students){
+        availablesStudentesList.innerHTML = '';
+
+        if(!students.length){
+            availablesStudentesList.innerHTML = '<li class="student-item">No se encontraron estudiantes con estos criterios</li>';
+            return;
+        }
+
+        students.forEach(student =>{
+            const fullName = `${student.nombre_Estudiante} ${student.apellido_Estudiante}`;
+            const isAssigned = student.id_Proyecto !== null;
+            const isSelected = selectedStudents.some(s => s.id_Estudiante === student.id_Estudiante);
+
+            const studentItem = document.createElement('li');
+            studentItem.className = `student-item ${isAssigned ? 'assigned' : ''}`;
+
+            const levelText = nivelMapping[student.Id_Nivel] || `Nivel ${student.Id_Nivel}`;
+
+            studentItem.innerHTML = `
+            <input type="checkbox" class="student-checkbox" 
+                   ${isAssigned ? 'disabled' : ''} 
+                   ${isSelected ? 'checked' : ''}
+                   data-id="${student.id_Estudiante}">
+            <div class="student-info">
+                <span>${fullName}</span>
+                <span class="student-carnet">Carnet: ${student.Codigo_Carnet}</span>
+                <span class="level-badge">${levelText}</span>
+                ${isAssigned ? '<span class="student-assigned-tag">Asignado</span>' : ''}
+            </div>
+        `;
+
+        if(!isAssigned){
+            const checkBox = studentItem.querySelector('.student-checkbox');
+            checkBox.addEventListener('change', function(){
+                if(this.checked){
+                    addToSelectedStudents(student);
+                }else{
+                    removeFromSelectedStudents(student.id_Estudiante);
+                }
+            });
+        }
+
+        availablesStudentesList.appendChild(studentItem);
+        });
+
+        function addToSelectedStudents(student){
+            if(!selectedStudents.some(s => s.id_Estudiante === student.id_Estudiante)){
+                selectedStudents.push(student);
+            }
+        }
+
+        function removeFromSelectedStudents(studentId){
+            selectedStudents = selectedStudents.filter(s => s.id_Estudiante !== studentId);
+        }
+
+        function confirmStudentSelection(){
+            updateStudentListView();
+            closeStudentModal();
+        }
+
+        function updateStudentListView(){
+            studentListContainer.innerHTML = '';
+
+            if(!selectedStudents.length){
+                return;
+            }
+
+            selectedStudents.forEach(student =>{
+                const fullName = `${student.nombre_Estudiante} ${student.apellido_Estudiante}`;
+                const levelText = nivelMapping[student.Id_Nivel] || `Nivel ${student.Id_Nivel}`;
+
+                const studentElement = document.createElement('div');
+                studentElement.className = 'selected-student';
+                studentElement.innerHTML = `
+            <input type="hidden" name="selectedStudentIds[]" value="${student.id_Estudiante}">
+            <div>
+                <span>${fullName}</span>
+                <span class="level-badge">${levelText}</span>
+            </div>
+            <span class="remove-student" data-id="${student.id_Estudiante}">&times;</span>
+        `;
+
+        const removeBtn = studentElement.querySelector('.remove-student');
+        removeBtn.addEventListener('click', function(){
+            const studentId = parseInt(this.getAttribute('data-id'));
+            removeFromSelectedStudents(studentId);
+            updateStudentListView();
+
+            if(studentModalOverlay.style.display === 'flex'){
+                const checkbox = document.querySelector(`.student-checkbox[data-id="${studentId}"]`);
+                if(checkbox){
+                    checkbox.checked = false;
+                }
+            }
+        });
+
+        studentListContainer.appendChild(studentElement);
+            });
+        }
+
+        selectStudentsBtn.addEventListener('click', confirmStudentSelection);
+    }
 });
