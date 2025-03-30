@@ -20,6 +20,10 @@ document.addEventListener('DOMContentLoaded', () =>{
     const selectStudentsBtn = document.getElementById('selectStudentBtn');
     const cancelSelectionBtn = document.getElementById('cancelSelectionBtn');
     const studentListContainer = document.getElementById('studentList');
+    const projectForm = document.getElementById('projectForm');
+    const projectNameInput = document.getElementById('projectName');
+    const projectStatusInput = document.getElementById('projectStatus');
+    const projectStatusText = document.createElement('span');
 
     let proyectosData = {tercerCiclo: [], bachillerato: []};
     let tipoActual = 'tercerCiclo';
@@ -227,16 +231,16 @@ document.addEventListener('DOMContentLoaded', () =>{
         const nivelId = projectLevelSelect.value;
         const seccionId = projectSectionSelect.value;
         const especialidadId = projectEspecialidadSelect.value;
-
+    
         if(!nivelId || !seccionId || (projectEspecialidadSelect.disabled === false && !especialidadId)){
             return "01";
         }
-
+    
         try{
             let prefijo;
             if(parseInt(nivelId) >= 4 && parseInt(nivelId) <= 6){
-                const especialidad = especialidadesData.find(e => e.Id_SeccionGrupo == seccionId);
-                const nivel = nivelesData.find(n => n.Id_Nivel) == nivelId;
+                const especialidad = especialidadesData.find(e => e.Id_Especialidad == especialidadId);
+                const nivel = nivelesData.find(n => n.Id_Nivel == nivelId);
                 if(!especialidad || !nivel) return "01";
                 prefijo = especialidad.letra_especialidad + nivel.letra_nivel;
             }else{
@@ -245,17 +249,17 @@ document.addEventListener('DOMContentLoaded', () =>{
                 if(!nivel || !seccion) return "01";
                 prefijo = nivel.letra_nivel + seccion.Nombre_SeccionGrupo;
             }
-
+    
             const response = await fetch(`http://localhost:5501/proyectosId?prefijo=${prefijo}`);
             const proyectos = await response.json();
-
+    
             if(!proyectos || proyectos.length === 0){
                 return "01";
             }
-
+    
             let maxNumero = 0;
-            proyectos.forEach(proyecto =>{
-                const match = proyecto.id_Proyecto.match(/[A-Z0-9]{2}(\d{2})-\d{2}/);
+            proyectos.forEach(proyecto => {
+                const match = proyecto.id_Proyecto.match(/[A-Z0-9]+(\d{2})-\d{2}/);
                 if(match && match[1]){
                     const num = parseInt(match[1]);
                     if(num > maxNumero){
@@ -263,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () =>{
                     }
                 }
             });
-
+    
             return (maxNumero + 1).toString().padStart(2, '0');
         }catch(error){
             console.error('Error obteniendo el número de proyectos:', error);
@@ -491,5 +495,144 @@ document.addEventListener('DOMContentLoaded', () =>{
         }
 
         selectStudentsBtn.addEventListener('click', confirmStudentSelection);
+    }
+
+    projectStatusText.id = 'statusText';
+    projectStatusText.textContent = 'Activo';
+    projectStatusText.classList.add('status-text');
+
+    const switchLabel = document.querySelector('.switch');
+    switchLabel.parentNode.insertBefore(projectStatusText, switchLabel.nextSibling);
+
+    function updateStatusText(){
+        projectStatusText.textContent = projectStatusInput.checked ? 'Activo' : 'Inactivo';
+    }
+
+    projectStatusInput.addEventListener('change', updateStatusText);
+
+    projectStatusInput.checked = true;
+    updateStatusText();
+
+    projectForm.addEventListener('submit', function(event){
+        event.preventDefault();
+
+        if(!projectNameInput.value.trim()){
+            alert('Por favor, ingrese un nombre para el proyecto');
+            return;
+        }
+
+        const projectData = {
+            nombre: projectNameInput.value.trim(),
+            nivelId: parseInt(projectLevelSelect.value),
+            seccionId: parseInt(projectSectionSelect.value),
+            especialidadId: projectEspecialidadSelect.disabled ? null : parseInt(projectEspecialidadSelect.value),
+            idProyecto: projectIdInput.value,
+            estado: projectStatusInput.checked,
+            estudiantesIds: selectedStudents.map(student => student.id_Estudiante)
+        };
+
+        if(!projectData.nivelId || !projectData.seccionId || !projectData.idProyecto){
+            alert('Por favor, complete todos los campos obligatorios');
+            return;
+        }
+
+        fetch('http://localhost:5501/creacionProyectos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(projectData)
+        })
+        .then(response =>{
+            if(!response.ok){
+                throw new Error('Error al crear el proyecto');
+            }
+            return response.json();
+        })
+        .then(data =>{
+            if(data.success){
+                mostrarAlerta('Proyecto creado exitosamente', 'success');
+
+                projectForm.reset();
+                selectedStudents = [];
+                updateStudentListView();
+
+                modal.style.display = 'none';
+
+                cargarProyectos(tipoActual, nivelSeleccionado);
+            }else{
+                mostrarAlerta(data.error || 'Error desconocido al crear el proyecto', 'error');
+            }
+        })
+        .catch(error =>{
+            console.error('Error:', error);
+            mostrarAlerta('Error al crear el proyecto', 'error');
+        });
+    });
+
+    function mostrarAlerta(mensaje, tipo){
+        const alertaDiv = document.createElement('div');
+        alertaDiv.className = `alerta ${tipo}`;
+        alertaDiv.textContent = mensaje;
+
+        document.body.appendChild(alertaDiv);
+
+        setTimeout(() =>{
+            alertaDiv.classList.add('mostrar');
+            setTimeout(() =>{
+                alertaDiv.classList.remove('mostrar');
+                setTimeout(() =>{
+                    alertaDiv.remove();
+                }, 300);
+            }, 3000);
+        }, 100);
+    }
+
+    if(typeof updateStudentListView !== 'function'){
+        function updateStudentListView(){
+            studentListContainer.innerHTML = '';
+
+            if(!selectedStudents.length){
+                return;
+            }
+
+            selectedStudents.forEach(student =>{
+                const fullName = `${student.nombre_Estudiante} ${student.apellido_Estudiante}`;
+                const levelText = nivelMapping[student.Id_Nivel] || `Nivel ${student.Id_Nivel}`;
+
+                const studentElement = document.createElement('div');
+                studentElement.className = 'selected-student';
+                studentElement.innerHTML = `
+                    <input type="hidden" name="selectedStudentIds[]" value="${student.id_Estudiante}">
+                    <div>
+                        <span>${fullName}</span>
+                        <span class="level-badge">${levelText}</span>
+                    </div>
+                    <span class="remove-student" data-id="${student.id_Estudiante}">&times;</span>
+                `;
+
+                const removeBtn = studentElement.querySelector('.remove-student');
+                removeBtn.addEventListener('click', function(){
+                    const studentId = parseInt(this.getAttribute('data-id'));
+                    removeFromSelectedStudents(studentId);
+                    updateStudentListView();
+
+                    if(studentModalOverlay.style.display === 'flex'){
+                        const checkbox = document.querySelector(`.student-checkbox[data-id="${studentId}"]`);
+                        if(checkbox){
+                            checkbox.checked = false;
+                        }
+                    }
+                });
+
+                studentListContainer.appendChild(studentElement);
+            });
+        }
+    }
+
+    if(typeof removeFromSelectedStudents !== 'function'){
+        function removeFromSelectedStudents(studentId){
+            selectedStudents = selectedStudents.filter(s => s.id_Estudiante !== studentId);
+        }
     }
 });

@@ -42,6 +42,18 @@ class DBConnection {
       console.log('Conexión cerrada.');
     });
   }
+
+    beginTransaction(callback) {
+        this.connection.beginTransaction(callback);
+    }
+    
+    commit(callback) {
+        this.connection.commit(callback);
+    }
+    
+    rollback(callback) {
+        this.connection.rollback(callback);
+    }
 }
 
 module.exports = DBConnection;

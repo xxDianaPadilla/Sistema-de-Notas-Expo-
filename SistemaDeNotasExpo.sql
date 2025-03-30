@@ -146,6 +146,8 @@ INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante
 INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad) VALUES (20200015, 'Sofía Isabel', 'Martínez Ruiz', 3, 7, 6);
 INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad) VALUES (20200016, 'Luis Fernando', 'García Castro', 3, 7, 6);
 
+SET SQL_SAFE_UPDATES = 0;
+
 SELECT * FROM tbEstudiantes;
 
 create table tbActividad(

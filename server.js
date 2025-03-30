@@ -528,6 +528,104 @@ app.post('/proyectos/asignar-estudiantes', (req, res) =>{
     });
 });
 
+app.post('/creacionProyectos', async (req, res) => {
+    const {nombre, nivelId, seccionId, especialidadId, idProyecto, estado, estudiantesIds} = req.body;
+    
+    console.log('Datos recibidos:', {
+        nombre, nivelId, seccionId, especialidadId, 
+        idProyecto, estado, 
+        estudiantesIds: estudiantesIds ? JSON.stringify(estudiantesIds) : 'null' 
+    });
+    
+    if(!nombre || !nivelId || !seccionId || !idProyecto){
+        return res.status(400).json({error: 'Faltan campos obligatorios'});
+    }
+    
+    if (!estudiantesIds || !Array.isArray(estudiantesIds)) {
+        return res.status(400).json({error: 'El formato de estudiantesIds es incorrecto'});
+    }
+    
+    const db = new DBConnection();
+    
+    try {
+        await new Promise((resolve, reject) => {
+            db.beginTransaction(err => {
+                if (err) reject(err);
+                else resolve();
+            });
+        });
+        
+        const id_estado = estado ? 1 : 2;
+        const valorGoogle = `https://sites.google.com/ricaldone.edu.sv/${idProyecto}`;
+        
+        const insertProyectoQuery = `
+            INSERT INTO tbProyectos 
+            (id_Proyecto, nombre_Proyecto, Id_Nivel, Id_SeccionGrupo, Id_Especialidad, id_estado, link_google_sites)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        `;
+        
+        await db.query(
+            insertProyectoQuery,
+            [idProyecto, nombre, nivelId, seccionId, especialidadId || null, id_estado, valorGoogle]
+        );
+        
+        console.log('Proyecto insertado correctamente, ID proyecto:', idProyecto);
+        
+        if(estudiantesIds.length === 0){
+            await new Promise((resolve, reject) => {
+                db.commit(err => {
+                    if (err) reject(err);
+                    else resolve();
+                });
+            });
+            
+            console.log('No hay estudiantes para asignar - Transacción completada');
+            return res.status(201).json({
+                success: true,
+                message: 'Proyecto creado correctamente (sin estudiantes)',
+                idProyecto: idProyecto,
+                estudiantes: 0
+            });
+        }
+        
+        const placeholders = estudiantesIds.map(() => '?').join(',');
+        const updateAllQuery = `
+            UPDATE tbEstudiantes 
+            SET id_Proyecto = ? 
+            WHERE id_Estudiante IN (${placeholders})
+        `;
+        
+        const updateParams = [idProyecto, ...estudiantesIds];
+        
+        const updateResult = await db.query(updateAllQuery, updateParams);
+        
+        await new Promise((resolve, reject) => {
+            db.commit(err => {
+                if (err) reject(err);
+                else resolve();
+            });
+        });
+        
+        console.log(`Actualizaciones completadas: ${updateResult.affectedRows}/${estudiantesIds.length}`);
+        
+        res.status(201).json({
+            success: true,
+            message: 'Proyecto creado correctamente',
+            idProyecto: idProyecto,
+            estudiantes: updateResult.affectedRows,
+            errores: estudiantesIds.length - updateResult.affectedRows
+        });
+        
+    } catch (error) {
+        db.rollback(() => {
+            console.error('Error en la transacción:', error);
+            res.status(500).json({error: 'Error al crear el proyecto: ' + error.message});
+        });
+    } finally {
+        db.close();
+    }
+});
+
 // Servidor escuchando en el puerto definido
 app.listen(PORT, () =>{
     console.log(`Servidor escuchando en el puerto ${PORT}`);
