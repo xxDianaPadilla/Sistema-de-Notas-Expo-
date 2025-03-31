@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPTC | Evaluaciones</title>
+    <title>SPTC | Nueva Escala</title>
     <link rel="icon" href="/logoRedondo.png" type="icon/png">
     <!--Estilo propio-->
-    <link rel="stylesheet" href="/evaluationStyle.css">
+    <link rel="stylesheet" href="/newRubric.css">
 
     <!--Estilo menú-->
     <link rel="stylesheet" href="/menu.css">
@@ -52,20 +52,26 @@
             </div>
         </div>
     </div>
-    
+
     <main>
-        <div class="evaluations">
-            <a href="/evaluation.html"><p id="instrumento">Instrumentos de evaluación</p></a>
-            <a href="/evaluarProyecto.html"><p id="evaluar">Evaluar proyecto</p></a>
-            <button class="newEva">Nuevo instrumento <img src="/mas.png" width="16px"></button>
-        </div>
-        
-        <div class="content">
-            
-        </div>
-    </main>
+        <div class="newTable">
+        <h1>Crear Nueva Escala Estimativa</h1>
+
+        <form id="formTabla">
+            <label for="filas">Cantidad de filas:</label>
+            <input type="number" id="filas" min="1" required>
+
+            <label for="columnas" style="display: none;">Cantidad de columnas:</label>
+            <input type="number" id="columnas" value="7" style="display: none;">
+        </form>
+
+        <div class="rubric"><div id="tablaContenedor"></div></div>
+    </div></main>
+
+    
+    
     <script src="/cerrarSesion.js"></script>
     <script src="/menu.js"></script>
-    <script src="/evaluaciones.js"></script>
+    <script src="/Scale/newScale.js"></script>
 </body>
 </html>

@@ -162,11 +162,46 @@ INSERT INTO tbActividad (Titulo_Actividad, Fecha_Inicio, Fecha_Fin) VALUES ('Pre
 
 SELECT * FROM tbActividad;
 
-create table tbCriterios(
-id_Criterio int primary key,
-nombre_Criterio text,
-descripcion_Criterio text,
-puntaje_Criterio double
+CREATE TABLE tbTipoEvaluacion (
+    id_TipoEvaluacion INT PRIMARY KEY,
+    nombre_TipoEvaluacion TEXT
+);
+
+-- Inserts para Tipo de Evaluación
+INSERT INTO tbTipoEvaluacion (id_TipoEvaluacion, nombre_TipoEvaluacion) 
+VALUES (1, 'Escala estimativa'), (2, 'Rúbrica');
+
+-- Tabla de Rúbricas
+CREATE TABLE tbRubrica (
+    id_Rubrica INT PRIMARY KEY,
+    nombre_Rubrica TEXT,
+    Id_Nivel INT,
+    Id_Especialidad INT,
+    Año TEXT,
+    id_etapa INT,
+    id_TipoEvaluacion INT,
+
+    FOREIGN KEY (id_etapa) REFERENCES tbEtapa (id_etapa) 
+        ON UPDATE CASCADE 
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (id_TipoEvaluacion) REFERENCES tbTipoEvaluacion (id_TipoEvaluacion) 
+        ON UPDATE CASCADE 
+        ON DELETE CASCADE
+);
+
+-- Tabla de Criterios
+CREATE TABLE tbCriterios (
+    id_Criterio INT PRIMARY KEY,
+    id_Rubrica INT,
+    nombre_Criterio TEXT,
+    descripcion_Criterio TEXT,
+    puntaje_Criterio DOUBLE,
+    ponderacion_Criterio DOUBLE,
+
+    FOREIGN KEY (id_Rubrica) REFERENCES tbRubrica (id_Rubrica) 
+        ON UPDATE CASCADE 
+        ON DELETE CASCADE
 );
 
 create table tbEtapa(
@@ -183,26 +218,6 @@ INSERT INTO tbEtapa (id_etapa, porcentaje_etapa, fecha_inicio, fecha_fin) VALUES
 INSERT INTO tbEtapa (id_etapa, porcentaje_etapa, fecha_inicio, fecha_fin) VALUES (5, '100%', '2025-01-23', '2025-01-24');
 
 SELECT * FROM tbEtapa;
-
-create table tbRubrica(
-id_Rubrica int primary key,
-nombre_Rubrica text,
-Id_Nivel int,
-Id_Especialidad int,
-Año text,
-id_etapa int,
-id_criterios int,
-
-foreign key(id_criterios)
-references tbCriterios (id_Criterio)
-on update cascade 
-on delete cascade,
-
-foreign key (id_etapa)
-references tbEtapa (id_etapa)
-on update cascade
-on delete cascade
-);
 
 create table tbEstadoProyectos(
 id_estado int primary key,

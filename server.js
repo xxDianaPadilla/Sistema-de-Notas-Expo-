@@ -22,6 +22,14 @@ app.get('/index', (req, res) => {
     res.sendFile(__dirname + '/pages/index.html');
 });
 
+app.get('/escala', (req, res) => {
+    res.sendFile(__dirname + '/pages/escala.html'); // Página de Escala estimativa
+});
+
+app.get('/newRubric', (req, res) => {
+    res.sendFile(__dirname + '/pages/newRubric.html');
+});
+
 // Endpoint para obtener la lista de usuarios conectados (Un select)
 app.get('/usuarios-conectados', async (req, res ) => {
     const db = new DBConnection();
@@ -333,12 +341,12 @@ app.get('/proyectos', (req, res) =>{
     });
 });
 
-app.get('/niveles', (req, res) =>{
+app.get('/niveles', (req, res) => {
     const db = new DBConnection();
-    const query = `SELECT Id_Nivel, Nombre_Nivel, letra_nivel FROM tbNivel`;
+    const query = 'SELECT Id_Nivel, Nombre_Nivel FROM tbNivel';
 
-    db.query(query, (err, results) =>{
-        if(err){
+    db.query(query, (err, results) => {
+        if (err) {
             console.error('Error obteniendo los niveles:', err);
             res.status(500).json({error: 'Error obteniendo los niveles'});
             return;
@@ -363,7 +371,7 @@ app.get('/seccionGrupo', (req, res) =>{
 
 app.get('/especialidad', (req, res) =>{
     const db = new DBConnection();
-    const query = `SELECT Id_Especialidad, Nombre_Especialidad, letra_especialidad FROM tbEspecialidad`;
+    const query = `SELECT Id_Especialidad, Nombre_Especialidad, FROM tbEspecialidad`;
 
     db.query(query, (err, results) =>{
         if(err){
@@ -620,6 +628,95 @@ app.post('/creacionProyectos', async (req, res) => {
         db.rollback(() => {
             console.error('Error en la transacción:', error);
             res.status(500).json({error: 'Error al crear el proyecto: ' + error.message});
+        });
+    } finally {
+        db.close();
+    }
+});
+
+app.post('/crearRubrica', async (req, res) => {
+    const { nombreRubrica, tipoEvaluacion, criterios } = req.body;
+
+    console.log('Datos recibidos:', {
+        nombreRubrica,
+        tipoEvaluacion,
+        criterios: criterios ? JSON.stringify(criterios) : 'null'
+    });
+
+    if (!nombreRubrica || !tipoEvaluacion) {
+        return res.status(400).json({ error: 'Faltan campos obligatorios' });
+    }
+
+    if (!criterios || !Array.isArray(criterios)) {
+        return res.status(400).json({ error: 'El formato de criterios es incorrecto' });
+    }
+
+    const db = new DBConnection();
+
+    try {
+        await new Promise((resolve, reject) => {
+            db.beginTransaction(err => {
+                if (err) reject(err);
+                else resolve();
+            });
+        });
+
+        const tipoEvaluacionId = tipoEvaluacion === 'Rúbrica' ? 2 : 1;
+
+        const insertRubricaQuery = `
+            INSERT INTO tbRubrica (nombre_Rubrica, id_TipoEvaluacion) 
+            VALUES (?, ?)
+        `;
+
+        const result = await db.query(insertRubricaQuery, [nombreRubrica, tipoEvaluacionId]);
+        const idRubrica = result.insertId;
+        console.log('Rúbrica insertada correctamente, ID:', idRubrica);
+
+        if (criterios.length === 0) {
+            await new Promise((resolve, reject) => {
+                db.commit(err => {
+                    if (err) reject(err);
+                    else resolve();
+                });
+            });
+
+            console.log('No hay criterios para asignar - Transacción completada');
+            return res.status(201).json({
+                success: true,
+                message: 'Rúbrica creada correctamente (sin criterios)',
+                idRubrica,
+                criterios: 0
+            });
+        }
+
+        const insertCriterioQuery = `
+            INSERT INTO tbCriterios (id_Rubrica, descripcion_Criterio, puntaje_Maximo)
+            VALUES ${criterios.map(() => '(?, ?, ?)').join(',')}
+        `;
+
+        const criteriosParams = criterios.flatMap(criterio => [idRubrica, criterio.descripcion, criterio.puntaje]);
+        const insertResult = await db.query(insertCriterioQuery, criteriosParams);
+
+        await new Promise((resolve, reject) => {
+            db.commit(err => {
+                if (err) reject(err);
+                else resolve();
+            });
+        });
+
+        console.log(`Criterios insertados: ${insertResult.affectedRows}/${criterios.length}`);
+
+        res.status(201).json({
+            success: true,
+            message: 'Rúbrica creada correctamente',
+            idRubrica,
+            criterios: insertResult.affectedRows,
+            errores: criterios.length - insertResult.affectedRows
+        });
+    } catch (error) {
+        db.rollback(() => {
+            console.error('Error en la transacción:', error);
+            res.status(500).json({ error: 'Error al crear la rúbrica: ' + error.message });
         });
     } finally {
         db.close();

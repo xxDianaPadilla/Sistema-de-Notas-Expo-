@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #E0E0E0;
+    font-family: 'Poppins', sans-serif;
+    color: #1D1D1B;
+    overflow: hidden;
+}
+
+
+main{
+    margin-left: 250px;
+    padding: 40px;
+    /* Esto hace que no exceda la altura visible de la ventana */
+    max-height: 100vh;
+    /* Esto activa el scroll vertical :) */ 
+    overflow-y: auto;
+    /* Esto evita el scroll horizontal :)*/ 
+    overflow-x: hidden; 
+    /* Esto asegura que el padding no expanda el tamaño del contenedor */
+    box-sizing: border-box;
+}
+
+.newTable {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    max-width: 600px; /* Ajusta el ancho máximo */
+    margin: 0 auto;
+}
+
+#formTabla {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.rubric{
+    width: 1200px;
+}
+
+#formTabla label,
+#formTabla input {
+    width: 100%;
+    max-width: 250px; 
+    text-align: center;
+}
+
+/* Ajustes en la tabla */
+#tablaContenedor {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center; 
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%; 
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background: #fff;
+}
+
+
+/* Estilo de las celdas */
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    word-wrap: break-word;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+/* Estilo de los encabezados */
+th {
+    background-color: #f2f2f2; 
+    font-weight: bold;
+}
+
+/* Ancho de las columnas */
+th:nth-child(2), td:nth-child(2) {
+    width: 550px;
+}
+
+th:nth-child(1), td:nth-child(1) {
+    width: 60px; 
+}
+
+
+th:nth-child(3), td:nth-child(3),
+th:nth-child(4), td:nth-child(4),
+th:nth-child(5), td:nth-child(5),
+th:nth-child(6), td:nth-child(6),
+th:nth-child(7), td:nth-child(7) {
+    width: 100px; 
+}
+
+/* Estilo para los inputs */
+input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 5px;
+    height: auto;
+    box-sizing: border-box;
+}
+
+/* Hacer que los campos de notas sean solo lectura */
+input[type="number"]:not([readonly]) {
+    background-color: #f9f9f9; 
+}
