@@ -5,6 +5,11 @@ const app = express(); // Creando una instancia de Express
 const PORT = 5501; // Definiendo el puerto en el que correrá el servidor
 const cors = require('cors'); // Middleware para permitir solicitudes desde otros dominios
 
+const bcrypt = require('bcrypt'); // Para encriptar contraseñas
+const jwt = require('jsonwebtoken'); // Para manejar JWT
+const cookieParser = require('cookie-parser'); // Para manejar cookies
+
+
 // Configurando de middlewares
 app.use(cors()); // Habilitando CORS para permitir conexiones desde otros dominios
 app.use(express.json()); // Habilitando el uso de JSON en las solicitudes
@@ -332,6 +337,125 @@ app.get('/proyectos', (req, res) =>{
         res.json(proyectos);
     });
 });
+
+
+
+// Endpoint para agregar un nuevo usuario
+app.post('/api/usuarios', async (req, res) => {
+    const db = new DBConnection();
+    const { nombre, apellido, correo, contraseña, idRol } = req.body;
+
+    if (!nombre || !apellido || !correo || !contraseña || !idRol) {
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
+    try {
+        // Encriptar la contraseña
+        const hashedPassword = await bcrypt.hash(contraseña, saltRounds);
+        const query = `
+            INSERT INTO tbUsuario (Nombre_Usuario, Apellido_Usuario, Correo_Usuario, Contra_Usuario, Id_Rol, FechaHora_Conexion)
+            VALUES (?, ?, ?, ?, ?, ?)
+        `;
+        const values = [nombre, apellido, correo, hashedPassword, idRol, new Date()];
+
+        await db.query(query, values);
+        res.status(201).json({ message: 'Usuario agregado exitosamente' });
+    } catch (error) {
+        console.error('Error al insertar usuario:', error.message);
+        res.status(500).send('Error del servidor');
+    } finally {
+        db.close();
+    }
+});
+
+
+
+// Select Usuarios
+app.get('/api/usuarios', async (req, res) => {
+    const db = new DBConnection();
+    const { rol } = req.query; // Obtener el rol de la consulta
+
+    let query = 'SELECT * FROM tbUsuario';
+    const values = [];
+
+    if (rol) {
+        query += ' WHERE Id_Rol = ?'; // Filtrar por rol
+        values.push(rol);
+    }
+
+    try {
+        const usuarios = await db.query(query, values);
+        res.json(usuarios);
+    } catch (error) {
+        console.error('Error al obtener usuarios:', error);
+        res.status(500).send('Error del servidor');
+    } finally {
+        db.close();
+    }
+});
+
+//Delete
+
+app.delete('/api/usuarios/:id', async (req, res) => {
+    const db = new DBConnection();
+    const { id } = req.params;
+
+    try {
+        await db.query('DELETE FROM tbUsuario WHERE Id_Usuario = ?', [id]);
+        res.status(200).json({ message: 'Usuario eliminado correctamente' });
+    } catch (error) {
+        console.error('Error al eliminar usuario:', error.message);
+        res.status(500).send('Error del servidor');
+    } finally {
+        db.close();
+    }
+});
+
+
+// Endpoint de inicio de sesión
+app.post('/api/login', async (req, res) => {
+    const db = new DBConnection();
+    const { correo, contraseña } = req.body;
+
+    if (!correo || !contraseña) {
+        return res.status(400).json({ message: 'Correo y contraseña son obligatorios' });
+    }
+
+    try {
+        const query = 'SELECT * FROM tbUsuario WHERE Correo_Usuario = ?';
+        const [usuario] = await db.query(query, [correo]);
+
+        if (!usuario || !await bcrypt.compare(contraseña, usuario.Contra_Usuario)) {
+            return res.status(401).json({ message: 'Credenciales incorrectas' });
+        }
+
+        // Generar un JWT
+        const token = jwt.sign({ userId: usuario.Id_Usuario, idRol: usuario.Id_Rol }, secretKey, { expiresIn: '1h' });
+
+        // Establecer una cookie con el token
+        res.cookie('token', token, { httpOnly: true, secure: true });
+        res.json({ message: 'Inicio de sesión exitoso' });
+    } catch (error) {
+        console.error('Error al iniciar sesión:', error.message);
+        res.status(500).send('Error del servidor');
+    } finally {
+        db.close();
+    }
+});
+
+// Middleware para autenticar usando JWT
+function authenticateJWT(req, res, next) {
+    const token = req.cookies.token;
+    if (!token) return res.sendStatus(403); // No autorizado
+
+    jwt.verify(token, secretKey, (err, user) => {
+        if (err) return res.sendStatus(403); // No autorizado
+        req.user = user;
+        next();
+    });
+}
+
+
 
 // Servidor escuchando en el puerto definido
 app.listen(PORT, () =>{

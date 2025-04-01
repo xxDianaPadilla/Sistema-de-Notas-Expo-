@@ -299,21 +299,56 @@ input {
 
 /*ESTILOS DE LAS CARDS*/
 
-#card {
-    width: 90%;
-    padding: 15px;
-    background-color: #f2f2f2;
-    border-radius: 15px;
+#cardContainer {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    font-family: poppinsLight;
+    flex-direction: column; /* Cambiar a columna para lista */
+    gap: 10px; /* Espacio entre elementos de la lista */
+    margin: 20px;
 }
 
-#card section {
+.list-item {
     display: flex;
-    flex-wrap: wrap;
-    width: 50%;
-    font-size: 20px;
+    justify-content: space-between; /* Espacio entre la información y los botones */
+    align-items: center; /* Centrar verticalmente */
+    border: 1px solid #000; /* Bordes de la lista */
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #f9f9f9;
 }
+
+.user-info {
+    display: flex;
+    flex-direction: column; /* Alinear nombre y correo en columna */
+}
+
+.user-name {
+    font-weight: bold; /* Nombre en negrita */
+}
+
+.button-container {
+    display: flex;
+    gap: 10px; /* Espacio entre los botones */
+}
+
+.edit-btn, .delete-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.edit-btn:hover {
+    background-color: #0056b3; /* Color al pasar el mouse */
+}
+
+.delete-btn {
+    background-color: #dc3545; /* Color para el botón de eliminar */
+}
+
+.delete-btn:hover {
+    background-color: #c82333; /* Color al pasar el mouse */
+}
+
+
