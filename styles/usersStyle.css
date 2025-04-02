@@ -66,15 +66,28 @@ body {
     margin-bottom: 3%;
 }
 
+.tipoCat1, .tipoCat2 {
+    transition: background-color 0.3s ease; /* Transición para el cambio de color de fondo */
+    padding: 10px; /* Espaciado interno */
+    cursor: pointer; /* Cambiar cursor a puntero */
+}
+
+.tipoCat1.active {
+    background-color: #e0e0e0; /* Fondo claro para la sección activa */
+    border-bottom: 3px solid #8a8282; /* Borde inferior para indicar la sección activa */
+}
+
+.tipoCat2.active {
+    background-color: #e0e0e0; /* Fondo claro para la sección activa */
+    border-bottom: 3px solid #8a8282; /* Borde inferior para indicar la sección activa */
+}
+
 .tipoCat1 {
-    background-color: #E0E0E0;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    background-color: #c0c0c0; /* Fondo oscuro para la sección inactiva */
 }
 
 .tipoCat2 {
-    background-color: #c0c0c0;
-    box-shadow: inset #a4a3a3 7px -7px 10px;
+    background-color: #c0c0c0; /* Fondo oscuro para la sección inactiva */
 }
 
 main {
@@ -350,5 +363,4 @@ input {
 .delete-btn:hover {
     background-color: #c82333; /* Color al pasar el mouse */
 }
-
 

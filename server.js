@@ -345,13 +345,15 @@ app.post('/api/usuarios', async (req, res) => {
     const db = new DBConnection();
     const { nombre, apellido, correo, contraseña, idRol } = req.body;
 
+    // Validar que se han proporcionado todos los campos requeridos
     if (!nombre || !apellido || !correo || !contraseña || !idRol) {
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }
 
     try {
         // Encriptar la contraseña
-        const hashedPassword = await bcrypt.hash(contraseña, saltRounds);
+        const hashedPassword = await bcrypt.hash(contraseña, 10);
+
         const query = `
             INSERT INTO tbUsuario (Nombre_Usuario, Apellido_Usuario, Correo_Usuario, Contra_Usuario, Id_Rol, FechaHora_Conexion)
             VALUES (?, ?, ?, ?, ?, ?)
@@ -412,28 +414,30 @@ app.delete('/api/usuarios/:id', async (req, res) => {
 });
 
 
-// Endpoint de inicio de sesión
+// Endpoint para iniciar sesión y generar un JWT
 app.post('/api/login', async (req, res) => {
     const db = new DBConnection();
     const { correo, contraseña } = req.body;
-
-    if (!correo || !contraseña) {
-        return res.status(400).json({ message: 'Correo y contraseña son obligatorios' });
-    }
 
     try {
         const query = 'SELECT * FROM tbUsuario WHERE Correo_Usuario = ?';
         const [usuario] = await db.query(query, [correo]);
 
-        if (!usuario || !await bcrypt.compare(contraseña, usuario.Contra_Usuario)) {
-            return res.status(401).json({ message: 'Credenciales incorrectas' });
+        if (!usuario) {
+            return res.status(401).json({ message: 'Credenciales inválidas' });
         }
 
-        // Generar un JWT
-        const token = jwt.sign({ userId: usuario.Id_Usuario, idRol: usuario.Id_Rol }, secretKey, { expiresIn: '1h' });
+        // Comparar la contraseña proporcionada con la almacenada
+        const isMatch = await bcrypt.compare(contraseña, usuario.Contra_Usuario);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Credenciales inválidas' });
+        }
 
-        // Establecer una cookie con el token
-        res.cookie('token', token, { httpOnly: true, secure: true });
+        // Generar un token JWT
+        const token = jwt.sign({ id: usuario.Id_Usuario, rol: usuario.Id_Rol }, 'tu_secreto', { expiresIn: '1h' });
+
+        // Establecer el token en una cookie
+        res.cookie('token', token, { httpOnly: true, secure: true }); // Asegúrate de usar secure: true en producción
         res.json({ message: 'Inicio de sesión exitoso' });
     } catch (error) {
         console.error('Error al iniciar sesión:', error.message);
@@ -443,17 +447,39 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// Middleware para autenticar usando JWT
-function authenticateJWT(req, res, next) {
-    const token = req.cookies.token;
-    if (!token) return res.sendStatus(403); // No autorizado
+// Middleware para verificar el token JWT
+const authenticateJWT = (req, res, next) => {
+    const token = req.cookies.token; // Obtener el token de las cookies
+    if (token) {
+        jwt.verify(token, 'tu_secreto', (err, user) => {
+            if (err) {
+                return res.sendStatus(403);
+            }
+            req.user = user;
+            next();
+        });
+    } else {
+        res.sendStatus(401);
+    }
+};
 
-    jwt.verify(token, secretKey, (err, user) => {
-        if (err) return res.sendStatus(403); // No autorizado
-        req.user = user;
-        next();
-    });
-}
+// Ejemplo de uso del middleware en una ruta protegida
+app.get('/api/protegida', authenticateJWT, (req, res) => {
+    res.json({ message: 'Esta es una ruta protegida', user: req.user });
+});
+
+// Endpoint para cerrar sesión y eliminar el token
+app.post('/api/logout', (req, res) => {
+    res.clearCookie('token'); // Eliminar la cookie del token
+    res.json({ message: 'Sesión cerrada exitosamente' });
+});
+
+// Endpoint para obtener el rol del usuario logueado
+app.get('/api/rol', authenticateJWT, (req, res) => {
+    res.json({ rol: req.user.rol });
+});
+
+
 
 
 

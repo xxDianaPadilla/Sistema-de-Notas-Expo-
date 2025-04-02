@@ -5,14 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPTC | Usuarios</title>
     <link rel="icon" href="/logoRedondo.png" type="icon/png">
-    <!--Estilo propio-->
     <link rel="stylesheet" href="/usersStyle.css">
-
-    <!--Estilo menú-->
     <link rel="stylesheet" href="/menu.css">
 </head>
 <body>
-    <!--Menú lateral-->
     <aside class="menu-lateral">
         <div class="logo">
             <img src="/logoRedondo.png" alt="Logo Salesianos Ricaldone">
@@ -40,7 +36,6 @@
         <button class="cerrar-sesion"><img src="/logout.svg" alt="home"> Cerrar Sesión</button>
     </aside>
 
-    <!--Alerta para cerrar sesión-->
     <div class="alert" id="alert">
         <div class="alert-box">
             <p>¿Estás seguro de que quieres cerrar sesión?</p>
@@ -53,10 +48,10 @@
 
     <main>
         <div id="categoriaBox">
-            <section class="tipoCat1">
+            <section class="tipoCat1 active" style="cursor: pointer;">
                 <h1>Usuarios del sistema</h1>
             </section>
-            <section class="tipoCat2">
+            <section class="tipoCat2" style="cursor: pointer;">
                 <h1>Alumnos del colegio</h1>
             </section>
         </div>
@@ -69,14 +64,40 @@
         </div>
         
         <div id="modalContainer" class="hidden"></div>
-
-        <div id="cardContainer">
-
-        </div>
+        <div id="cardContainer"></div>
     </main>
 
     <script src="/usersScript.js"></script>
     <script src="/cerrarSesion.js"></script>
     <script src="/menu.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const tipoCat1 = document.querySelector('.tipoCat1');
+            const tipoCat2 = document.querySelector('.tipoCat2');
+
+            // Resaltar la sección activa al cargar la página
+            if (window.location.pathname.includes('students.html')) {
+                tipoCat2.classList.add('active');
+                tipoCat1.classList.remove('active');
+            } else {
+                tipoCat1.classList.add('active');
+                tipoCat2.classList.remove('active');
+            }
+
+            // Agregar evento de clic para tipoCat1
+            tipoCat1.addEventListener('click', () => {
+                tipoCat1.classList.add('active');
+                tipoCat2.classList.remove('active');
+                location.href = '/users.html'; // Navegar a usuarios
+            });
+
+            // Agregar evento de clic para tipoCat2
+            tipoCat2.addEventListener('click', () => {
+                tipoCat2.classList.add('active');
+                tipoCat1.classList.remove('active');
+                location.href = '/students.html'; // Navegar a estudiantes
+            });
+        });
+    </script>
 </body>
 </html>

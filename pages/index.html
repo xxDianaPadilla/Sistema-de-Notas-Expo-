@@ -51,18 +51,66 @@
             </div>
             <h1>¡Bienvenido al Sistema de Notas PTC!</h1>
             <p>Accede al sistema con tus credenciales.</p>
-            <form>
-                <input type="text" placeholder="Usuario" required>
+            <form id="loginForm">
+                <input type="text" id="username" placeholder="Usuario" required>
                 <div class="password-container">
                     <input type="password" id="password" placeholder="Contraseña" required>
-                <span class="toggle-password" onclick="togglePassword()">
-                    <img id="password-icon" src="/no_ver_contrasena.png" alt="">
-                </span>
+                    <span class="toggle-password" onclick="togglePassword()">
+                        <img id="password-icon" src="/no_ver_contrasena.png" alt="">
+                    </span>
                 </div>
                 <button type="submit" class="login-btn">Acceder</button>
             </form>
         </div>
     </div>
     <script src="/cerrarSesion.js"></script>
+
+    
+    <script>
+        // Función para alternar la visibilidad de la contraseña
+        function togglePassword() {
+            const passwordInput = document.getElementById("password");
+            const passwordIcon = document.getElementById("password-icon");
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                passwordIcon.src = "/ver_contrasena.png"; // Cambia la imagen a la de "ver"
+            } else {
+                passwordInput.type = "password";
+                passwordIcon.src = "/no_ver_contrasena.png"; // Cambia la imagen a la de "no ver"
+            }
+        }
+
+        // Manejar el envío del formulario
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Evitar el envío del formulario por defecto
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Enviar los datos al servidor para iniciar sesión
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ correo: username, contraseña: password })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+                // Aquí puedes redirigir al usuario a otra página o realizar otras acciones
+                window.location.href = '/dashboard.html'; // Redirigir a la página del dashboard
+            })
+            .catch(error => {
+                console.error("Error al iniciar sesión:", error);
+                alert("Error al iniciar sesión. Verifica tus credenciales.");
+            });
+        });
+    </script>
 </body>
 </html>
