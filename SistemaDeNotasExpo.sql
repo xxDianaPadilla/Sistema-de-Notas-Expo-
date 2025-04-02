@@ -139,8 +139,8 @@ INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante
 INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, id_Proyecto) VALUES (20200008, 'José Luis', 'Iraheta Marroquín', 3, 4, 'CD01-25');
 INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, id_Proyecto) VALUES (20200009, 'Edenilson Alexander', 'Amaya Benítez', 3, 4, 'CD01-25');
 INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, id_Proyecto) VALUES (20200010, 'Adriel Levi', 'Moreno Solano', 3, 4, 'CD01-25');
-INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad, id_Proyecto) VALUES (202000011, 'Ana Sofía', 'Mendoza Torres', 6, 7, 3, 'D301-25');
-INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad, id_Proyecto) VALUES (202000012, 'Juan Pablo', 'Rodríguez López', 6, 7, 3, 'D301-25');
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad, id_Proyecto) VALUES (20200011, 'Ana Sofía', 'Mendoza Torres', 6, 7, 3, 'D301-25');
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad, id_Proyecto) VALUES (20200012, 'Juan Pablo', 'Rodríguez López', 6, 7, 3, 'D301-25');
 INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, id_Proyecto) VALUES (20200013, 'María Fernanda', 'Pérez Gómez', 2, 1, 'BA01-25');
 INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, id_Proyecto) VALUES (20200014, 'Carlos Andrés', 'Sánchez Díaz', 2, 1, 'BA01-25');
 INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad) VALUES (20200015, 'Sofía Isabel', 'Martínez Ruiz', 3, 7, 6);
@@ -170,6 +170,8 @@ CREATE TABLE tbTipoEvaluacion (
 -- Inserts para Tipo de Evaluación
 INSERT INTO tbTipoEvaluacion (id_TipoEvaluacion, nombre_TipoEvaluacion) 
 VALUES (1, 'Escala estimativa'), (2, 'Rúbrica');
+
+SELECT * FROM tbTipoEvaluacion;
 
 -- Tabla de Rúbricas
 CREATE TABLE tbRubrica (
