@@ -5,7 +5,7 @@ class DBConnection {
     this.connection = mysql.createConnection({
       host: 'localhost', 
       user: 'root',    
-      password: 'Messi10', 
+      password: 'Firezone234', 
       database: 'BasededatosNotasEXPO' 
     });
 

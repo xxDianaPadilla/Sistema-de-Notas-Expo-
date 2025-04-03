@@ -480,10 +480,24 @@ app.get('/api/rol', authenticateJWT, (req, res) => {
 });
 
 
-
+// Endpoint para obtener las secciones/grupos
+app.get('/api/seccion-grupos', async (req, res) => {
+    const db = new DBConnection();
+    try {
+        const query = 'SELECT Id_SeccionGrupo AS id, Nombre_SeccionGrupo AS nombre FROM tbSeccionGrupo';
+        const secciones = await db.query(query);
+        res.json(secciones);
+    } catch (error) {
+        console.error('Error obteniendo secciones/grupos:', error.message);
+        res.status(500).send('Error del servidor');
+    } finally {
+        db.close();
+    }
+});
 
 
 // Servidor escuchando en el puerto definido
 app.listen(PORT, () =>{
     console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
+
