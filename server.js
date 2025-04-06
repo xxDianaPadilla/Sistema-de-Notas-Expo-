@@ -814,10 +814,10 @@ app.get('/proyectos/:id/estudiantes', (req, res) => {
 });
 
 app.put('/actualizarProyecto', async (req, res) => {
-    const { idProyecto, nombre, nivelId, seccionId, especialidadId, estado, estudiantesIds } = req.body;
+    const { idProyecto, nombre, nivelId, seccionId, especialidadId, estado, estudiantesIds, originalProjectId } = req.body;
     
     console.log('Datos recibidos para actualización:', {
-        idProyecto, nombre, nivelId, seccionId, especialidadId, 
+        idProyecto, originalProjectId, nombre, nivelId, seccionId, especialidadId, 
         estado, estudiantesIds: estudiantesIds ? JSON.stringify(estudiantesIds) : 'null'
     });
     
@@ -828,6 +828,8 @@ app.put('/actualizarProyecto', async (req, res) => {
     if (!estudiantesIds || !Array.isArray(estudiantesIds)) {
         return res.status(400).json({ error: 'El formato de estudiantesIds es incorrecto' });
     }
+
+    const projectIdToUpdate = originalProjectId || idProyecto;
     
     const db = new DBConnection();
     
@@ -842,31 +844,63 @@ app.put('/actualizarProyecto', async (req, res) => {
         const id_estado = estado ? 1 : 2;
         const valorGoogle = `https://sites.google.com/ricaldone.edu.sv/${idProyecto}`;
         
-        const updateProyectoQuery = `
-            UPDATE tbProyectos 
-            SET nombre_Proyecto = ?, 
-                link_google_sites = ?,
-                Id_Nivel = ?, 
-                Id_SeccionGrupo = ?, 
-                Id_Especialidad = ?, 
-                id_estado = ?
-            WHERE id_Proyecto = ?
-        `;
-        
-        await db.query(
-            updateProyectoQuery,
-            [nombre, valorGoogle ,nivelId, seccionId, especialidadId || null, id_estado, idProyecto]
-        );
-        
-        console.log('Proyecto actualizado correctamente, ID proyecto:', idProyecto);
-        
-        const resetEstudiantesQuery = `
-            UPDATE tbEstudiantes 
-            SET id_Proyecto = NULL 
-            WHERE id_Proyecto = ?
-        `;
-        
-        await db.query(resetEstudiantesQuery, [idProyecto]);
+        if (projectIdToUpdate !== idProyecto) {
+            console.log(`ID del proyecto cambió: ${projectIdToUpdate} -> ${idProyecto}. Desvinculando estudiantes primero.`);
+            
+            const resetEstudiantesQuery = `
+                UPDATE tbEstudiantes 
+                SET id_Proyecto = NULL 
+                WHERE id_Proyecto = ?
+            `;
+            
+            await db.query(resetEstudiantesQuery, [projectIdToUpdate]);
+            
+            const deleteOldProjectQuery = `
+                DELETE FROM tbProyectos
+                WHERE id_Proyecto = ?
+            `;
+            
+            await db.query(deleteOldProjectQuery, [projectIdToUpdate]);
+            
+            const insertProyectoQuery = `
+                INSERT INTO tbProyectos
+                (id_Proyecto, nombre_Proyecto, Id_Nivel, Id_SeccionGrupo, Id_Especialidad, id_estado, link_google_sites)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            `;
+            
+            await db.query(
+                insertProyectoQuery,
+                [idProyecto, nombre, nivelId, seccionId, especialidadId || null, id_estado, valorGoogle]
+            );
+            
+            console.log('Proyecto recreado con nuevo ID:', idProyecto);
+        } else {
+            const updateProyectoQuery = `
+                UPDATE tbProyectos 
+                SET nombre_Proyecto = ?, 
+                    link_google_sites = ?,
+                    Id_Nivel = ?, 
+                    Id_SeccionGrupo = ?, 
+                    Id_Especialidad = ?, 
+                    id_estado = ?
+                WHERE id_Proyecto = ?
+            `;
+            
+            await db.query(
+                updateProyectoQuery,
+                [nombre, valorGoogle, nivelId, seccionId, especialidadId || null, id_estado, idProyecto]
+            );
+            
+            console.log('Proyecto actualizado correctamente, ID proyecto:', idProyecto);
+            
+            const resetEstudiantesQuery = `
+                UPDATE tbEstudiantes 
+                SET id_Proyecto = NULL 
+                WHERE id_Proyecto = ?
+            `;
+            
+            await db.query(resetEstudiantesQuery, [idProyecto]);
+        }
         
         if (estudiantesIds.length > 0) {
             const placeholders = estudiantesIds.map(() => '?').join(',');

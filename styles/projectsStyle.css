@@ -1,5 +1,3 @@
-/* Style para proyectos */
-
 @import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 
 * {
@@ -32,20 +30,16 @@ html {
     box-sizing: border-box;
 }
 
-main{
+main {
     margin-left: 230px;
     padding: 40px;
-    /* Esto hace que no exceda la altura visible de la ventana */
     max-height: 100vh;
-    /* Esto activa el scroll vertical :) */ 
     overflow-y: auto;
-    /* Esto evita el scroll horizontal :)*/ 
-    overflow-x: hidden; 
-    /* Esto asegura que el padding no expanda el tamaño del contenedor */
+    overflow-x: hidden;
     box-sizing: border-box;
 }
 
-.container{
+.container {
     width: 95%;
     margin: -20px auto;
     background: #E0E0E0;
@@ -53,18 +47,28 @@ main{
     border-radius: 10px;
 }
 
-.container-2{
+.container-2 {
     background-color: #ffffff;
     margin: -20px auto;
     padding: 20px;
     border-radius: 10px;
 }
 
-h2{
+h2 {
     margin-bottom: 5px;
+    margin-top: 0;
+    color: #333;
+    font-size: 20px;
 }
 
-.search-filter{
+h1 {
+    margin-bottom: 5px;
+    margin-top: 0;
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.search-filter {
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
@@ -72,7 +76,7 @@ h2{
     overflow: visible;
 }
 
-#buscar{
+#buscar {
     width: 30%;
     height: 30%;
     padding: 8px;
@@ -80,7 +84,7 @@ h2{
     border: 2px solid #444;
 }
 
-#filtrarBtn{
+#filtrarBtn {
     color: #000000;
     background-color: #ffffff;
     padding: 8px;
@@ -89,138 +93,7 @@ h2{
     cursor: pointer;
 }
 
-#filtrarBtn img{
-    width: 20px;
-    height: 20px;
-    margin-bottom: -5px;
-}
-
-table{
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-}
-
-thead{
-    background-color: #ffffff;
-    color: #000000;
-}
-
-th, td{
-    padding: 10px;
-    text-align: left;
-    width: auto;
-}
-
-th:nth-child(1), td:nth-child(1) {
-    width: 50%; 
-}
-
-th:nth-child(2), td:nth-child(2) {
-    width: 30%; 
-}
-
-th:nth-child(3), td:nth-child(3) {
-    width: 40%; 
-}
-
-tr{
-    border-bottom: 1px solid #444;
-}
-
-.estado{
-    display: flex;
-    align-items: center;
-}
-
-.estado .circulo{
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    margin-right: 8px;
-}
-
-.verde{
-    background-color: green;
-}
-
-.rojo{
-    background-color: red;
-}
-
-.tabs{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.tab{
-    background: none;
-    border: none;
-    font-size: 18px;
-    padding: -10px;
-    cursor: pointer;
-}
-
-.tab.active{
-    font-weight: bold;
-    text-decoration: underline;
-}
-
-#add-button{
-    background: #CA8708;
-    border: none;
-    font-size: 18px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    color: #ffffff;
-}
-
-#add-button img{
-    width: 25px;
-    height: 25px;
-    margin-bottom: -6px;
-}
-
-.proyecto{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background-color: #ffffff;
-    margin-bottom: 10px;
-    border-radius: 5px;
-}
-
-.btn-editar{
-    background-color: #06AECC;
-    color: #ffffff;
-    width: 160px;
-    height: 30px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-}
-
-.btn-editar img{
-    width: 15px;
-    height: 15px;
-    margin-bottom: -1px;
-}
-
-#btn-link{
-    background-color: #F64382;
-    color: #ffffff;
-    width: 160px;
-    height: 30px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-}
-
-#btn-link img{
+#filtrarBtn img {
     width: 20px;
     height: 20px;
     margin-bottom: -5px;
@@ -239,7 +112,7 @@ tr{
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
     left: 70%;
     transform: translateX(100%);
-    top: 100%; 
+    top: 100%;
 }
 
 #filtro-menu.visible {
@@ -247,16 +120,173 @@ tr{
     opacity: 1;
 }
 
-.filtro-opcion{
+.filtro-opcion {
     padding: 5px;
     cursor: pointer;
 }
 
-.filtro-opcion:hover{
+.filtro-opcion:hover {
     background: #aaa;
 }
 
-.modal{
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+thead {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    width: auto;
+}
+
+th:nth-child(1), td:nth-child(1) {
+    width: 50%;
+}
+
+th:nth-child(2), td:nth-child(2) {
+    width: 30%;
+}
+
+th:nth-child(3), td:nth-child(3) {
+    width: 40%;
+}
+
+tr {
+    border-bottom: 1px solid #444;
+}
+
+.estado {
+    display: flex;
+    align-items: center;
+}
+
+.estado .circulo {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.verde {
+    background-color: green;
+}
+
+.rojo {
+    background-color: red;
+}
+
+.tabs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.tab {
+    background: none;
+    border: none;
+    font-size: 18px;
+    padding: -10px;
+    cursor: pointer;
+}
+
+.tab.active {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#add-button {
+    background: #CA8708;
+    border: none;
+    font-size: 18px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+#add-button img {
+    width: 25px;
+    height: 25px;
+    margin-bottom: -6px;
+}
+
+.proyecto {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #ffffff;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-editar {
+    background-color: #06AECC;
+    color: #ffffff;
+    width: 160px;
+    height: 30px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-editar img {
+    width: 15px;
+    height: 15px;
+    margin-bottom: -1px;
+}
+
+#btn-link {
+    background-color: #F64382;
+    color: #ffffff;
+    width: 160px;
+    height: 30px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+#btn-link img {
+    width: 20px;
+    height: 20px;
+    margin-bottom: -5px;
+}
+
+.primary-btn {
+    background-color: #0099cc;
+    color: #ffffff;
+}
+
+.primary-btn:hover {
+    background-color: #0088b3;
+}
+
+.secondary-btn {
+    background-color: #ff9933;
+    color: #ffffff;
+}
+
+.secondary-btn:hover {
+    background-color: #ff8c1a;
+}
+
+.modal, #editProjectFormModal {
     display: none;
     position: fixed;
     z-index: 1000;
@@ -265,9 +295,10 @@ tr{
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
+    overflow: auto;
 }
 
-.modal-content{
+.modal-content {
     background-color: #1c1c1c;
     margin: 10% auto;
     padding: 20px;
@@ -275,23 +306,58 @@ tr{
     width: 50%;
     color: #ffffff;
     margin-top: 80px;
-    margin-right: 300px;
+    position: relative;
 }
 
-.close-btn{
+#editProjectFormModal .modal-content {
+    background-color: #f2f2f2;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: #333;
+}
+
+.close-btn, .close-edit-btn {
     float: right;
     font-size: 24px;
     cursor: pointer;
+    color: #555;
 }
 
-.switch{
+.close-edit-btn {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-weight: bold;
+}
+
+.close-edit-btn:hover {
+    color: #000;
+}
+
+.close-btn:hover {
+    color: #ffffff;
+}
+
+.switch {
     position: relative;
     display: inline-block;
-    width: 40px;
+    width: 50px;
+    height: 24px;
     cursor: pointer;
+    margin-left: 10px;
 }
 
-.slider{
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -300,44 +366,69 @@ tr{
     bottom: 0;
     background-color: #ccc;
     transition: .4s;
-    border-radius: 40px;
+    border-radius: 34px;
 }
 
-.slider::before{
+.slider:before {
     position: absolute;
     content: "";
-    height: 14px;
-    width: 14px;
-    left: 3px;
-    bottom: 3px;
-    background-color: #ffffff;
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
     transition: .4s;
     border-radius: 50%;
 }
 
-input:checked + .slider{
+input:checked + .slider {
     background-color: #4caf50;
 }
 
-input:checked + .slider::before{
-    transform: translateX(22px);
+input:focus + .slider {
+    box-shadow: 0 0 1px #4caf50;
 }
 
-.form-buttons{
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.status-text {
+    display: inline-block;
+    margin-left: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #ccc;
+}
+
+.form-buttons {
     display: flex;
     margin-top: 20px;
+    text-align: right;
 }
 
-.insert-btn{
+.insert-btn, .update-btn {
     background-color: #06AECCDB;
     padding: 10px;
     border: none;
     color: #ffffff;
     cursor: pointer;
     border-radius: 10px;
+    margin-right: 10px;
 }
 
-.cancel-btn{
+.update-btn {
+    background-color: #4caf50;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+
+.update-btn:hover {
+    background-color: #45a049;
+}
+
+.cancel-btn {
     background-color: #F38E39;
     padding: 10px;
     border: none;
@@ -346,20 +437,33 @@ input:checked + .slider::before{
     border-radius: 10px;
 }
 
-#projectName{
+#editProjectForm .cancel-btn {
+    background-color: #f44336;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#editProjectForm .cancel-btn:hover {
+    background-color: #d32f2f;
+}
+
+#projectName, #projectID, #studentList, #editStudentList {
     width: 96%;
     padding: 10px;
-    height: 20px;
     background-color: #1D1D1B;
     border: 1px solid #ffffff;
     border-radius: 4px;
     color: #ffffff;
     margin-top: 10px;
+}
+
+#projectName {
+    height: 20px;
     margin-bottom: 15px;
 }
 
-#projectLevel{
-    width: 19%;
+#projectLevel, #projectSection, #projectEspecialidad {
     padding: 10px;
     height: 40px;
     background-color: #1D1D1B;
@@ -368,50 +472,69 @@ input:checked + .slider::before{
     color: #ffffff;
 }
 
-#projectSection{
+#projectLevel {
+    width: 19%;
+}
+
+#projectSection {
     width: 10%;
-    padding: 10px;
-    height: 40px;
-    background-color: #1D1D1B;
-    border: 1px solid #ffffff;
-    border-radius: 4px;
-    color: #ffffff;
 }
 
-#projectEspecialidad{
+#projectEspecialidad {
     width: 33%;
-    padding: 10px;
-    height: 40px;
-    background-color: #1D1D1B;
-    border: 1px solid #ffffff;
-    border-radius: 4px;
-    color: #ffffff;
 }
 
-#projectID{
+#projectID {
     width: 19%;
-    padding: 10px;
     height: 20px;
-    background-color: #1D1D1B;
-    border: 1px solid #ffffff;
-    border-radius: 4px;
-    color: #ffffff;
     margin-bottom: 10px;
-    margin-top: 10px;
 }
 
-#studentList{
-    width: 96%;
-    padding: 10px;
+#studentList, #editStudentList {
     height: 100px;
-    background-color: #1D1D1B;
-    border: 1px solid #ffffff;
-    border-radius: 4px;
-    color: #ffffff;
     margin-top: 10px;
 }
 
-#addStudentBtn{
+#editStudentList {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    color: #333;
+    background-color: #fff;
+    margin-bottom: 10px;
+}
+
+#editProjectForm label {
+    display: block;
+    margin: 15px 0 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+#editProjectForm input[type="text"],
+#editProjectForm select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    color: #333;
+    background-color: #fff;
+}
+
+#editProjectForm input[type="text"]:focus,
+#editProjectForm select:focus {
+    border-color: #6691e7;
+    outline: none;
+    box-shadow: 0 0 5px rgba(102, 145, 231, 0.5);
+}
+
+#editProjectForm input[readonly] {
+    background-color: #f9f9f9;
+}
+
+#addStudentBtn, #editAddStudentBtn {
     width: 30%;
     height: 50px;
     background-color: #1D1D1B;
@@ -422,11 +545,25 @@ input:checked + .slider::before{
     cursor: pointer;
 }
 
-#addStudentBtn:hover{
+#editAddStudentBtn {
+    background-color: #6691e7;
+    padding: 6px 12px;
+    border: none;
+    font-size: 14px;
+    margin-bottom: 15px;
+    height: auto;
+    width: auto;
+}
+
+#editAddStudentBtn:hover {
+    background-color: #5576c6;
+}
+
+#addStudentBtn:hover {
     background-color: #D9D9D926;
 }
 
-.modal-overlay{
+.modal-overlay, #editStudentsModalOverlay {
     display: none;
     position: fixed;
     top: 0;
@@ -439,8 +576,12 @@ input:checked + .slider::before{
     align-items: center;
 }
 
-.modal-content2{
+#editStudentsModalOverlay {
+    z-index: 1010;
+    background-color: rgba(0, 0, 0, 0.7);
+}
 
+.modal-content2, .students-modal {
     background-color: #1e1e1e;
     border-radius: 8px;
     width: 80%;
@@ -452,7 +593,15 @@ input:checked + .slider::before{
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.modal-header{
+.students-modal {
+    background-color: white;
+    max-width: 700px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border: none;
+}
+
+.modal-header, .students-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -460,23 +609,36 @@ input:checked + .slider::before{
     border-bottom: 1px solid #333;
 }
 
-.modal-header h2{
+.students-modal-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.modal-header h2, .students-modal-header h2 {
     color: #ffffff;
     margin: 0;
     font-size: 1.2rem;
 }
 
-.close-btn:hover{
-    color: #ffffff;
+.students-modal-header h2 {
+    color: #333;
+    font-size: 18px;
 }
 
-.modal-body{
+.close-edit-student-btn {
+    font-size: 20px;
+    cursor: pointer;
+    color: #555;
+}
+
+.modal-body {
     padding: 15px;
     flex-grow: 1;
     overflow-y: auto;
 }
 
-.modal-footer{
+.modal-footer, .modal-buttons {
     padding: 15px;
     display: flex;
     justify-content: flex-end;
@@ -484,7 +646,12 @@ input:checked + .slider::before{
     border-top: 1px solid #333;
 }
 
-.filter-container, .search-container{
+.modal-buttons {
+    margin-top: 15px;
+    border-top: none;
+}
+
+.filter-container, .search-container {
     margin-bottom: 15px;
 }
 
@@ -497,7 +664,29 @@ input:checked + .slider::before{
     border-radius: 4px;
 }
 
-.students-list{
+.filter-container2 {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.filter-container2 select,
+.filter-container2 input {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.filter-container2 select {
+    width: 40%;
+}
+
+.filter-container2 input {
+    width: 60%;
+}
+
+.students-list, .available-students-list {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -505,7 +694,13 @@ input:checked + .slider::before{
     overflow-y: auto;
 }
 
-.student-item{
+.available-students-list {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #333;
+}
+
+.student-item {
     padding: 12px;
     border-bottom: 1px solid #333;
     display: flex;
@@ -513,31 +708,57 @@ input:checked + .slider::before{
     color: #ffffff;
 }
 
-.student-item:last-child{
+.available-students-list .student-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    color: #333;
+}
+
+.student-item:last-child {
     border-bottom: none;
 }
 
-.student-item.assigned{
+.available-students-list .student-item:hover {
+    background-color: #f5f5f5;
+}
+
+.student-item.assigned {
     opacity: 0.6;
     background-color: #2d2d2d;
 }
 
-.student-checkbox{
+.available-students-list .student-item.assigned {
+    background-color: #f0f0f0;
+    color: #999;
+}
+
+.student-checkbox {
     margin-right: 10px;
 }
 
-.student-info{
+.student-info {
     flex-grow: 1;
 }
 
-.student-carnet{
+.available-students-list .student-info {
+    margin-left: 10px;
+    color: #333;
+}
+
+.student-carnet {
     font-size: 0.8rem;
     color: #999;
     margin-top: 4px;
     display: block;
 }
 
-.student-assigned-tag{
+.available-students-list .student-carnet {
+    font-size: 12px;
+    color: #666;
+    margin-top: 3px;
+}
+
+.student-assigned-tag {
     background-color: #f44336;
     color: #ffffff;
     padding: 2px 6px;
@@ -546,42 +767,29 @@ input:checked + .slider::before{
     margin-left: 8px;
 }
 
-.btn{
-    padding: 8px 16px;
-    border: none;
+.available-students-list .student-assigned-tag {
+    border-radius: 10px;
+    font-size: 11px;
+    margin-left: 5px;
+}
+
+.level-badge {
+    background-color: #666;
+    padding: 2px 6px;
     border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
+    font-size: 0.7rem;
+    margin-left: 8px;
 }
 
-.primary-btn{
-    background-color: #0099cc;
-    color: #ffffff;
+.available-students-list .level-badge {
+    background-color: #6691e7;
+    color: white;
+    border-radius: 10px;
+    font-size: 11px;
+    margin-left: 5px;
 }
 
-.primary-btn:hover{
-    background-color: #0088b3;
-}
-
-.secondary-btn{
-    background-color: #ff9933;
-    color: #ffffff;
-}
-
-.secondary-btn:hover{
-    background-color: #ff8c1a;
-}
-
-#studentList{
-    background-color: #2d2d2d;
-    border: 1px solid #333;
-    border-radius: 4px;
-    padding: 10px;
-    min-height: 100px;
-    margin-top: 10px;
-}
-
-.selected-student{
+.selected-student {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -592,42 +800,66 @@ input:checked + .slider::before{
     color: #ffffff;
 }
 
-.remove-student{
+#editStudentList .selected-student {
+    padding: 8px;
+    margin-bottom: 5px;
+    background-color: #f9f9f9;
+    color: #333;
+    border: 1px solid #eee;
+}
+
+#editStudentList .selected-student:hover {
+    background-color: #f0f0f0;
+}
+
+.remove-student {
     color: #f44336;
     cursor: pointer;
     font-weight: bold;
     font-size: 1.2rem;
 }
 
-.remove-student:hover{
+#editStudentList .remove-student {
+    font-size: 16px;
+}
+
+.remove-student:hover {
     color: #ff5c5c;
 }
 
-.level-badge{
-    background-color: #666;
-    padding: 2px 6px;
+#editStudentList .remove-student:hover {
+    color: #d32f2f;
+}
+
+#editSelectStudentBtn {
+    background-color: #4caf50;
+    color: white;
+    padding: 8px 16px;
+    border: none;
     border-radius: 4px;
-    font-size: 0.7rem;
-    margin-left: 8px;
+    cursor: pointer;
+    font-size: 14px;
 }
 
-.status-text{
-    display: inline-block;
-    margin-left: 10px;
-    font-weight: bold;
+#editSelectStudentBtn:hover {
+    background-color: #45a049;
 }
 
-.switch input{
-    opacity: 0;
-    width: 0;
-    height: 0;
+#editCancelSelectionBtn {
+    background-color: #f44336;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
 }
 
-input:focus + .slider{
-    box-shadow: 0 0 1px #4caf50;
+#editCancelSelectionBtn:hover {
+    background-color: #d32f2f;
 }
 
-.alerta{
+.alerta {
     position: fixed;
     top: -100px;
     left: 50%;
@@ -641,14 +873,14 @@ input:focus + .slider{
     transition: top 0.3s ease-in-out;
 }
 
-.alerta.mostrar{
+.alerta.mostrar {
     top: 20px;
 }
 
-.alerta.success{
+.alerta.success {
     background-color: #4caf50;
 }
 
-.alerta.error{
+.alerta.error {
     background-color: #f44336;
 }

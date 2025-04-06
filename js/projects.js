@@ -661,7 +661,7 @@ editStudentModalOverlay.innerHTML = `
             <h2>Seleccionar Estudiantes</h2>
             <span class="close-edit-student-btn">&times;</span>
         </div>
-        <div class="filter-container">
+        <div class="filter-container2">
             <select id="editNivelFilter">
                 <option value="0">Todos los niveles</option>
                 <option value="1">Séptimo</option>
@@ -1095,6 +1095,7 @@ editProjectLevelSelect.addEventListener('change', toggleEditEspecialidadSelect);
         
         const projectData = {
             idProyecto: editProjectIdInput.value,
+            originalProjectId: window.originalProjectId, 
             nombre: editProjectNameInput.value.trim(),
             nivelId: parseInt(editProjectLevelSelect.value),
             seccionId: parseInt(editProjectSectionSelect.value),
