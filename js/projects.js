@@ -707,6 +707,8 @@ function editarProyecto(idProyecto) {
         editStudentListContainer.innerHTML = '';
     }
     
+    window.loadingProjectForEdit = true;
+    
     editProjectModal.style.display = 'block';
     
     fetch(`http://localhost:5501/proyectos/${idProyecto}`)
@@ -733,12 +735,14 @@ function editarProyecto(idProyecto) {
                 return;
             }
             
-            const projectId = proyecto.idProyecto; 
+            const projectId = proyecto.idProyecto || proyecto.id_Proyecto; 
             const projectName = proyecto.nombre_Proyecto; 
             const nivelId = proyecto.Id_Nivel;
             const seccionId = proyecto.Id_SeccionGrupo;
             const especialidadId = proyecto.Id_Especialidad;
             const estado = proyecto.Estado;
+            
+            window.originalProjectId = projectId;
             
             editProjectIdInput.value = projectId;
             editProjectNameInput.value = projectName || '';
@@ -746,6 +750,10 @@ function editarProyecto(idProyecto) {
             cargarNivelesEdicion(nivelId, () => {
                 cargarSeccionGrupoEdicion(seccionId, () => {
                     cargarEspecialidadEdicion(especialidadId);
+                    
+                    setTimeout(() => {
+                        window.loadingProjectForEdit = false;
+                    }, 100);
                 });
             });
             
@@ -757,6 +765,7 @@ function editarProyecto(idProyecto) {
         .catch(error => {
             console.error('Error loading project data:', error);
             mostrarAlerta('Error al cargar datos del proyecto: ' + error.message, 'error');
+            window.loadingProjectForEdit = false;
         });
 }
 
@@ -863,6 +872,12 @@ function toggleEditEspecialidadSelect() {
     const esBachillerato = nivelId >= 4 && nivelId <= 6;
     
     editProjectEspecialidadSelect.disabled = !esBachillerato;
+    
+    if (!esBachillerato) {
+        editProjectEspecialidadSelect.value = "";
+    }
+    
+    generarIdProyectoEdicion();
 }
 
 function openEditStudentModal() {
@@ -1206,4 +1221,116 @@ editProjectLevelSelect.addEventListener('change', toggleEditEspecialidadSelect);
     window.editarProyecto = editarProyecto;
     editarProyectoGlobal = editarProyecto;
 
+    editProjectLevelSelect.addEventListener('change', function() {
+        toggleEditEspecialidadSelect();
+        generarIdProyectoEdicion();
+    });
+
+    editProjectSectionSelect.addEventListener('change', function() {
+        generarIdProyectoEdicion();
+    });
+
+    editProjectEspecialidadSelect.addEventListener('change', function() {
+        generarIdProyectoEdicion();
+    });
+
+    async function obtenerNumeroProyectoEdicion(idProyectoActual) {
+        const nivelId = editProjectLevelSelect.value;
+        const seccionId = editProjectSectionSelect.value;
+        const especialidadId = editProjectEspecialidadSelect.value;
+        
+        if (!nivelId || !seccionId || (editProjectEspecialidadSelect.disabled === false && !especialidadId)) {
+            return "01";
+        }
+        
+        try {
+            let prefijo;
+            if (parseInt(nivelId) >= 4 && parseInt(nivelId) <= 6) {
+                const especialidad = especialidadesData.find(e => e.Id_Especialidad == especialidadId);
+                const nivel = nivelesData.find(n => n.Id_Nivel == nivelId);
+                if (!especialidad || !nivel) return "01";
+                prefijo = especialidad.letra_especialidad + nivel.letra_nivel;
+            } else {
+                const nivel = nivelesData.find(n => n.Id_Nivel == nivelId);
+                const seccion = seccionesData.find(s => s.Id_SeccionGrupo == seccionId);
+                if (!nivel || !seccion) return "01";
+                prefijo = nivel.letra_nivel + seccion.Nombre_SeccionGrupo;
+            }
+            
+            const idActualParts = idProyectoActual.match(/([A-Z0-9]+)(\d{2})-(\d{2})/);
+            if (idActualParts && idActualParts[1] === prefijo) {
+                return idActualParts[2];
+            }
+            
+            const response = await fetch(`http://localhost:5501/proyectosId?prefijo=${prefijo}`);
+            const proyectos = await response.json();
+            
+            if (!proyectos || proyectos.length === 0) {
+                return "01";
+            }
+            
+            let maxNumero = 0;
+            proyectos.forEach(proyecto => {
+                const match = proyecto.id_Proyecto.match(/[A-Z0-9]+(\d{2})-\d{2}/);
+                if (match && match[1]) {
+                    const num = parseInt(match[1]);
+                    if (num > maxNumero) {
+                        maxNumero = num;
+                    }
+                }
+            });
+            
+            return (maxNumero + 1).toString().padStart(2, '0');
+        } catch (error) {
+            console.error('Error obteniendo el número de proyectos:', error);
+            return "01";
+        }
+    }
+
+    async function generarIdProyectoEdicion() {
+        if (window.loadingProjectForEdit) {
+            console.log('Cargando proyecto, no se regenera ID');
+            return;
+        }
+        
+        const nivelId = editProjectLevelSelect.value;
+        const seccionId = editProjectSectionSelect.value;
+        const especialidadId = editProjectEspecialidadSelect.value;
+        
+        const idProyectoActual = window.originalProjectId || editProjectIdInput.value;
+        
+        if (!nivelId || !seccionId || (editProjectEspecialidadSelect.disabled === false && !especialidadId)) {
+            return;
+        }
+        
+        const year = "25"; 
+        
+        const numeroProyecto = await obtenerNumeroProyectoEdicion(idProyectoActual);
+        
+        let idProyecto = "";
+        
+        if (parseInt(nivelId) >= 4 && parseInt(nivelId) <= 6) {
+            const especialidad = especialidadesData.find(e => e.Id_Especialidad == especialidadId);
+            const nivel = nivelesData.find(n => n.Id_Nivel == nivelId);
+            
+            if (especialidad && nivel) {
+                idProyecto = especialidad.letra_especialidad + nivel.letra_nivel + numeroProyecto + "-" + year;
+            }
+        } else {
+            const nivel = nivelesData.find(n => n.Id_Nivel == nivelId);
+            const seccion = seccionesData.find(s => s.Id_SeccionGrupo == seccionId);
+            
+            if (nivel && seccion) {
+                idProyecto = nivel.letra_nivel + seccion.Nombre_SeccionGrupo + numeroProyecto + "-" + year;
+            }
+        }
+        
+        if (idProyecto && idProyecto !== idProyectoActual) {
+            console.log(`ID del proyecto cambiado: ${idProyectoActual} -> ${idProyecto}`);
+        }
+        
+        if (idProyecto) {
+            editProjectIdInput.value = idProyecto;
+        }
+    }
 });
