@@ -1,0 +1,378 @@
+#editProjectFormModal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#editProjectFormModal .modal-content {
+    background-color: #f2f2f2;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.close-edit-btn {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #555;
+}
+
+.close-edit-btn:hover {
+    color: #000;
+}
+
+#editProjectFormModal h2 {
+    margin-top: 0;
+    color: #333;
+    font-size: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+#editProjectForm label {
+    display: block;
+    margin: 15px 0 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+#editProjectForm input[type="text"],
+#editProjectForm select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+#editProjectForm input[type="text"]:focus,
+#editProjectForm select:focus {
+    border-color: #6691e7;
+    outline: none;
+    box-shadow: 0 0 5px rgba(102, 145, 231, 0.5);
+}
+
+#editProjectForm input[readonly] {
+    background-color: #f9f9f9;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+    margin-left: 10px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #4caf50;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #4caf50;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.status-text {
+    margin-left: 10px;
+    font-size: 14px;
+    color: #ccc;
+}
+
+/* Estilos para los botones */
+.form-buttons {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.update-btn {
+    background-color: #4caf50;
+    color: #ffffff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.update-btn:hover {
+    background-color: #45a049;
+}
+
+.cancel-btn {
+    background-color: #f44336;
+    color: #ffffff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.cancel-btn:hover {
+    background-color: #d32f2f;
+}
+
+/* Estilos para la lista de estudiantes */
+#editStudentList {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    color: #333;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.selected-student {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    margin-bottom: 5px;
+    background-color: #f9f9f9;
+    color: #333;
+    border-radius: 4px;
+    border: 1px solid #eee;
+}
+
+.selected-student:hover {
+    background-color: #f0f0f0;
+}
+
+.remove-student {
+    color: #f44336;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.remove-student:hover {
+    color: #d32f2f;
+}
+
+#editAddStudentBtn {
+    background-color: #6691e7;
+    color: #ffffff;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+#editAddStudentBtn:hover {
+    background-color: #5576c6;
+}
+
+/* Modal para seleccionar estudiantes */
+#editStudentsModalOverlay {
+    display: none;
+    position: fixed;
+    z-index: 1010;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.students-modal {
+    background-color: white;
+    width: 90%;
+    max-width: 700px;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.students-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.students-modal-header h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.close-edit-student-btn {
+    font-size: 20px;
+    cursor: pointer;
+    color: #555;
+}
+
+.filter-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.filter-container select,
+.filter-container input {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.filter-container select {
+    width: 40%;
+}
+
+.filter-container input {
+    width: 60%;
+}
+
+.available-students-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #333;
+}
+
+.student-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    color: #333;
+}
+
+.student-item:last-child {
+    border-bottom: none;
+}
+
+.student-item:hover {
+    background-color: #f5f5f5;
+}
+
+.student-item.assigned {
+    background-color: #f0f0f0;
+    color: #ccc;
+}
+
+.student-info {
+    margin-left: 10px;
+    flex-grow: 1;
+    color: #333;
+}
+
+.student-carnet {
+    font-size: 12px;
+    color: #666;
+    display: block;
+    margin-top: 3px;
+}
+
+.level-badge {
+    background-color: #6691e7;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 11px;
+    margin-left: 5px;
+}
+
+.student-assigned-tag {
+    background-color: #f44336;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 11px;
+    margin-left: 5px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+    gap: 10px;
+}
+
+.modal-buttons button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#editSelectStudentBtn {
+    background-color: #4caf50;
+    color: white;
+}
+
+#editSelectStudentBtn:hover {
+    background-color: #45a049;
+}
+
+#editCancelSelectionBtn {
+    background-color: #f44336;
+    color: white;
+}
+
+#editCancelSelectionBtn:hover {
+    background-color: #d32f2f;
+}

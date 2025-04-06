@@ -313,6 +313,7 @@ app.get('/proyectos', (req, res) =>{
     const db = new DBConnection();
     const query = `
         SELECT 
+            tbProyectos.id_Proyecto AS IdProyecto,
             tbProyectos.id_nivel AS Id_Nivel,  
             tbProyectos.nombre_Proyecto AS Nombre_Proyecto,
             tbProyectos.link_google_sites AS Google_Sites,
@@ -343,7 +344,7 @@ app.get('/proyectos', (req, res) =>{
 
 app.get('/niveles', (req, res) => {
     const db = new DBConnection();
-    const query = 'SELECT Id_Nivel, Nombre_Nivel FROM tbNivel';
+    const query = 'SELECT Id_Nivel, Nombre_Nivel, letra_nivel FROM tbNivel';
 
     db.query(query, (err, results) => {
         if (err) {
@@ -371,7 +372,7 @@ app.get('/seccionGrupo', (req, res) =>{
 
 app.get('/especialidad', (req, res) =>{
     const db = new DBConnection();
-    const query = `SELECT Id_Especialidad, Nombre_Especialidad, FROM tbEspecialidad`;
+    const query = `SELECT Id_Especialidad, Nombre_Especialidad, letra_especialidad FROM tbEspecialidad`;
 
     db.query(query, (err, results) =>{
         if(err){
@@ -717,6 +718,204 @@ app.post('/crearRubrica', async (req, res) => {
         db.rollback(() => {
             console.error('Error en la transacción:', error);
             res.status(500).json({ error: 'Error al crear la rúbrica: ' + error.message });
+        });
+    } finally {
+        db.close();
+    }
+});
+
+app.get('/proyectos/:id', async (req, res) => {
+    const idProyecto = req.params.id;
+    
+    console.log('Recibida petición para proyecto ID:', idProyecto);
+    
+    if (!idProyecto) {
+        console.log('ID de proyecto no proporcionado');
+        return res.status(400).json({ error: 'Se requiere el ID del proyecto' });
+    }
+    
+    const db = new DBConnection();
+    const query = `
+        SELECT 
+            p.id_Proyecto AS idProyecto,
+            p.nombre_Proyecto, 
+            p.Id_Nivel, 
+            p.Id_SeccionGrupo, 
+            p.Id_Especialidad,
+            p.link_google_sites AS Google_Sites,
+            e.tipo_estado AS Estado
+        FROM 
+            tbProyectos p
+        INNER JOIN 
+            tbEstadoProyectos e ON p.id_estado = e.id_estado
+        WHERE 
+            p.id_Proyecto = ?
+    `;
+    
+    console.log('Ejecutando consulta SQL:', query);
+    console.log('Parámetros:', [idProyecto]);
+    
+    try {
+        const results = await db.query(query, [idProyecto]);
+        
+        console.log('Resultados encontrados:', results.length);
+        
+        if (results.length === 0) {
+            console.log('No se encontró ningún proyecto con ID:', idProyecto);
+            return res.status(404).json({ error: 'Proyecto no encontrado' });
+        }
+        
+        console.log('Devolviendo datos del proyecto:', results[0]);
+        res.json({ proyecto: results[0] });
+    } catch (err) {
+        console.error('Error obteniendo el proyecto:', err);
+        res.status(500).json({ error: 'Error obteniendo el proyecto', details: err.message });
+    } finally {
+        db.close(); 
+    }
+});
+
+app.get('/proyectos/:id/estudiantes', (req, res) => {
+    const idProyecto = req.params.id;
+    
+    if (!idProyecto) {
+        return res.status(400).json({ error: 'Se requiere el ID del proyecto' });
+    }
+    
+    const db = new DBConnection();
+    const query = `
+        SELECT 
+            id_Estudiante,
+            Codigo_Carnet,
+            nombre_Estudiante,
+            apellido_Estudiante,
+            Id_Nivel,
+            Id_SeccionGrupo,
+            Id_Especialidad,
+            id_Proyecto
+        FROM 
+            tbEstudiantes
+        WHERE 
+            id_Proyecto = ?
+        ORDER BY 
+            apellido_Estudiante, 
+            nombre_Estudiante
+    `;
+    
+    db.query(query, [idProyecto], (err, results) => {
+        if (err) {
+            console.error('Error obteniendo los estudiantes del proyecto:', err);
+            res.status(500).json({ error: 'Error obteniendo los estudiantes del proyecto' });
+            return;
+        }
+        
+        res.json({ estudiantes: results });
+    });
+});
+
+app.put('/actualizarProyecto', async (req, res) => {
+    const { idProyecto, nombre, nivelId, seccionId, especialidadId, estado, estudiantesIds } = req.body;
+    
+    console.log('Datos recibidos para actualización:', {
+        idProyecto, nombre, nivelId, seccionId, especialidadId, 
+        estado, estudiantesIds: estudiantesIds ? JSON.stringify(estudiantesIds) : 'null'
+    });
+    
+    if (!idProyecto || !nombre || !nivelId || !seccionId) {
+        return res.status(400).json({ error: 'Faltan campos obligatorios' });
+    }
+    
+    if (!estudiantesIds || !Array.isArray(estudiantesIds)) {
+        return res.status(400).json({ error: 'El formato de estudiantesIds es incorrecto' });
+    }
+    
+    const db = new DBConnection();
+    
+    try {
+        await new Promise((resolve, reject) => {
+            db.beginTransaction(err => {
+                if (err) reject(err);
+                else resolve();
+            });
+        });
+        
+        const id_estado = estado ? 1 : 2;
+        const valorGoogle = `https://sites.google.com/ricaldone.edu.sv/${idProyecto}`;
+        
+        const updateProyectoQuery = `
+            UPDATE tbProyectos 
+            SET nombre_Proyecto = ?, 
+                link_google_sites = ?,
+                Id_Nivel = ?, 
+                Id_SeccionGrupo = ?, 
+                Id_Especialidad = ?, 
+                id_estado = ?
+            WHERE id_Proyecto = ?
+        `;
+        
+        await db.query(
+            updateProyectoQuery,
+            [nombre, valorGoogle ,nivelId, seccionId, especialidadId || null, id_estado, idProyecto]
+        );
+        
+        console.log('Proyecto actualizado correctamente, ID proyecto:', idProyecto);
+        
+        const resetEstudiantesQuery = `
+            UPDATE tbEstudiantes 
+            SET id_Proyecto = NULL 
+            WHERE id_Proyecto = ?
+        `;
+        
+        await db.query(resetEstudiantesQuery, [idProyecto]);
+        
+        if (estudiantesIds.length > 0) {
+            const placeholders = estudiantesIds.map(() => '?').join(',');
+            const updateAllQuery = `
+                UPDATE tbEstudiantes 
+                SET id_Proyecto = ? 
+                WHERE id_Estudiante IN (${placeholders})
+            `;
+            
+            const updateParams = [idProyecto, ...estudiantesIds];
+            const updateResult = await db.query(updateAllQuery, updateParams);
+            
+            await new Promise((resolve, reject) => {
+                db.commit(err => {
+                    if (err) reject(err);
+                    else resolve();
+                });
+            });
+            
+            console.log(`Actualizaciones de estudiantes completadas: ${updateResult.affectedRows}/${estudiantesIds.length}`);
+            
+            res.status(200).json({
+                success: true,
+                message: 'Proyecto actualizado correctamente',
+                idProyecto: idProyecto,
+                estudiantes: updateResult.affectedRows,
+                errores: estudiantesIds.length - updateResult.affectedRows
+            });
+        } else {
+            await new Promise((resolve, reject) => {
+                db.commit(err => {
+                    if (err) reject(err);
+                    else resolve();
+                });
+            });
+            
+            console.log('Proyecto actualizado sin estudiantes - Transacción completada');
+            
+            res.status(200).json({
+                success: true,
+                message: 'Proyecto actualizado correctamente (sin estudiantes)',
+                idProyecto: idProyecto,
+                estudiantes: 0
+            });
+        }
+    } catch (error) {
+        db.rollback(() => {
+            console.error('Error en la transacción de actualización:', error);
+            res.status(500).json({ error: 'Error al actualizar el proyecto: ' + error.message });
         });
     } finally {
         db.close();

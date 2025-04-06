@@ -194,7 +194,7 @@ tr{
     border-radius: 5px;
 }
 
-#btn-editar{
+.btn-editar{
     background-color: #06AECC;
     color: #ffffff;
     width: 160px;
@@ -204,7 +204,7 @@ tr{
     cursor: pointer;
 }
 
-#btn-editar img{
+.btn-editar img{
     width: 15px;
     height: 15px;
     margin-bottom: -1px;

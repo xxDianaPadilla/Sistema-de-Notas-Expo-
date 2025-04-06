@@ -1,3 +1,5 @@
+let editarProyectoGlobal;
+
 document.addEventListener('DOMContentLoaded', () =>{
     const proyectosContainer = document.getElementById('proyectos-container');
     const totalProyectos = document.getElementById('totalProyectos');
@@ -41,51 +43,6 @@ document.addEventListener('DOMContentLoaded', () =>{
         5: '2° Bachillerato',
         6: '3° Bachillerato'
     };
-
-    function cargarProyectos(tipo, filtroNivel = null) {
-        fetch('http://localhost:5501/proyectos')
-            .then(response => response.json())
-            .then(data => {
-                proyectosData = data;
-                proyectosContainer.innerHTML = '';
-                let count = 0;
-
-                if (!data[tipo]) {
-                    console.error('Error: No hay datos para el tipo', tipo);
-                    return;
-                }
-
-                let proyectosFiltrados = data[tipo];
-
-                if(filtroNivel !== null){
-                    proyectosFiltrados = proyectosFiltrados.filter(p => p.Id_Nivel == filtroNivel);
-                }
-
-                if(proyectosFiltrados.length === 0){
-                    proyectosContainer.innerHTML = `<tr><td colspan="3">No hay proyectos disponibles</td></tr>`;
-                }else{
-                proyectosFiltrados.forEach(proyecto => {
-                    count++;
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td class="estado">
-                            <div class="circulo ${proyecto.Estado === 'Activo' ? 'verde' : 'rojo'}"></div>
-                            ${proyecto.Nombre_Proyecto}
-                        </td>
-                        <td>${proyecto.Estado}</td>
-                        <td>
-                            <button id="btn-link" onclick="window.open('${proyecto.Google_Sites}', '_blank')">Google Sites &nbsp;<img src="/link.png" alt=""></button>
-                            <button id="btn-editar" onclick="editarProyecto(${proyecto.IdProyecto})">Editar &nbsp;<img src="/Vector.png" alt=""></button>
-                        </td>
-                    `;
-                    proyectosContainer.appendChild(tr);
-                });
-            }
-
-                totalProyectos.textContent = count;
-            })
-            .catch(error => console.error('Error cargando proyectos:', error));
-    }
 
     function cambiarTab(event){
         tabs.forEach(tab => tab.classList.remove('active'));
@@ -635,4 +592,618 @@ document.addEventListener('DOMContentLoaded', () =>{
             selectedStudents = selectedStudents.filter(s => s.id_Estudiante !== studentId);
         }
     }
+
+    const editProjectModal = document.createElement('div');
+    editProjectModal.id = 'editProjectFormModal';
+    editProjectModal.className = 'modal';
+
+editProjectModal.innerHTML = `
+    <div class="modal-content" style="background-color: #f2f2f2;">
+        <span class="close-edit-btn">&times;</span>
+        <h2>Editar Proyecto</h2>
+        <form id="editProjectForm">
+            <input type="hidden" id="editProjectId">
+            <label>Nombre del proyecto</label>
+            <input type="text" id="editProjectName" required>
+            <label>Nivel</label>
+            <select id="editProjectLevel">
+                <option value="">Selecciona un nivel</option>
+            </select>
+            <label class="labels">Sección/Grupo</label>
+            <select id="editProjectSection">
+                <option value="">Selecciona una sección o grupo</option>
+            </select>
+            <label class="labels">Especialidad</label>
+            <select id="editProjectEspecialidad">
+                <option value="">Selecciona una especialidad</option>
+            </select>
+            <label class="labels">ID del Proyecto</label>
+            <input type="text" id="editProjectID" readonly>
+            <label>Estudiantes</label>
+            <div id="editStudentList"></div>
+            <button type="button" id="editAddStudentBtn">Agregar Estudiante</button>
+            <label>Estado</label>
+            <label class="switch">
+                <input type="checkbox" id="editProjectStatus">
+                <span class="slider"></span>
+            </label>
+            <span id="editStatusText" class="status-text">Activo</span>
+            <div class="form-buttons">
+                <button type="submit" class="update-btn">Actualizar Proyecto</button>&nbsp;
+                <button type="button" id="editCancelBtn" class="cancel-btn">Cancelar</button>
+            </div>
+        </form>
+    </div>
+`;
+
+document.body.appendChild(editProjectModal);
+
+    const closeEditBtn = document.querySelector('.close-edit-btn');
+    const editCancelBtn = document.getElementById('editCancelBtn');
+    const editProjectLevelSelect = document.getElementById('editProjectLevel');
+    const editProjectSectionSelect = document.getElementById('editProjectSection');
+    const editProjectEspecialidadSelect = document.getElementById('editProjectEspecialidad');
+    const editProjectIdInput = document.getElementById('editProjectID');
+    const editProjectNameInput = document.getElementById('editProjectName');
+    const editProjectStatusInput = document.getElementById('editProjectStatus');
+    const editStatusText = document.getElementById('editStatusText');
+    const editAddStudentBtn = document.getElementById('editAddStudentBtn');
+    const editStudentListContainer = document.getElementById('editStudentList');
+    const editProjectForm = document.getElementById('editProjectForm');
+
+const editStudentModalOverlay = document.createElement('div');
+editStudentModalOverlay.id = 'editStudentsModalOverlay';
+editStudentModalOverlay.className = 'modal-overlay';
+
+editStudentModalOverlay.innerHTML = `
+    <div class="students-modal">
+        <div class="students-modal-header">
+            <h2>Seleccionar Estudiantes</h2>
+            <span class="close-edit-student-btn">&times;</span>
+        </div>
+        <div class="filter-container">
+            <select id="editNivelFilter">
+                <option value="0">Todos los niveles</option>
+                <option value="1">Séptimo</option>
+                <option value="2">Octavo</option>
+                <option value="3">Noveno</option>
+                <option value="4">1° Bachillerato</option>
+                <option value="5">2° Bachillerato</option>
+                <option value="6">3° Bachillerato</option>
+            </select>
+            <input type="text" id="editStudentSearch" placeholder="Buscar por nombre o carnet">
+        </div>
+        <ul id="editAvailableStudentsList" class="available-students-list"></ul>
+        <div class="modal-buttons">
+            <button id="editSelectStudentBtn">Seleccionar</button>
+            <button id="editCancelSelectionBtn">Cancelar</button>
+        </div>
+    </div>
+`;
+
+document.body.appendChild(editStudentModalOverlay);
+
+const closeEditStudentBtn = document.querySelector('.close-edit-student-btn');
+const editNivelFilter = document.getElementById('editNivelFilter');
+const editStudentSearch = document.getElementById('editStudentSearch');
+const editAvailableStudentsList = document.getElementById('editAvailableStudentsList');
+const editSelectStudentBtn = document.getElementById('editSelectStudentBtn');
+const editCancelSelectionBtn = document.getElementById('editCancelSelectionBtn');
+
+let editSelectedStudents = [];
+let editAvailableStudents = [];
+let currentProjectId = null;
+let projectStudents = [];
+
+function editarProyecto(idProyecto) {
+    console.log('Editing project:', idProyecto);
+    currentProjectId = idProyecto;
+
+    projectStudents = [];
+    editSelectedStudents = [];
+
+    const editStudentListContainer = document.getElementById('editStudentList');
+    if (editStudentListContainer) {
+        editStudentListContainer.innerHTML = '';
+    }
+    
+    editProjectModal.style.display = 'block';
+    
+    fetch(`http://localhost:5501/proyectos/${idProyecto}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Project data loaded:', data);
+            
+            if (!data || !data.proyecto) {
+                console.error('Invalid data structure received from server:', data);
+                mostrarAlerta('Error en la estructura de datos del servidor', 'error');
+                return;
+            }
+            
+            const proyecto = data.proyecto;
+            
+            if (!proyecto.idProyecto && !proyecto.id_Proyecto) {
+                console.error('Missing required project ID field:', proyecto);
+                mostrarAlerta('Datos de proyecto incompletos', 'error');
+                return;
+            }
+            
+            const projectId = proyecto.idProyecto; 
+            const projectName = proyecto.nombre_Proyecto; 
+            const nivelId = proyecto.Id_Nivel;
+            const seccionId = proyecto.Id_SeccionGrupo;
+            const especialidadId = proyecto.Id_Especialidad;
+            const estado = proyecto.Estado;
+            
+            editProjectIdInput.value = projectId;
+            editProjectNameInput.value = projectName || '';
+            
+            cargarNivelesEdicion(nivelId, () => {
+                cargarSeccionGrupoEdicion(seccionId, () => {
+                    cargarEspecialidadEdicion(especialidadId);
+                });
+            });
+            
+            editProjectStatusInput.checked = estado === 'Activo' || estado === true;
+            updateEditStatusText();
+            
+            cargarEstudiantesProyecto(idProyecto);
+        })
+        .catch(error => {
+            console.error('Error loading project data:', error);
+            mostrarAlerta('Error al cargar datos del proyecto: ' + error.message, 'error');
+        });
+}
+
+function cargarNivelesEdicion(nivelSeleccionado, callback) {
+    console.log('Cargando niveles, seleccionado:', nivelSeleccionado);
+    editProjectLevelSelect.innerHTML = '<option value="">Selecciona un nivel</option>';
+    
+    if (!nivelesData || nivelesData.length === 0) {
+        console.error('No hay datos de niveles disponibles');
+        if (callback) callback();
+        return;
+    }
+    
+    nivelesData.forEach(nivel => {
+        const option = document.createElement('option');
+        option.value = nivel.Id_Nivel;
+        option.textContent = nivel.Nombre_Nivel;
+        option.dataset.letra = nivel.letra_nivel;
+        option.selected = nivel.Id_Nivel == nivelSeleccionado;
+        editProjectLevelSelect.appendChild(option);
+    });
+    
+    toggleEditEspecialidadSelect();
+    
+    if (callback) callback();
+}
+
+function cargarSeccionGrupoEdicion(seccionSeleccionada, callback) {
+    console.log('Cargando secciones, seleccionada:', seccionSeleccionada);
+    editProjectSectionSelect.innerHTML = '<option value="">Selecciona una sección o grupo</option>';
+    
+    if (!seccionesData || seccionesData.length === 0) {
+        console.error('No hay datos de secciones disponibles');
+        if (callback) callback();
+        return;
+    }
+    
+    seccionesData.forEach(seccion => {
+        const option = document.createElement('option');
+        option.value = seccion.Id_SeccionGrupo;
+        option.textContent = seccion.Nombre_SeccionGrupo;
+        option.selected = seccion.Id_SeccionGrupo == seccionSeleccionada;
+        editProjectSectionSelect.appendChild(option);
+    });
+    
+    if (callback) callback();
+}
+
+function cargarEspecialidadEdicion(especialidadSeleccionada) {
+    console.log('Cargando especialidades, seleccionada:', especialidadSeleccionada);
+    editProjectEspecialidadSelect.innerHTML = '<option value="">Selecciona una especialidad</option>';
+    
+    if (!especialidadesData || especialidadesData.length === 0) {
+        console.error('No hay datos de especialidades disponibles');
+        return;
+    }
+    
+    especialidadesData.forEach(especialidad => {
+        const option = document.createElement('option');
+        option.value = especialidad.Id_Especialidad;
+        option.textContent = especialidad.Nombre_Especialidad;
+        option.dataset.letra = especialidad.letra_especialidad;
+        option.selected = especialidad.Id_Especialidad == especialidadSeleccionada;
+        editProjectEspecialidadSelect.appendChild(option);
+    });
+}
+
+function cargarEstudiantesProyecto(idProyecto) {
+    console.log('Cargando estudiantes del proyecto:', idProyecto);
+    
+    fetch(`http://localhost:5501/proyectos/${idProyecto}/estudiantes`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error al cargar estudiantes: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Estudiantes cargados:', data);
+            
+            if (!data || !data.estudiantes) {
+                console.warn('No se encontraron estudiantes o formato incorrecto:', data);
+                projectStudents = [];
+                editSelectedStudents = [];
+            } else {
+                projectStudents = data.estudiantes;
+                editSelectedStudents = [...projectStudents];
+            }
+            
+            updateEditStudentListView();
+        })
+        .catch(error => {
+            console.error('Error cargando estudiantes del proyecto:', error);
+            mostrarAlerta('Error al cargar estudiantes', 'error');
+        });
+}
+
+function updateEditStatusText() {
+    editStatusText.textContent = editProjectStatusInput.checked ? 'Activo' : 'Inactivo';
+}
+
+function toggleEditEspecialidadSelect() {
+    const nivelId = parseInt(editProjectLevelSelect.value);
+    const esBachillerato = nivelId >= 4 && nivelId <= 6;
+    
+    editProjectEspecialidadSelect.disabled = !esBachillerato;
+}
+
+function openEditStudentModal() {
+    fetchEditAvailableStudents();
+    editStudentModalOverlay.style.display = 'flex';
+}
+
+function closeEditStudentModal() {
+    editStudentModalOverlay.style.display = 'none';
+    editNivelFilter.value = '0';
+    editStudentSearch.value = '';
+}
+
+function fetchEditAvailableStudents() {
+    editAvailableStudentsList.innerHTML = '<li class="student-item">Cargando estudiantes...</li>';
+    
+    fetch('/estudiantes')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error al obtener estudiantes: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Estudiantes disponibles cargados:', data);
+            editAvailableStudents = data;
+            renderEditStudentList();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            editAvailableStudentsList.innerHTML = '<li class="student-item">Error al cargar estudiantes. Intente nuevamente.</li>';
+        });
+}
+
+function renderEditStudentList() {
+    if (!editAvailableStudents.length) {
+        editAvailableStudentsList.innerHTML = '<li class="student-item">No hay estudiantes disponibles</li>';
+        return;
+    }
+    
+    filterEditStudents();
+}
+
+function filterEditStudents() {
+    const nivelId = parseInt(editNivelFilter.value);
+    const searchTerm = editStudentSearch.value.toLowerCase();
+    
+    let filteredStudents = editAvailableStudents;
+    
+    if (nivelId > 0) {
+        filteredStudents = filteredStudents.filter(student => student.Id_Nivel === nivelId);
+    }
+    
+    if (searchTerm) {
+        filteredStudents = filteredStudents.filter(student => {
+            const fullName = `${student.nombre_Estudiante} ${student.apellido_Estudiante}`.toLowerCase();
+            const carnet = student.Codigo_Carnet ? student.Codigo_Carnet.toString() : '';
+            return fullName.includes(searchTerm) || carnet.includes(searchTerm);
+        });
+    }
+    
+    renderEditFilteredStudents(filteredStudents);
+}
+
+function renderEditFilteredStudents(students) {
+    editAvailableStudentsList.innerHTML = '';
+    
+    if (!students.length) {
+        editAvailableStudentsList.innerHTML = '<li class="student-item">No se encontraron estudiantes con estos criterios</li>';
+        return;
+    }
+    
+    students.forEach(student => {
+        const fullName = `${student.nombre_Estudiante} ${student.apellido_Estudiante}`;
+        const isAssigned = student.id_Proyecto !== null && student.id_Proyecto != currentProjectId;
+        const isSelected = editSelectedStudents.some(s => s.id_Estudiante === student.id_Estudiante);
+        
+        const studentItem = document.createElement('li');
+        studentItem.className = `student-item ${isAssigned ? 'assigned' : ''}`;
+        
+        const levelText = nivelMapping[student.Id_Nivel] || `Nivel ${student.Id_Nivel}`;
+        
+        studentItem.innerHTML = `
+            <input type="checkbox" class="student-checkbox" 
+                   ${isAssigned ? 'disabled' : ''} 
+                   ${isSelected ? 'checked' : ''}
+                   data-id="${student.id_Estudiante}">
+            <div class="student-info">
+                <span>${fullName}</span>
+                <span class="student-carnet">Carnet: ${student.Codigo_Carnet}</span>
+                <span class="level-badge">${levelText}</span>
+                ${isAssigned ? '<span class="student-assigned-tag">Asignado</span>' : ''}
+            </div>
+        `;
+        
+        if (!isAssigned) {
+            const checkBox = studentItem.querySelector('.student-checkbox');
+            checkBox.addEventListener('change', function() {
+                if (this.checked) {
+                    addToEditSelectedStudents(student);
+                } else {
+                    removeFromEditSelectedStudents(student.id_Estudiante);
+                }
+            });
+        }
+        
+        editAvailableStudentsList.appendChild(studentItem);
+    });
+}
+
+function addToEditSelectedStudents(student) {
+    if (!editSelectedStudents.some(s => s.id_Estudiante === student.id_Estudiante)) {
+        editSelectedStudents.push(student);
+    }
+}
+
+function removeFromEditSelectedStudents(studentId) {
+    editSelectedStudents = editSelectedStudents.filter(s => s.id_Estudiante !== studentId);
+}
+
+function confirmEditStudentSelection() {
+    updateEditStudentListView();
+    closeEditStudentModal();
+}
+
+function updateEditStudentListView() {
+    console.log('Actualizando lista de estudiantes:', editSelectedStudents);
+    
+    editStudentListContainer.innerHTML = '';
+    
+    if (!editSelectedStudents || editSelectedStudents.length === 0) {
+        editStudentListContainer.innerHTML = '<p class="text-muted">No hay estudiantes asignados a este proyecto.</p>';
+        return;
+    }
+    
+    const table = document.createElement('table');
+    table.className = 'table table-striped table-bordered';
+    
+    const thead = document.createElement('thead');
+    thead.innerHTML = `
+        <tr>
+            <th>Carnet</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Acciones</th>
+        </tr>
+    `;
+    table.appendChild(thead);
+    
+    const tbody = document.createElement('tbody');
+    
+    editSelectedStudents.forEach(estudiante => {
+        const tr = document.createElement('tr');
+        
+        tr.innerHTML = `
+            <td>${estudiante.Codigo_Carnet || ''}</td>
+            <td>${estudiante.nombre_Estudiante || ''}</td>
+            <td>${estudiante.apellido_Estudiante || ''}</td>
+            <td>
+                <button class="btn btn-sm btn-danger remove-student" 
+                        data-id="${estudiante.id_Estudiante}">
+                    <i class="fas fa-trash"></i> Eliminar
+                </button>
+            </td>
+        `;
+        
+        tbody.appendChild(tr);
+    });
+    
+    table.appendChild(tbody);
+    editStudentListContainer.appendChild(table);
+    
+    document.querySelectorAll('.remove-student').forEach(button => {
+        button.addEventListener('click', function() {
+            const studentId = this.getAttribute('data-id');
+            removeStudentFromProject(studentId);
+        });
+    });
+}
+
+function removeStudentFromProject(studentId) {
+    console.log('Eliminando estudiante:', studentId);
+    
+    editSelectedStudents = editSelectedStudents.filter(
+        estudiante => estudiante.id_Estudiante.toString() !== studentId.toString()
+    );
+    
+    updateEditStudentListView();
+    
+    mostrarAlerta('Estudiante eliminado del proyecto', 'success');
+}
+
+editProjectLevelSelect.addEventListener('change', toggleEditEspecialidadSelect);
+    editProjectStatusInput.addEventListener('change', updateEditStatusText);
+    editAddStudentBtn.addEventListener('click', openEditStudentModal);
+    closeEditBtn.addEventListener('click', () => {
+        editProjectModal.style.display = 'none';
+    });
+    editCancelBtn.addEventListener('click', () => {
+        editProjectModal.style.display = 'none';
+    });
+    closeEditStudentBtn.addEventListener('click', closeEditStudentModal);
+    editCancelSelectionBtn.addEventListener('click', closeEditStudentModal);
+    editSelectStudentBtn.addEventListener('click', confirmEditStudentSelection);
+    editNivelFilter.addEventListener('change', filterEditStudents);
+    editStudentSearch.addEventListener('input', filterEditStudents);
+
+    editProjectForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        if (!editProjectNameInput.value.trim()) {
+            alert('Por favor, ingrese un nombre para el proyecto');
+            return;
+        }
+        
+        const projectData = {
+            idProyecto: editProjectIdInput.value,
+            nombre: editProjectNameInput.value.trim(),
+            nivelId: parseInt(editProjectLevelSelect.value),
+            seccionId: parseInt(editProjectSectionSelect.value),
+            especialidadId: editProjectEspecialidadSelect.disabled ? null : parseInt(editProjectEspecialidadSelect.value),
+            estado: editProjectStatusInput.checked,
+            estudiantesIds: editSelectedStudents.map(student => student.id_Estudiante)
+        };
+        
+        if (!projectData.nivelId || !projectData.seccionId) {
+            alert('Por favor, complete todos los campos obligatorios');
+            return;
+        }
+        
+        console.log('Enviando datos de actualización:', projectData);
+        
+        fetch('http://localhost:5501/actualizarProyecto', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(projectData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error al actualizar el proyecto: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Respuesta del servidor:', data);
+            if (data.success) {
+                mostrarAlerta('Proyecto actualizado exitosamente', 'success');
+                editProjectModal.style.display = 'none';
+                cargarProyectos(tipoActual, nivelSeleccionado);
+            } else {
+                mostrarAlerta(data.error || 'Error desconocido al actualizar el proyecto', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            mostrarAlerta('Error al actualizar el proyecto: ' + error.message, 'error');
+        });
+    });
+
+    function cargarProyectos(tipo, filtroNivel = null) {
+        fetch('http://localhost:5501/proyectos')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error al cargar proyectos: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Proyectos cargados:', data);
+                proyectosData = data;
+                proyectosContainer.innerHTML = '';
+                let count = 0;
+
+                if (!data[tipo]) {
+                    console.error('Error: No hay datos para el tipo', tipo);
+                    proyectosContainer.innerHTML = `<tr><td colspan="3">No hay proyectos disponibles para ${tipo}</td></tr>`;
+                    totalProyectos.textContent = 0;
+                    return;
+                }
+
+                let proyectosFiltrados = data[tipo];
+
+                if(filtroNivel !== null) {
+                    proyectosFiltrados = proyectosFiltrados.filter(p => p.Id_Nivel == filtroNivel);
+                }
+
+                if(proyectosFiltrados.length === 0) {
+                    proyectosContainer.innerHTML = `<tr><td colspan="3">No hay proyectos disponibles</td></tr>`;
+                    totalProyectos.textContent = 0;
+                } else {
+                    proyectosFiltrados.forEach(proyecto => {
+                        count++;
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="estado">
+                                <div class="circulo ${proyecto.Estado === 'Activo' ? 'verde' : 'rojo'}"></div>
+                                ${proyecto.Nombre_Proyecto}
+                            </td>
+                            <td>${proyecto.Estado}</td>
+                            <td>
+                                <button id="btn-link" data-url="${proyecto.Google_Sites || '#'}">Google Sites &nbsp;<img src="/link.png" alt=""></button>
+                                <button class="btn-editar" data-id="${proyecto.IdProyecto}">Editar &nbsp;<img src="/Vector.png" alt=""></button>
+                            </td>
+                        `;
+                        proyectosContainer.appendChild(tr);
+                        
+                        const editBtn = tr.querySelector('.btn-editar');
+                        if (editBtn) {
+                            editBtn.addEventListener('click', function() {
+                                const projectId = this.getAttribute('data-id');
+                                console.log('Edit button clicked with ID:', projectId);
+                                if (projectId) {
+                                    editarProyecto(projectId);
+                                }
+                            });
+                        }
+                        
+                        const linkBtn = tr.querySelector('#btn-link');
+                        if (linkBtn) {
+                            linkBtn.addEventListener('click', function() {
+                                const url = this.getAttribute('data-url');
+                                if (url && url !== '#') {
+                                    window.open(url, '_blank');
+                                }
+                            });
+                        }
+                    });
+                }
+
+                totalProyectos.textContent = count;
+            })
+            .catch(error => {
+                console.error('Error cargando proyectos:', error);
+                proyectosContainer.innerHTML = `<tr><td colspan="3">Error al cargar proyectos: ${error.message}</td></tr>`;
+                totalProyectos.textContent = 0;
+            });
+    }
+    
+    window.editarProyecto = editarProyecto;
+    editarProyectoGlobal = editarProyecto;
+
 });
