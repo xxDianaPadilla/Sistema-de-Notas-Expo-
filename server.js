@@ -5,6 +5,10 @@ const app = express(); // Creando una instancia de Express
 const PORT = 5501; // Definiendo el puerto en el que correrá el servidor
 const cors = require('cors'); // Middleware para permitir solicitudes desde otros dominios
 
+const bcrypt = require('bcrypt'); // Para encriptar contraseñas
+const jwt = require('jsonwebtoken'); // Para manejar JWT
+const cookieParser = require('cookie-parser'); // Para manejar cookies
+
 // Configurando de middlewares
 app.use(cors()); // Habilitando CORS para permitir conexiones desde otros dominios
 app.use(express.json()); // Habilitando el uso de JSON en las solicitudes
@@ -951,6 +955,156 @@ app.put('/actualizarProyecto', async (req, res) => {
             console.error('Error en la transacción de actualización:', error);
             res.status(500).json({ error: 'Error al actualizar el proyecto: ' + error.message });
         });
+    } finally {
+        db.close();
+    }
+});
+
+// Endpoint para agregar un nuevo usuario
+app.post('/api/usuarios', async (req, res) => {
+    const db = new DBConnection();
+    const { nombre, apellido, correo, contraseña, idRol } = req.body;
+
+    if (!nombre || !apellido || !correo || !contraseña || !idRol) {
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
+    try {
+        // Encriptar la contraseña
+        const hashedPassword = await bcrypt.hash(contraseña, 10);
+        const query = `
+            INSERT INTO tbUsuario (Nombre_Usuario, Apellido_Usuario, Correo_Usuario, Contra_Usuario, Id_Rol, FechaHora_Conexion)
+            VALUES (?, ?, ?, ?, ?, ?)
+        `;
+        const values = [nombre, apellido, correo, hashedPassword, idRol, new Date()];
+
+        await db.query(query, values);
+        res.status(201).json({ message: 'Usuario agregado exitosamente' });
+    } catch (error) {
+        console.error('Error al insertar usuario:', error.message);
+        res.status(500).send('Error del servidor');
+    } finally {
+        db.close();
+    }
+});
+
+// Select Usuarios
+app.get('/api/usuarios', async (req, res) => {
+    const db = new DBConnection();
+    const { rol } = req.query; // Obtener el rol de la consulta
+
+    let query = 'SELECT * FROM tbUsuario';
+    const values = [];
+
+    if (rol) {
+        query += ' WHERE Id_Rol = ?'; // Filtrar por rol
+        values.push(rol);
+    }
+
+    try {
+        const usuarios = await db.query(query, values);
+        res.json(usuarios);
+    } catch (error) {
+        console.error('Error al obtener usuarios:', error);
+        res.status(500).send('Error del servidor');
+    } finally {
+        db.close();
+    }
+});
+
+//Delete
+ 
+app.delete('/api/usuarios/:id', async (req, res) => {
+    const db = new DBConnection();
+    const { id } = req.params;
+
+    try {
+        await db.query('DELETE FROM tbUsuario WHERE Id_Usuario = ?', [id]);
+        res.status(200).json({ message: 'Usuario eliminado correctamente' });
+    } catch (error) {
+        console.error('Error al eliminar usuario:', error.message);
+        res.status(500).send('Error del servidor');
+    } finally {
+        db.close();
+    }
+});
+
+// Endpoint para iniciar sesión y generar un JWT
+app.post('/api/login', async (req, res) => {
+    const db = new DBConnection();
+    const { correo, contraseña } = req.body;
+
+    try {
+        const query = 'SELECT * FROM tbUsuario WHERE Correo_Usuario = ?';
+        const [usuario] = await db.query(query, [correo]);
+
+        if (!usuario) {
+            return res.status(401).json({ message: 'Credenciales inválidas' });
+        }
+
+        // Comparar la contraseña proporcionada con la almacenada
+        const isMatch = await bcrypt.compare(contraseña, usuario.Contra_Usuario);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Credenciales inválidas' });
+        }
+
+        // Generar un token JWT
+        const token = jwt.sign({ id: usuario.Id_Usuario, rol: usuario.Id_Rol }, 'tu_secreto', { expiresIn: '1h' });
+ 
+        // Establecer el token en una cookie
+        res.cookie('token', token, { httpOnly: true, secure: true }); // Asegúrate de usar secure: true en producción
+        
+        res.json({ message: 'Inicio de sesión exitoso' });
+    } catch (error) {
+        console.error('Error al iniciar sesión:', error.message);
+        res.status(500).send('Error del servidor');
+    } finally {
+        db.close();
+    }
+});
+
+// Middleware para verificar el token JWT
+const authenticateJWT = (req, res, next) => {
+    const token = req.cookies.token; // Obtener el token de las cookies
+    if (token) {
+        jwt.verify(token, 'tu_secreto', (err, user) => {
+            if (err) {
+                return res.sendStatus(403);
+            }
+            req.user = user;
+            next();
+        });
+    } else {
+        res.sendStatus(401);
+    }
+};
+
+// Ejemplo de uso del middleware en una ruta protegida
+app.get('/api/protegida', authenticateJWT, (req, res) => {
+    res.json({ message: 'Esta es una ruta protegida', user: req.user });
+});
+
+// Endpoint para cerrar sesión y eliminar el token
+app.post('/api/logout', (req, res) => {
+    res.clearCookie('token'); // Eliminar la cookie del token
+    res.json({ message: 'Sesión cerrada exitosamente' });
+});
+
+// Endpoint para obtener el rol del usuario logueado
+app.get('/api/rol', authenticateJWT, (req, res) => {
+    res.json({ rol: req.user.rol });
+});
+
+// Endpoint para obtener las secciones/grupos
+app.get('/api/seccion-grupos', async (req, res) => {
+    const db = new DBConnection();
+    try {
+        const query = 'SELECT Id_SeccionGrupo AS id, Nombre_SeccionGrupo AS nombre FROM tbSeccionGrupo';
+        const secciones = await db.query(query);
+        res.json(secciones);
+    } catch (error) {
+        console.error('Error obteniendo secciones/grupos:', error.message);
+        res.status(500).send('Error del servidor');
     } finally {
         db.close();
     }

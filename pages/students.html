@@ -3,16 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPTC | Usuarios</title>
+    <title>SPTC | Estudiantes</title>
     <link rel="icon" href="/logoRedondo.png" type="icon/png">
-    <!--Estilo propio-->
     <link rel="stylesheet" href="/studentsStyle.css">
-
-    <!--Estilo menú-->
     <link rel="stylesheet" href="/menu.css">
+    <link rel="stylesheet" href="usersStyle.css">
 </head>
 <body>
-    <!--Menú lateral-->
     <aside class="menu-lateral">
         <div class="logo">
             <img src="/logoRedondo.png" alt="Logo Salesianos Ricaldone">
@@ -40,7 +37,6 @@
         <button class="cerrar-sesion"><img src="/logout.svg" alt="home"> Cerrar Sesión</button>
     </aside>
 
-    <!--Alerta para cerrar sesión-->
     <div class="alert" id="alert">
         <div class="alert-box">
             <p>¿Estás seguro de que quieres cerrar sesión?</p>
@@ -53,28 +49,26 @@
 
     <main>
         <div id="categoriaBox">
-            <section class="tipoCat1">
+            <section class="tipoCat1" style="cursor: pointer;">
                 <h1>Usuarios del sistema</h1>
             </section>
-            <section class="tipoCat2">
+            <section class="tipoCat2 active" style="cursor: pointer;">
                 <h1>Alumnos del colegio</h1>
             </section>
         </div>
         <div id="roles">
-            <p class="role">Bachillerato</p>
-            <p class="role">Tercer ciclo</p>
-            <button id="newUser">agregar alumno<img src="/mas.png" width="16px"></button>
+            <p class="role tipoBachillerato active">Bachillerato</p>
+            <p class="role tipoTercerCiclo">Tercer ciclo</p>
+            <button id="newUser2">Agregar alumno<img src="/mas.png" width="16px"></button>
         </div>
         
-        <div id="modalContainer" class="hidden"></div>
-
-        <div id="cardContainer">
-
-        </div>
+        <!-- Contenedor para cargar el formulario -->
+        <div id="formContainer" class="form-container"></div>
+        <div id="cardContainer"></div>
     </main>
 
-    <script src="/studentsScript.js"></script>
     <script src="/cerrarSesion.js"></script>
     <script src="/menu.js"></script>
+    <script src="/students.js"></script>
 </body>
 </html>

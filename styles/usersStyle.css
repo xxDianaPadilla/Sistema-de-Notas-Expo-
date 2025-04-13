@@ -66,15 +66,28 @@ body {
     margin-bottom: 3%;
 }
 
+.tipoCat1, .tipoCat2 {
+    transition: background-color 0.3s ease; /* Transición para el cambio de color de fondo */
+    padding: 10px; /* Espaciado interno */
+    cursor: pointer; /* Cambiar cursor a puntero */
+}
+
+.tipoCat1.active {
+    background-color: #e0e0e0; /* Fondo claro para la sección activa */
+    border-bottom: 3px solid #8a8282; /* Borde inferior para indicar la sección activa */
+}
+
+.tipoCat2.active {
+    background-color: #e0e0e0; /* Fondo claro para la sección activa */
+    border-bottom: 3px solid #8a8282; /* Borde inferior para indicar la sección activa */
+}
+
 .tipoCat1 {
-    background-color: #E0E0E0;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    background-color: #c0c0c0;
 }
 
 .tipoCat2 {
-    background-color: #c0c0c0;
-    box-shadow: inset #a4a3a3 7px -7px 10px;
+    background-color: #c0c0c0; 
 }
 
 main {
@@ -299,21 +312,54 @@ input {
 
 /*ESTILOS DE LAS CARDS*/
 
-#card {
-    width: 90%;
-    padding: 15px;
-    background-color: #f2f2f2;
-    border-radius: 15px;
+#cardContainer {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    font-family: poppinsLight;
+    flex-direction: column; /* Cambiar a columna para lista */
+    gap: 10px; /* Espacio entre elementos de la lista */
+    margin: 20px;
 }
 
-#card section {
+.list-item {
     display: flex;
-    flex-wrap: wrap;
-    width: 50%;
-    font-size: 20px;
+    justify-content: space-between; /* Espacio entre la información y los botones */
+    align-items: center; /* Centrar verticalmente */
+    border: 1px solid #000; /* Bordes de la lista */
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.user-info{
+    display: flex;
+    flex-direction: column; /* Alinear nombre y correo en columna */
+}
+
+.user-name {
+    font-weight: bold; /* Nombre en negrita */
+}
+
+.button-container {
+    display: flex;
+    gap: 10px; /* Espacio entre los botones */
+}
+
+.edit-btn, .delete-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.edit-btn:hover {
+    background-color: #0056b3; /* Color al pasar el mouse */
+}
+
+.delete-btn {
+    background-color: #dc3545; /* Color para el botón de eliminar */
+}
+
+.delete-btn:hover {
+    background-color: #c82333; /* Color al pasar el mouse */
 }
