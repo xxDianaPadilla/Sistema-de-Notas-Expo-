@@ -150,6 +150,8 @@ INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante
 INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo) VALUES (20200018, 'Ana María', 'Rodríguez Sánchez', 2, 1);
 INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, id_Proyecto) VALUES (20200013, 'María Fernanda', 'Pérez Gómez', 2, 1, 'BA01-25');
 INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad) VALUES (20200021, 'Juan Diego', 'González Fernández', 6, 7, 6);
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo) VALUES (20200022, 'María Fernanda', 'López Ramírez', 1, 1);
+INSERT INTO tbEstudiantes (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad) VALUES (20200023, 'Juan Carlos', 'Martínez Gómez', 5, 7, 6);
 
 SET SQL_SAFE_UPDATES = 0;
 

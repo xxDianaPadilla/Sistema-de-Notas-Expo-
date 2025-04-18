@@ -1115,10 +1115,13 @@ app.get('/api/estudiantes', async (req, res) =>{
     const {nivel, minNivel, maxNivel, search} = req.query;
 
     let query = `
-        SELECT e.id_Estudiante, e.Codigo_Carnet, e.nombre_Estudiante, 
-               e.apellido_Estudiante, n.Nombre_Nivel, n.Id_Nivel
+        SELECT e.id_Estudiante, e.Codigo_Carnet, e.nombre_Estudiante,
+                e.apellido_Estudiante, n.Nombre_Nivel, n.Id_Nivel, 
+                s.Nombre_SeccionGrupo, s.Id_SeccionGrupo,
+                e.Id_Especialidad, e.id_Proyecto
         FROM tbEstudiantes e
         JOIN tbNivel n ON e.Id_Nivel = n.Id_Nivel
+        JOIN tbSeccionGrupo s ON e.Id_SeccionGrupo = s.Id_SeccionGrupo
         WHERE 1=1
     `;
 
@@ -1161,6 +1164,106 @@ app.get('/api/niveles', async (req, res) =>{
     }catch(error){
         console.error('Error al obtener niveles:', error);
         res.status(500).send('Error del servidor');
+    }finally{
+        db.close();
+    }
+});
+
+app.get('/api/secciones', async (req, res) =>{
+    const db = new DBConnection();
+
+    try{
+        const secciones = await db.query('SELECT * FROM tbSeccionGrupo ORDER BY Nombre_SeccionGrupo');
+        res.json(secciones);
+    }catch(error){
+        console.error('Error al obtener secciones:', error);
+        res.status(500).send('Error del servidor');
+    }finally{
+        db.close();
+    }
+});
+
+app.get('/api/especialidades', async (req, res) =>{
+    const db = new DBConnection();
+
+    try{
+        const especialidades = await db.query('SELECT * FROM tbEspecialidad ORDER BY Nombre_Especialidad');
+        res.json(especialidades);
+    }catch(error){
+        console.error('Error al obtener especialidades:', error);
+        res.status(500).send('Error del servidor');
+    }finally{
+        db.close();
+    }
+});
+
+app.get('/api/proyectos/:id', async (req, res) =>{
+    const db = new DBConnection();
+    const {id} = req.params;
+
+    try{
+        const query = `
+            SELECT p.id_Proyecto, p.nombre_Proyecto, p.link_google_sites, 
+                   n.Nombre_Nivel, s.Nombre_SeccionGrupo, e.Nombre_Especialidad
+            FROM tbProyectos p
+            JOIN tbNivel n ON p.Id_Nivel = n.Id_Nivel
+            JOIN tbSeccionGrupo s ON p.Id_SeccionGrupo = s.Id_SeccionGrupo
+            LEFT JOIN tbEspecialidad e ON p.Id_Especialidad = e.Id_Especialidad
+            WHERE p.id_Proyecto = ?
+        `;
+
+        const [proyecto] = await db.query(query, [id]);
+
+        if(!proyecto){
+            return res.status(404).json({message: 'Proyecto no encontrado'});
+        }
+
+        res.json(proyecto);
+    }catch(error){
+        console.error('Error al obtener proyecto:', error);
+        res.status(500).send('Error del servidor');
+    }finally{
+        db.close();
+    }
+});
+
+app.put('/api/estudiantes/:id', async (req, res) =>{
+    const db = new DBConnection();
+    const {id} = req.params;
+    const {nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad} = req.body;
+
+    try{
+        if(!nombre_Estudiante || !apellido_Estudiante || !Id_Nivel || !Id_SeccionGrupo){
+            return res.status(400).json({message: 'Faltan campos requeridos'});
+        }
+
+        if(Id_Nivel >= 4 && Id_Nivel <= 6 && !Id_Especialidad){
+            return res.status(400).json({message: 'Especialidad requerida para estudiantes de bachillerato'});
+        }
+
+        const query = `
+            UPDATE tbEstudiantes
+            SET nombre_Estudiante = ?,
+                apellido_Estudiante = ?,
+                Id_Nivel = ?,
+                Id_SeccionGrupo = ?,
+                Id_Especialidad = ?
+            WHERE id_Estudiante = ?
+        `;
+
+        await db.query(query, [
+            nombre_Estudiante,
+            apellido_Estudiante,
+            Id_Nivel,
+            Id_SeccionGrupo,
+            Id_Especialidad,
+            id
+        ]);
+
+        res.json({message: 'Estudiante actualizado exitosamente'});
+    }catch(error){
+        console.error('Error al actualizar estudiante:', error);
+        res.status(500).json({message: 'Error al actualizar estudiante'});
     }finally{
         db.close();
     }

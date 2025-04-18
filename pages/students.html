@@ -47,6 +47,63 @@
         </div>
     </div>
 
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Editar Estudiantes</h2>
+            <form id="editStudentForm">
+                <input type="hidden" id="editStudentId">
+
+                <div class="form-group">
+                    <label for="editStudentCode">Código del Estudiante:</label>
+                    <input type="text" id="editStudentCode" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="editStudentName">Nombres:</label>
+                    <input type="text" id="editStudentName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editStudentLastName">Apellidos:</label>
+                    <input type="text" id="editStudentLastName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editStudentLevel">Nivel:</label>
+                    <select id="editStudentLevel" required>
+                        <option value="">Seleccione un nivel</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editStudentSection">Sección/Grupo:</label>
+                    <select id="editStudentSection" required>
+                        <option value="">Seleccione una sección</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="especialidadGroup" style="display: none;">
+                    <label for="editStudentSpeciality">Especialidad:</label>
+                    <select id="editStudentSpeciality">
+                        <option value="">Seleccione una especialidad</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editStudentProject">Proyecto:</label>
+                    <input type="text" id="editStudentProject" readonly>
+                    <p class="info">Para editar el proyecto, dirígete al apartado de proyectos.</p>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-save">Guardar Cambios</button>
+                    <button type="button" class="btn btn-cancel">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <main>
         <div id="categoriaBox">
             <section class="tipoCat1" style="cursor: pointer;">
