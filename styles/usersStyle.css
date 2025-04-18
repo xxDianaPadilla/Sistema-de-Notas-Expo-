@@ -146,6 +146,21 @@ main {
     cursor: pointer;
 }
 
+#newUser2 {
+    width: 10vw;
+    background-color: #4CAF50;
+    font-family: poppinsMedium;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    padding: 1vh;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-around;
+    cursor: pointer;
+}
+
 #cardContainer {
     width: 95%;
     height: 75vh;

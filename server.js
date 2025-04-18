@@ -1110,6 +1110,62 @@ app.get('/api/seccion-grupos', async (req, res) => {
     }
 });
 
+app.get('/api/estudiantes', async (req, res) =>{
+    const db = new DBConnection();
+    const {nivel, minNivel, maxNivel, search} = req.query;
+
+    let query = `
+        SELECT e.id_Estudiante, e.Codigo_Carnet, e.nombre_Estudiante, 
+               e.apellido_Estudiante, n.Nombre_Nivel, n.Id_Nivel
+        FROM tbEstudiantes e
+        JOIN tbNivel n ON e.Id_Nivel = n.Id_Nivel
+        WHERE 1=1
+    `;
+
+    const values = [];
+
+    if(nivel){
+        query += ' AND e.Id_Nivel = ?';
+        values.push(nivel);
+    }
+
+    if(minNivel && maxNivel){
+        query += ' AND e.Id_Nivel BETWEEN ? AND ?';
+        values.push(minNivel, maxNivel);
+    }
+
+    if(search){
+        query += ' AND (e.nombre_Estudiante LIKE ? OR e.apellido_Estudiante LIKE ?)';
+        values.push(`%${search}%`, `%${search}%`);
+    }
+
+    query += ' ORDER BY e.nombre_Estudiante ASC';
+
+    try{
+        const estudiantes = await db.query(query, values);
+        res.json(estudiantes);
+    }catch(error){
+        console.error('Error al obtener estudiantes:', error);
+        res.status(500).send('Error del servidor');
+    }finally{
+        db.close();
+    }
+});
+
+app.get('/api/niveles', async (req, res) =>{
+    const db = new DBConnection();
+
+    try{
+        const niveles = await db.query('SELECT * FROM tbNivel ORDER BY Id_Nivel');
+        res.json(niveles);
+    }catch(error){
+        console.error('Error al obtener niveles:', error);
+        res.status(500).send('Error del servidor');
+    }finally{
+        db.close();
+    }
+});
+
 // Servidor escuchando en el puerto definido
 app.listen(PORT, () =>{
     console.log(`Servidor escuchando en el puerto ${PORT}`);

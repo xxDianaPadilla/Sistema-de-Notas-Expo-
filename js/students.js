@@ -1,8 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
     const tipoCat1 = document.querySelector('.tipoCat1');
     const tipoCat2 = document.querySelector('.tipoCat2');
-    const tipoBachillerato = document.querySelector('.tipoBachillerato');
-    const tipoTercerCiclo = document.querySelector('.tipoTercerCiclo');
+    const bachilleratoTab   = document.querySelector('.tipoBachillerato');
+    const tercerCicloTab  = document.querySelector('.tipoTercerCiclo');
+    const tercerCicloFilters = document.querySelector('.tercer-ciclo-filters');
+    const bachilleratoFilters = document.querySelector('.bachillerato-filters');
+    const tercerCicloFilterSelect = document.getElementById('tercerCicloFilter');
+    const bachilleratoFilterSelect = document.getElementById('bachilleratoFilter');
+    const searchInput = document.getElementById('searchInput');
+    const cardContainer = document.getElementById('cardContainer2');
 
     // Resaltar la sección activa al cargar la página
     if (window.location.pathname.includes('students.html')) {
@@ -27,109 +33,97 @@ document.addEventListener("DOMContentLoaded", () => {
         location.href = '/students.html'; // Navegar a estudiantes
     });
 
-    // Agregar evento de clic para Bachillerato
-    tipoBachillerato.addEventListener('click', () => {
-        tipoBachillerato.classList.add('active');
-        tipoTercerCiclo.classList.remove('active');
+    let currentTab = 'bachillerato';
+
+    loadStudents('bachillerato', 0);
+
+    tercerCicloTab.addEventListener('click', function(){
+        setActiveTab('tercerCiclo');
+        loadStudents('tercerCiclo', 0);
     });
 
-    // Agregar evento de clic para Tercer ciclo
-    tipoTercerCiclo.addEventListener('click', () => {
-        tipoTercerCiclo.classList.add('active');
-        tipoBachillerato.classList.remove('active');
+    bachilleratoTab.addEventListener('click', function(){
+        setActiveTab('bachillerato');
+        loadStudents('bachillerato', 0);
     });
 
-    const openFormBtn = document.getElementById("newUser2");
-     const formContainer = document.getElementById("formContainer");
- 
-     // Abrir el formulario para elegir rol
-     openFormBtn.addEventListener("click", () => {
-         fetch("/formsUsers/formChooseRol.html")
-             .then(response => {
-                 if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                 return response.text();
-             })
-             .then(html => {
-                 formContainer.innerHTML = html; // Cargar el formulario en el contenedor
-                 initializeRoleSelectionListeners();
-             })
-             .catch(error => console.error("Error cargando el formulario:", error));
-     });
- 
-     // Inicializar listeners para los botones de selección de rol
-     function initializeRoleSelectionListeners() {
-         const btnTercerCiclo = document.getElementById("btnAddTercerCiclo");
-         const btnBachillerato = document.getElementById("btnAddBachillerato");
-         const closeFormBtn = document.getElementById("closeFormBtn");
- 
-         if (closeFormBtn) {
-             closeFormBtn.addEventListener("click", closeModal);
-         }
-         if (btnTercerCiclo) {
-             btnTercerCiclo.addEventListener("click", () => openTercerCicloForm());
-         }
-         if (btnBachillerato) {
-             btnBachillerato.addEventListener("click", () => openBachilleratoForm());
-         }
-     }
- 
-     function openTercerCicloForm() {
-         loadForm("/formsUsers/formAgregarDatosTercerCi.html", 'tercerCiclo');
-     }
- 
-     function openBachilleratoForm() {
-         loadForm("/formsUsers/formAgregarDatosBachi.html", 'bachillerato');
-     }
- 
-     function loadForm(formUrl, type) {
-         fetch(formUrl)
-             .then(response => {
-                 if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                 return response.text();
-             })
-             .then(html => {
-                 formContainer.innerHTML = html; // Cargar el formulario en el contenedor
-                 loadComboBoxData(type);
-             })
-             .catch(error => console.error("Error cargando el formulario:", error));
-     }
- 
-     function loadComboBoxData(type) {
-         const idSeccionGrupoTercerCi = document.getElementById("idSeccionGrupoTercerCi");
-         const idSeccionGrupoBachi = document.getElementById("idSeccionGrupoBachi");
-         const idProyectoTercerCi = document.getElementById("idProyectoTercerCi");
-         const idProyectoBachi = document.getElementById("idProyectoBachi");
- 
-         // Cargar Secciones/Grupos
-         fetch('/api/seccion-grupos')
-             .then(response => response.json())
-             .then(data => {
-                 const select = type === 'tercerCiclo' ? idSeccionGrupoTercerCi : idSeccionGrupoBachi;
-                 data.forEach(item => {
-                     const option = document.createElement('option');
-                     option.value = item.id;
-                     option.textContent = item.nombre;
-                     select.appendChild(option);
-                 });
-             })
-             .catch(error => console.error("Error cargando secciones/grupos:", error));
- 
-         // Cargar Proyectos
-         fetch('/api/proyectos')
-             .then(response => response.json())
-             .then(data => {
-                 const select = type === 'tercerCiclo' ? idProyectoTercerCi : idProyectoBachi;
-                 data.forEach(item => {
-                     const option = document.createElement('option');
-                     option.value = item.id;
-                     option.textContent = item.nombre_Proyecto;
-                     select.appendChild(option);
-                 });
-             })
-             .catch(error => console.error("Error cargando proyectos:", error));
-     }
- 
-     function closeModal() {
-         formContainer.innerHTML = ""; // Limpiar el contenido
-     }
+    tercerCicloFilterSelect.addEventListener('change', function(){
+        loadStudents('tercerCiclo', this.value);
+    });
+
+    bachilleratoFilterSelect.addEventListener('change', function(){
+        loadStudents('bachillerato', this.value);
+    });
+
+    searchInput.addEventListener('input', function(){
+        if(currentTab === 'tercerCiclo'){
+            loadStudents('tercerCiclo', tercerCicloFilterSelect.value, this.value);
+        }else{
+            loadStudents('bachillerato', bachilleratoFilterSelect.value, this.value);
+        }
+    });
+
+    function setActiveTab(tab){
+        currentTab = tab;
+
+        if(tab === 'tercerCiclo'){
+            tercerCicloTab.classList.add('active');
+            bachilleratoTab.classList.remove('active');
+            tercerCicloFilters.classList.add('active');
+            bachilleratoFilters.classList.remove('active');
+        }else{
+            bachilleratoTab.classList.add('active');
+            tercerCicloTab.classList.remove('active');
+            bachilleratoFilters.classList.add('active');
+            tercerCicloFilters.classList.remove('active');
+        }
+    }
+
+    function loadStudents(tabType, nivelId, searchTerm = ''){
+        let minNivel, maxNivel;
+
+        if(tabType === 'tercerCiclo'){
+            minNivel = 1;
+            maxNivel = 3;
+        }else{
+            minNivel = 4;
+            maxNivel = 6;
+        }
+
+        let url = '/api/estudiantes?';
+
+        if(nivelId && nivelId != 0){
+            url += `nivel=${nivelId}`;
+        }else{
+            url += `minNivel=${minNivel}&maxNivel=${maxNivel}`;
+        }
+
+        if(searchTerm){
+            url += `&search=${encodeURIComponent(searchTerm)}`;
+        }
+
+        fetch(url)
+        .then(response => response.json())
+        .then(students =>{
+            cardContainer.innerHTML = '';
+
+            students.forEach(student =>{
+                const card = document.createElement('div');
+                card.className = 'student-card';
+                card.innerHTML = `
+                                <div class="student-info">${student.nombre_Estudiante} ${student.apellido_Estudiante}</div>
+                                <div class="student-id">#${student.Codigo_Carnet}</div>
+                            `;
+                            cardContainer.appendChild(card);
+            });
+
+            if(students.length === 0){
+                cardContainer.innerHTML = '<p>No se encontraron estudiantes con los criterios seleccionados.</p>';
+            }
+        })
+        .catch(error =>{
+            console.error('Error fetching students:', error);
+            cardContainer.innerHTML = '<p>Error al cargar los estudiantes. Por favor, intente nuevamente.</p>';
+        });
+    }
 });

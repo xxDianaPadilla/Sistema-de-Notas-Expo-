@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPTC | Estudiantes</title>
     <link rel="icon" href="/logoRedondo.png" type="icon/png">
-    <link rel="stylesheet" href="/studentsStyle.css">
     <link rel="stylesheet" href="/menu.css">
-    <link rel="stylesheet" href="usersStyle.css">
+    <link rel="stylesheet" href="/usersStyle.css">
+    <link rel="stylesheet" href="/studentaStyle.css">
 </head>
 <body>
     <aside class="menu-lateral">
@@ -56,15 +56,36 @@
                 <h1>Alumnos del colegio</h1>
             </section>
         </div>
-        <div id="roles">
-            <p class="role tipoBachillerato active">Bachillerato</p>
-            <p class="role tipoTercerCiclo">Tercer ciclo</p>
-            <button id="newUser2">Agregar alumno<img src="/mas.png" width="16px"></button>
-        </div>
-        
-        <!-- Contenedor para cargar el formulario -->
-        <div id="formContainer" class="form-container"></div>
-        <div id="cardContainer"></div>
+
+            <div id="roles">
+                <p class="role tipoBachillerato active">Bachillerato</p>
+                <p class="role tipoTercerCiclo">Tercer ciclo</p>
+                <button id="newUser2">Agregar alumno<img src="/mas.png" width="16px"></button>
+            </div>
+
+            <div class="filter-controls">
+                <div class="filter-group tercer-ciclo-filters">
+                    <select id="tercerCicloFilter" class="filter-dropdown">
+                        <option value="0">Todos los niveles</option>
+                        <option value="1">Séptimo</option>
+                        <option value="2">Octavo</option>
+                        <option value="3">Noveno</option>
+                    </select>
+                </div>
+
+                <div class="filter-group bachillerato-filters active">
+                    <select id="bachilleratoFilter" class="filter-dropdown">
+                        <option value="0">Todos los niveles</option>
+                        <option value="4">1° Bachillerato</option>
+                        <option value="5">2° Bachillerato</option>
+                        <option value="6">3° Bachillerato</option>
+                    </select>
+                </div>
+
+                <input type="text" id="searchInput" class="search-box" placeholder="Buscar estudiante...">
+            </div>
+
+            <div id="cardContainer2"></div>
     </main>
 
     <script src="/cerrarSesion.js"></script>
