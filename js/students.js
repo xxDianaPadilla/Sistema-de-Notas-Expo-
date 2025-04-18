@@ -347,4 +347,48 @@ document.addEventListener("DOMContentLoaded", () => {
             alert(`Error: ${error.message}`);
         }
     }
+
+    document.addEventListener('click', function(e){
+        if(e.target && e.target.classList.contains('btn-delete')){
+            const studentId = e.target.getAttribute('data-id');
+            const studentName = e.target.getAttribute('data-nombre');
+
+            if(confirm(`¿Está seguro que desea eliminar a ${studentName}?`)){
+                deleteStudent(studentId);
+            }
+        }
+    });
+
+    function deleteStudent(studentId) {
+        fetch(`/api/eliminarEstudiantes/${studentId}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const cardToRemove = document.querySelector(`.btn-delete[data-id="${studentId}"]`).closest('.student-card');
+            
+            cardToRemove.style.transition = 'opacity 0.3s, transform 0.3s';
+            cardToRemove.style.opacity = '0';
+            cardToRemove.style.transform = 'scale(0.8)';
+            
+            setTimeout(() => {
+                cardToRemove.remove();
+                
+                if (cardContainer.children.length === 0) {
+                    cardContainer.innerHTML = '<p>No se encontraron estudiantes con los criterios seleccionados.</p>';
+                }
+                
+                alert(data.message);
+            }, 300);
+        })
+        .catch(error => {
+            console.error('Error al eliminar estudiante:', error);
+            alert('Error al eliminar estudiante. Por favor, intente nuevamente.');
+        });
+    }
 });

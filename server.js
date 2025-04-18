@@ -1269,6 +1269,22 @@ app.put('/api/estudiantes/:id', async (req, res) =>{
     }
 });
 
+app.delete('/api/eliminarEstudiantes/:id', async (req, res) =>{
+    const db = new DBConnection();
+    const {id} = req.params;
+
+    try{
+        const query = 'DELETE FROM tbEstudiantes WHERE id_Estudiante = ?';
+        await db.query(query, [id]);
+        res.json({message: 'Estudiante elimando exitosamente'});
+    }catch(error){
+        console.error('Error al eliminar estudiantes:', error);
+        res.status(500).json({message: 'Error al eliminar estudiante'});
+    }finally{
+        db.close();
+    }
+});
+
 // Servidor escuchando en el puerto definido
 app.listen(PORT, () =>{
     console.log(`Servidor escuchando en el puerto ${PORT}`);
