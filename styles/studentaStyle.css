@@ -179,3 +179,38 @@
     color: #666;
     margin-top: 5px;
 }
+
+.question-text {
+    margin-bottom: 15px;
+  }
+  
+  .button-container {
+    margin-top: 20px;
+    margin-left: 20px;
+  }
+  
+  .form-button {
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: white;
+  }
+  
+  .primary-button {
+    background-color: #007bff;
+    margin-right: 15px;
+  }
+  
+  .success-button {
+    background-color: #28a745;
+  }
+  
+  .primary-button:hover {
+    background-color: #0069d9;
+  }
+  
+  .success-button:hover {
+    background-color: #218838;
+  }

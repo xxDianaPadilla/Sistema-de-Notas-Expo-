@@ -8,6 +8,29 @@ const cors = require('cors'); // Middleware para permitir solicitudes desde otro
 const bcrypt = require('bcrypt'); // Para encriptar contraseñas
 const jwt = require('jsonwebtoken'); // Para manejar JWT
 const cookieParser = require('cookie-parser'); // Para manejar cookies
+const multer = require('multer');
+const XLSX = require('xlsx');
+const path = require('path');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    fileFilter: function (req, file, cb) {
+        const ext = path.extname(file.originalname).toLowerCase();
+        if (ext !== '.xlsx' && ext !== '.xls') {
+            return cb(new Error('Solo se permiten archivos Excel (xlsx o .xls)'));
+        }
+        cb(null, true);
+    }
+});
 
 // Configurando de middlewares
 app.use(cors()); // Habilitando CORS para permitir conexiones desde otros dominios
@@ -35,9 +58,9 @@ app.get('/newRubric', (req, res) => {
 });
 
 // Endpoint para obtener la lista de usuarios conectados (Un select)
-app.get('/usuarios-conectados', async (req, res ) => {
+app.get('/usuarios-conectados', async (req, res) => {
     const db = new DBConnection();
-    try{
+    try {
         const query = `
             SELECT 
                 tbUsuario.Nombre_Usuario AS Nombre,
@@ -55,10 +78,10 @@ app.get('/usuarios-conectados', async (req, res ) => {
         `;
         const usuarios = await db.query(query);
         res.json(usuarios);
-    }catch(err){
+    } catch (err) {
         console.error('Error obteniendo usuarios conectados:', err.message);
         res.status(500).send('Error del servidor');
-    }finally{
+    } finally {
         db.close();
     }
 });
@@ -66,7 +89,7 @@ app.get('/usuarios-conectados', async (req, res ) => {
 // Endpoint para obtener las etapas (Un select)
 app.get('/etapas', async (req, res) => {
     const db = new DBConnection();
-    try{
+    try {
         const query = `
             SELECT 
                 id_etapa,
@@ -79,18 +102,18 @@ app.get('/etapas', async (req, res) => {
         `;
         const etapas = await db.query(query);
         res.json(etapas);
-    }catch(err){
+    } catch (err) {
         console.error('Error obteniendo las etapas: ', err.message);
         res.status(500).send('Error del servidor');
-    }finally{
+    } finally {
         db.close();
     }
 });
 
 // Endpoint para obtener actividades (Un select)
-app.get('/actividades', async(req, res) =>{
+app.get('/actividades', async (req, res) => {
     const db = new DBConnection();
-    try{
+    try {
         const query = `
             SELECT 
                 Id_Actividad,
@@ -102,38 +125,38 @@ app.get('/actividades', async(req, res) =>{
         `;
         const actividades = await db.query(query);
         res.json(actividades);
-    }catch(err){
+    } catch (err) {
         console.error('Error obteniendo las actividades:', err.message);
         res.status(500).send('Error del servidor');
-    }finally{
+    } finally {
         db.close();
     }
 });
 
 // Endpoint para eliminar una actividad por ID
-app.delete('/actividades/:id', async (req, res) =>{
+app.delete('/actividades/:id', async (req, res) => {
     const db = new DBConnection();
     console.log('Datos recibidos:', req.body);
     const { id } = req.params;
-    try{
+    try {
         await db.query('DELETE FROM tbActividad WHERE Id_Actividad = ?', [id]);
-        res.status(200).json({message: 'Actividad eliminada correctamente'});
-    }catch (error){
-        res.status(500).json({message: 'Error al eliminar la actividad', error});
+        res.status(200).json({ message: 'Actividad eliminada correctamente' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al eliminar la actividad', error });
     }
 });
 
 // Endpoint para actualizar una actividad por ID
-app.put('/actividades/:id', async (req, res) =>{
+app.put('/actividades/:id', async (req, res) => {
     const db = new DBConnection();
     const { id } = req.params;
-    const { Titulo_Actividad, Fecha_Inicio, Fecha_Fin} = req.body;
+    const { Titulo_Actividad, Fecha_Inicio, Fecha_Fin } = req.body;
 
     if (!Titulo_Actividad || !Fecha_Inicio || !Fecha_Fin) {
         return res.status(400).json({ message: 'Faltan datos en la solicitud' });
     }
 
-    try{
+    try {
 
         const checkQuery = `
             SELECT Titulo_Actividad, Fecha_Inicio, Fecha_Fin
@@ -148,24 +171,24 @@ app.put('/actividades/:id', async (req, res) =>{
 
         const conflicts = await db.query(checkQuery, [id, Fecha_Inicio, Fecha_Fin, Fecha_Inicio, Fecha_Fin, Fecha_Inicio, Fecha_Fin]);
 
-        if(conflicts.length > 0){
+        if (conflicts.length > 0) {
             let conflictMessages = conflicts.map(conflict => {
                 let conflictDate = "";
-                if(Fecha_Inicio >= conflict.Fecha_Inicio && Fecha_Inicio <= conflict.Fecha_Fin){
+                if (Fecha_Inicio >= conflict.Fecha_Inicio && Fecha_Inicio <= conflict.Fecha_Fin) {
                     conflictDate = `Inicio: ${Fecha_Inicio}`;
                 }
-                if(Fecha_Fin >= conflict.Fecha_Inicio && Fecha_Fin <= conflict.Fecha_Fin){
-                    conflictDate += (conflictDate ? " y " : "" ) +  `Fin: ${Fecha_Fin}`;
+                if (Fecha_Fin >= conflict.Fecha_Inicio && Fecha_Fin <= conflict.Fecha_Fin) {
+                    conflictDate += (conflictDate ? " y " : "") + `Fin: ${Fecha_Fin}`;
                 }
 
                 return `Conflicto de fechas con "${conflict.Titulo_Actividad}".`;
             });
 
-            return res.status(400).json({message: conflictMessages.join(". ")});
+            return res.status(400).json({ message: conflictMessages.join(". ") });
         }
 
         await db.query('UPDATE tbActividad SET Titulo_Actividad = ?, Fecha_Inicio = ?, Fecha_Fin = ? WHERE Id_Actividad = ?',
-        [Titulo_Actividad, Fecha_Inicio, Fecha_Fin, id]);
+            [Titulo_Actividad, Fecha_Inicio, Fecha_Fin, id]);
 
         const actividadActualizada = {
             Id_Actividad: id,
@@ -176,21 +199,21 @@ app.put('/actividades/:id', async (req, res) =>{
 
 
         res.status(200).json(actividadActualizada);
-    }catch(error){
-        res.status(500).json({message: 'Error al actualizar la actividad', error});
+    } catch (error) {
+        res.status(500).json({ message: 'Error al actualizar la actividad', error });
     }
 });
 
 // Endpoint para agregar una nueva actividad 
-app.post('/actividades', async (req, res) =>{
+app.post('/actividades', async (req, res) => {
     const db = new DBConnection();
     const { Titulo_Actividad, Fecha_Inicio, Fecha_Fin } = req.body;
 
     if (!Titulo_Actividad || !Fecha_Inicio || !Fecha_Fin) {
         return res.status(400).json({ message: 'Todos los campos son obligatorios' });
-      }
+    }
 
-    try{
+    try {
 
         const checkQuery = `
             SELECT Titulo_Actividad, Fecha_Inicio, Fecha_Fin
@@ -221,26 +244,26 @@ app.post('/actividades', async (req, res) =>{
         const query = `INSERT INTO tbActividad (Titulo_Actividad, Fecha_Inicio, Fecha_Fin) VALUES (?, ?, ?)`;
 
         await db.query(query, [Titulo_Actividad, Fecha_Inicio, Fecha_Fin]);
-        res.status(201).json({message: 'Actividad agregada exitosamente'});
-    }catch(err){
+        res.status(201).json({ message: 'Actividad agregada exitosamente' });
+    } catch (err) {
         console.error('Error al insertar actividad:', err.message);
         res.status(500).send('Error del servidor');
-    }finally{
+    } finally {
         db.close();
     }
 });
 
 // Endpoint para actualizar las etapas por ID
-app.put('/etapas/:id', async (req, res) =>{
+app.put('/etapas/:id', async (req, res) => {
     const db = new DBConnection();
     const { id } = req.params;
     const { fecha_inicio, fecha_fin } = req.body;
 
-    if(!fecha_inicio || !fecha_fin){
-        return res.status(400).json({message: 'Faltan datos en la solicitud'});
+    if (!fecha_inicio || !fecha_fin) {
+        return res.status(400).json({ message: 'Faltan datos en la solicitud' });
     }
 
-    try{
+    try {
 
         const checkQuery = `
             SELECT id_etapa, porcentaje_etapa, fecha_inicio, fecha_fin
@@ -271,24 +294,24 @@ app.put('/etapas/:id', async (req, res) =>{
 
             return res.status(400).json({ message: conflictMessages.join(". ") });
         }
-        
+
         await db.query('UPDATE tbEtapa SET fecha_inicio = ?, fecha_fin = ? WHERE id_etapa = ?', [fecha_inicio, fecha_fin, id]);
 
-        res.status(200).json({message: 'Etapa actualizada correctamente'});
-    }catch(error){
+        res.status(200).json({ message: 'Etapa actualizada correctamente' });
+    } catch (error) {
         console.error('Error al actualizar la etapa:', error.message);
-        res.status(500).json({message: 'Error del servidor'});
-    }finally{
+        res.status(500).json({ message: 'Error del servidor' });
+    } finally {
         db.close();
     }
 });
 
 // Endpoint para obtener la etapa actual según la fecha
-app.get('/etapa-actual', async (req, res) =>{
+app.get('/etapa-actual', async (req, res) => {
     const db = new DBConnection();
     const fechaHoy = new Date().toISOString().split('T')[0];
 
-    try{
+    try {
         const query = `
             SELECT 
                 id_etapa,
@@ -299,21 +322,21 @@ app.get('/etapa-actual', async (req, res) =>{
                 fecha_inicio <= ? AND fecha_fin >= ?
         `;
         const [etapaActual] = await db.query(query, [fechaHoy, fechaHoy]);
-        if(etapaActual){
+        if (etapaActual) {
             res.json(etapaActual);
-        }else{
-            res.json({porcentaje_etapa: 'Sin etapa activa'});
+        } else {
+            res.json({ porcentaje_etapa: 'Sin etapa activa' });
         }
-    }catch (err){
+    } catch (err) {
         console.error('Error obteniendo la etapa actual:', err.message);
         res.status(500).send('Error del servidor');
-    }finally{
+    } finally {
         db.close();
     }
 });
 
 // Endpoint para obtener los proyectos existentes
-app.get('/proyectos', (req, res) =>{
+app.get('/proyectos', (req, res) => {
     const db = new DBConnection();
     const query = `
         SELECT 
@@ -330,10 +353,10 @@ app.get('/proyectos', (req, res) =>{
             tbProyectos.id_estado = tbEstadoProyectos.id_estado
     `;
 
-    db.query(query, (err, results) =>{
-        if(err){
+    db.query(query, (err, results) => {
+        if (err) {
             console.error('Error ejecutando la consulta: ', err);
-            res.status(500).json({error: 'Error obteniemdo los proyectos'});
+            res.status(500).json({ error: 'Error obteniemdo los proyectos' });
             return;
         }
 
@@ -353,62 +376,62 @@ app.get('/niveles', (req, res) => {
     db.query(query, (err, results) => {
         if (err) {
             console.error('Error obteniendo los niveles:', err);
-            res.status(500).json({error: 'Error obteniendo los niveles'});
+            res.status(500).json({ error: 'Error obteniendo los niveles' });
             return;
         }
         res.json(results);
     });
 });
 
-app.get('/seccionGrupo', (req, res) =>{
+app.get('/seccionGrupo', (req, res) => {
     const db = new DBConnection();
     const query = `SELECT Id_SeccionGrupo, Nombre_SeccionGrupo FROM tbSeccionGrupo`;
 
-    db.query(query, (err, results) =>{
-        if(err){
+    db.query(query, (err, results) => {
+        if (err) {
             console.error('Error obteniendo las secciones y grupos:', err);
-            res.status(500).json({error: 'Error obteniendo las secciones y grupos'});
+            res.status(500).json({ error: 'Error obteniendo las secciones y grupos' });
             return;
         }
         res.json(results);
     });
 });
 
-app.get('/especialidad', (req, res) =>{
+app.get('/especialidad', (req, res) => {
     const db = new DBConnection();
     const query = `SELECT Id_Especialidad, Nombre_Especialidad, letra_especialidad FROM tbEspecialidad`;
 
-    db.query(query, (err, results) =>{
-        if(err){
+    db.query(query, (err, results) => {
+        if (err) {
             console.error('Error obteniendo las especialidades:', err);
-            res.status(500).json({error: 'Error obteniendo las especialidades'});
+            res.status(500).json({ error: 'Error obteniendo las especialidades' });
             return;
         }
         res.json(results);
     });
 });
 
-app.get('/proyectosId', (req, res) =>{
+app.get('/proyectosId', (req, res) => {
     const prefijo = req.query.prefijo;
 
-    if(!prefijo){
-        return res.status(400).json({error: 'Se requiere un prefijo para la búsqueda de proyectos'});
+    if (!prefijo) {
+        return res.status(400).json({ error: 'Se requiere un prefijo para la búsqueda de proyectos' });
     }
 
     const db = new DBConnection();
     const query = `SELECT id_Proyecto FROM tbProyectos WHERE id_Proyecto LIKE '${prefijo}%'`;
 
-    db.query(query, (err, results) =>{
-        if(err){
+    db.query(query, (err, results) => {
+        if (err) {
             console.error('Error obteniendo los proyectos:', err);
-            res.status(500).json({error: 'Error obteniendo los proyectos'});
+            res.status(500).json({ error: 'Error obteniendo los proyectos' });
             return;
         }
         res.json(results);
     });
 });
 
-app.get('/estudiantes', (req, res) =>{
+app.get('/estudiantes', (req, res) => {
     const db = new DBConnection();
     const query = `
         SELECT 
@@ -428,21 +451,21 @@ app.get('/estudiantes', (req, res) =>{
             nombre_Estudiante
     `;
 
-    db.query(query, (err, results) =>{
-        if(err){
+    db.query(query, (err, results) => {
+        if (err) {
             console.error('Error obteniendo los estudiantes:', err);
-            res.status(500).json({error: 'Error obteniendo los estudiantes'});
+            res.status(500).json({ error: 'Error obteniendo los estudiantes' });
             return;
         }
         res.json(results);
     });
 });
 
-app.get('/estudiantes/nivel/:nivelId', (req, res) =>{
+app.get('/estudiantes/nivel/:nivelId', (req, res) => {
     const nivelId = req.params.nivelId;
 
-    if(!nivelId){
-        return res.status(400).json({error: 'Se requiere un ID de nivel'});
+    if (!nivelId) {
+        return res.status(400).json({ error: 'Se requiere un ID de nivel' });
     }
 
     const db = new DBConnection();
@@ -465,17 +488,17 @@ app.get('/estudiantes/nivel/:nivelId', (req, res) =>{
             nombre_Estudiante
     `;
 
-    db.query(query, [nivelId], (err, results) =>{
-        if(err){
+    db.query(query, [nivelId], (err, results) => {
+        if (err) {
             console.error('Error obteniendo los estudiantes por nivel:', err);
-            res.status(500).json({error: 'Error obteniendo los estudiantes por nivel'});
+            res.status(500).json({ error: 'Error obteniendo los estudiantes por nivel' });
             return;
         }
         res.json(results);
     });
 });
 
-app.get('/estudiantes/disponibles', (req, res) =>{
+app.get('/estudiantes/disponibles', (req, res) => {
     const db = new DBConnection();
     const query = `
         SELECT 
@@ -497,21 +520,21 @@ app.get('/estudiantes/disponibles', (req, res) =>{
             nombre_Estudiante
     `;
 
-    db.query(query, (err, results) =>{
-        if(err){
+    db.query(query, (err, results) => {
+        if (err) {
             console.error('Error obteniendo los estudiantes disponibles:', err);
-            res.status(500).json({error: 'Error obteniendo los estudiantes disponibles'});
+            res.status(500).json({ error: 'Error obteniendo los estudiantes disponibles' });
             return;
         }
         res.json(results);
     });
 });
 
-app.post('/proyectos/asignar-estudiantes', (req, res) =>{
-    const {proyectoId, estudiantesIds} = req.body;
+app.post('/proyectos/asignar-estudiantes', (req, res) => {
+    const { proyectoId, estudiantesIds } = req.body;
 
-    if(!proyectoId || !estudiantesIds || !Array.isArray(estudiantesIds) || estudiantesIds.length === 0){
-        return res.status(400).json({error: 'Se requiere un ID de proyecto y al menos un ID de estudiante'});
+    if (!proyectoId || !estudiantesIds || !Array.isArray(estudiantesIds) || estudiantesIds.length === 0) {
+        return res.status(400).json({ error: 'Se requiere un ID de proyecto y al menos un ID de estudiante' });
     }
 
     const db = new DBConnection();
@@ -526,10 +549,10 @@ app.post('/proyectos/asignar-estudiantes', (req, res) =>{
 
     const params = [proyectoId, ...estudiantesIds];
 
-    db.query(query, params, (err, results) =>{
-        if(err){
+    db.query(query, params, (err, results) => {
+        if (err) {
             console.error('Error asignando estudiantes al proyecto:', err);
-            res.status(500).json({error: 'Error asignando estudiantes al proyecto'});
+            res.status(500).json({ error: 'Error asignando estudiantes al proyecto' });
             return;
         }
 
@@ -542,24 +565,24 @@ app.post('/proyectos/asignar-estudiantes', (req, res) =>{
 });
 
 app.post('/creacionProyectos', async (req, res) => {
-    const {nombre, nivelId, seccionId, especialidadId, idProyecto, estado, estudiantesIds} = req.body;
-    
+    const { nombre, nivelId, seccionId, especialidadId, idProyecto, estado, estudiantesIds } = req.body;
+
     console.log('Datos recibidos:', {
-        nombre, nivelId, seccionId, especialidadId, 
-        idProyecto, estado, 
-        estudiantesIds: estudiantesIds ? JSON.stringify(estudiantesIds) : 'null' 
+        nombre, nivelId, seccionId, especialidadId,
+        idProyecto, estado,
+        estudiantesIds: estudiantesIds ? JSON.stringify(estudiantesIds) : 'null'
     });
-    
-    if(!nombre || !nivelId || !seccionId || !idProyecto){
-        return res.status(400).json({error: 'Faltan campos obligatorios'});
+
+    if (!nombre || !nivelId || !seccionId || !idProyecto) {
+        return res.status(400).json({ error: 'Faltan campos obligatorios' });
     }
-    
+
     if (!estudiantesIds || !Array.isArray(estudiantesIds)) {
-        return res.status(400).json({error: 'El formato de estudiantesIds es incorrecto'});
+        return res.status(400).json({ error: 'El formato de estudiantesIds es incorrecto' });
     }
-    
+
     const db = new DBConnection();
-    
+
     try {
         await new Promise((resolve, reject) => {
             db.beginTransaction(err => {
@@ -567,31 +590,31 @@ app.post('/creacionProyectos', async (req, res) => {
                 else resolve();
             });
         });
-        
+
         const id_estado = estado ? 1 : 2;
         const valorGoogle = `https://sites.google.com/ricaldone.edu.sv/${idProyecto}`;
-        
+
         const insertProyectoQuery = `
             INSERT INTO tbProyectos 
             (id_Proyecto, nombre_Proyecto, Id_Nivel, Id_SeccionGrupo, Id_Especialidad, id_estado, link_google_sites)
             VALUES (?, ?, ?, ?, ?, ?, ?)
         `;
-        
+
         await db.query(
             insertProyectoQuery,
             [idProyecto, nombre, nivelId, seccionId, especialidadId || null, id_estado, valorGoogle]
         );
-        
+
         console.log('Proyecto insertado correctamente, ID proyecto:', idProyecto);
-        
-        if(estudiantesIds.length === 0){
+
+        if (estudiantesIds.length === 0) {
             await new Promise((resolve, reject) => {
                 db.commit(err => {
                     if (err) reject(err);
                     else resolve();
                 });
             });
-            
+
             console.log('No hay estudiantes para asignar - Transacción completada');
             return res.status(201).json({
                 success: true,
@@ -600,27 +623,27 @@ app.post('/creacionProyectos', async (req, res) => {
                 estudiantes: 0
             });
         }
-        
+
         const placeholders = estudiantesIds.map(() => '?').join(',');
         const updateAllQuery = `
             UPDATE tbEstudiantes 
             SET id_Proyecto = ? 
             WHERE id_Estudiante IN (${placeholders})
         `;
-        
+
         const updateParams = [idProyecto, ...estudiantesIds];
-        
+
         const updateResult = await db.query(updateAllQuery, updateParams);
-        
+
         await new Promise((resolve, reject) => {
             db.commit(err => {
                 if (err) reject(err);
                 else resolve();
             });
         });
-        
+
         console.log(`Actualizaciones completadas: ${updateResult.affectedRows}/${estudiantesIds.length}`);
-        
+
         res.status(201).json({
             success: true,
             message: 'Proyecto creado correctamente',
@@ -628,11 +651,11 @@ app.post('/creacionProyectos', async (req, res) => {
             estudiantes: updateResult.affectedRows,
             errores: estudiantesIds.length - updateResult.affectedRows
         });
-        
+
     } catch (error) {
         db.rollback(() => {
             console.error('Error en la transacción:', error);
-            res.status(500).json({error: 'Error al crear el proyecto: ' + error.message});
+            res.status(500).json({ error: 'Error al crear el proyecto: ' + error.message });
         });
     } finally {
         db.close();
@@ -730,14 +753,14 @@ app.post('/crearRubrica', async (req, res) => {
 
 app.get('/proyectos/:id', async (req, res) => {
     const idProyecto = req.params.id;
-    
+
     console.log('Recibida petición para proyecto ID:', idProyecto);
-    
+
     if (!idProyecto) {
         console.log('ID de proyecto no proporcionado');
         return res.status(400).json({ error: 'Se requiere el ID del proyecto' });
     }
-    
+
     const db = new DBConnection();
     const query = `
         SELECT 
@@ -755,37 +778,37 @@ app.get('/proyectos/:id', async (req, res) => {
         WHERE 
             p.id_Proyecto = ?
     `;
-    
+
     console.log('Ejecutando consulta SQL:', query);
     console.log('Parámetros:', [idProyecto]);
-    
+
     try {
         const results = await db.query(query, [idProyecto]);
-        
+
         console.log('Resultados encontrados:', results.length);
-        
+
         if (results.length === 0) {
             console.log('No se encontró ningún proyecto con ID:', idProyecto);
             return res.status(404).json({ error: 'Proyecto no encontrado' });
         }
-        
+
         console.log('Devolviendo datos del proyecto:', results[0]);
         res.json({ proyecto: results[0] });
     } catch (err) {
         console.error('Error obteniendo el proyecto:', err);
         res.status(500).json({ error: 'Error obteniendo el proyecto', details: err.message });
     } finally {
-        db.close(); 
+        db.close();
     }
 });
 
 app.get('/proyectos/:id/estudiantes', (req, res) => {
     const idProyecto = req.params.id;
-    
+
     if (!idProyecto) {
         return res.status(400).json({ error: 'Se requiere el ID del proyecto' });
     }
-    
+
     const db = new DBConnection();
     const query = `
         SELECT 
@@ -805,38 +828,38 @@ app.get('/proyectos/:id/estudiantes', (req, res) => {
             apellido_Estudiante, 
             nombre_Estudiante
     `;
-    
+
     db.query(query, [idProyecto], (err, results) => {
         if (err) {
             console.error('Error obteniendo los estudiantes del proyecto:', err);
             res.status(500).json({ error: 'Error obteniendo los estudiantes del proyecto' });
             return;
         }
-        
+
         res.json({ estudiantes: results });
     });
 });
 
 app.put('/actualizarProyecto', async (req, res) => {
     const { idProyecto, nombre, nivelId, seccionId, especialidadId, estado, estudiantesIds, originalProjectId } = req.body;
-    
+
     console.log('Datos recibidos para actualización:', {
-        idProyecto, originalProjectId, nombre, nivelId, seccionId, especialidadId, 
+        idProyecto, originalProjectId, nombre, nivelId, seccionId, especialidadId,
         estado, estudiantesIds: estudiantesIds ? JSON.stringify(estudiantesIds) : 'null'
     });
-    
+
     if (!idProyecto || !nombre || !nivelId || !seccionId) {
         return res.status(400).json({ error: 'Faltan campos obligatorios' });
     }
-    
+
     if (!estudiantesIds || !Array.isArray(estudiantesIds)) {
         return res.status(400).json({ error: 'El formato de estudiantesIds es incorrecto' });
     }
 
     const projectIdToUpdate = originalProjectId || idProyecto;
-    
+
     const db = new DBConnection();
-    
+
     try {
         await new Promise((resolve, reject) => {
             db.beginTransaction(err => {
@@ -844,39 +867,39 @@ app.put('/actualizarProyecto', async (req, res) => {
                 else resolve();
             });
         });
-        
+
         const id_estado = estado ? 1 : 2;
         const valorGoogle = `https://sites.google.com/ricaldone.edu.sv/${idProyecto}`;
-        
+
         if (projectIdToUpdate !== idProyecto) {
             console.log(`ID del proyecto cambió: ${projectIdToUpdate} -> ${idProyecto}. Desvinculando estudiantes primero.`);
-            
+
             const resetEstudiantesQuery = `
                 UPDATE tbEstudiantes 
                 SET id_Proyecto = NULL 
                 WHERE id_Proyecto = ?
             `;
-            
+
             await db.query(resetEstudiantesQuery, [projectIdToUpdate]);
-            
+
             const deleteOldProjectQuery = `
                 DELETE FROM tbProyectos
                 WHERE id_Proyecto = ?
             `;
-            
+
             await db.query(deleteOldProjectQuery, [projectIdToUpdate]);
-            
+
             const insertProyectoQuery = `
                 INSERT INTO tbProyectos
                 (id_Proyecto, nombre_Proyecto, Id_Nivel, Id_SeccionGrupo, Id_Especialidad, id_estado, link_google_sites)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             `;
-            
+
             await db.query(
                 insertProyectoQuery,
                 [idProyecto, nombre, nivelId, seccionId, especialidadId || null, id_estado, valorGoogle]
             );
-            
+
             console.log('Proyecto recreado con nuevo ID:', idProyecto);
         } else {
             const updateProyectoQuery = `
@@ -889,23 +912,23 @@ app.put('/actualizarProyecto', async (req, res) => {
                     id_estado = ?
                 WHERE id_Proyecto = ?
             `;
-            
+
             await db.query(
                 updateProyectoQuery,
                 [nombre, valorGoogle, nivelId, seccionId, especialidadId || null, id_estado, idProyecto]
             );
-            
+
             console.log('Proyecto actualizado correctamente, ID proyecto:', idProyecto);
-            
+
             const resetEstudiantesQuery = `
                 UPDATE tbEstudiantes 
                 SET id_Proyecto = NULL 
                 WHERE id_Proyecto = ?
             `;
-            
+
             await db.query(resetEstudiantesQuery, [idProyecto]);
         }
-        
+
         if (estudiantesIds.length > 0) {
             const placeholders = estudiantesIds.map(() => '?').join(',');
             const updateAllQuery = `
@@ -913,19 +936,19 @@ app.put('/actualizarProyecto', async (req, res) => {
                 SET id_Proyecto = ? 
                 WHERE id_Estudiante IN (${placeholders})
             `;
-            
+
             const updateParams = [idProyecto, ...estudiantesIds];
             const updateResult = await db.query(updateAllQuery, updateParams);
-            
+
             await new Promise((resolve, reject) => {
                 db.commit(err => {
                     if (err) reject(err);
                     else resolve();
                 });
             });
-            
+
             console.log(`Actualizaciones de estudiantes completadas: ${updateResult.affectedRows}/${estudiantesIds.length}`);
-            
+
             res.status(200).json({
                 success: true,
                 message: 'Proyecto actualizado correctamente',
@@ -940,9 +963,9 @@ app.put('/actualizarProyecto', async (req, res) => {
                     else resolve();
                 });
             });
-            
+
             console.log('Proyecto actualizado sin estudiantes - Transacción completada');
-            
+
             res.status(200).json({
                 success: true,
                 message: 'Proyecto actualizado correctamente (sin estudiantes)',
@@ -1013,7 +1036,7 @@ app.get('/api/usuarios', async (req, res) => {
 });
 
 //Delete
- 
+
 app.delete('/api/usuarios/:id', async (req, res) => {
     const db = new DBConnection();
     const { id } = req.params;
@@ -1050,10 +1073,10 @@ app.post('/api/login', async (req, res) => {
 
         // Generar un token JWT
         const token = jwt.sign({ id: usuario.Id_Usuario, rol: usuario.Id_Rol }, 'tu_secreto', { expiresIn: '1h' });
- 
+
         // Establecer el token en una cookie
         res.cookie('token', token, { httpOnly: true, secure: true }); // Asegúrate de usar secure: true en producción
-        
+
         res.json({ message: 'Inicio de sesión exitoso' });
     } catch (error) {
         console.error('Error al iniciar sesión:', error.message);
@@ -1110,9 +1133,9 @@ app.get('/api/seccion-grupos', async (req, res) => {
     }
 });
 
-app.get('/api/estudiantes', async (req, res) =>{
+app.get('/api/estudiantes', async (req, res) => {
     const db = new DBConnection();
-    const {nivel, minNivel, maxNivel, search} = req.query;
+    const { nivel, minNivel, maxNivel, search } = req.query;
 
     let query = `
         SELECT e.id_Estudiante, e.Codigo_Carnet, e.nombre_Estudiante,
@@ -1127,81 +1150,81 @@ app.get('/api/estudiantes', async (req, res) =>{
 
     const values = [];
 
-    if(nivel){
+    if (nivel) {
         query += ' AND e.Id_Nivel = ?';
         values.push(nivel);
     }
 
-    if(minNivel && maxNivel){
+    if (minNivel && maxNivel) {
         query += ' AND e.Id_Nivel BETWEEN ? AND ?';
         values.push(minNivel, maxNivel);
     }
 
-    if(search){
+    if (search) {
         query += ' AND (e.nombre_Estudiante LIKE ? OR e.apellido_Estudiante LIKE ?)';
         values.push(`%${search}%`, `%${search}%`);
     }
 
     query += ' ORDER BY e.nombre_Estudiante ASC';
 
-    try{
+    try {
         const estudiantes = await db.query(query, values);
         res.json(estudiantes);
-    }catch(error){
+    } catch (error) {
         console.error('Error al obtener estudiantes:', error);
         res.status(500).send('Error del servidor');
-    }finally{
+    } finally {
         db.close();
     }
 });
 
-app.get('/api/niveles', async (req, res) =>{
+app.get('/api/niveles', async (req, res) => {
     const db = new DBConnection();
 
-    try{
+    try {
         const niveles = await db.query('SELECT * FROM tbNivel ORDER BY Id_Nivel');
         res.json(niveles);
-    }catch(error){
+    } catch (error) {
         console.error('Error al obtener niveles:', error);
         res.status(500).send('Error del servidor');
-    }finally{
+    } finally {
         db.close();
     }
 });
 
-app.get('/api/secciones', async (req, res) =>{
+app.get('/api/secciones', async (req, res) => {
     const db = new DBConnection();
 
-    try{
+    try {
         const secciones = await db.query('SELECT * FROM tbSeccionGrupo ORDER BY Nombre_SeccionGrupo');
         res.json(secciones);
-    }catch(error){
+    } catch (error) {
         console.error('Error al obtener secciones:', error);
         res.status(500).send('Error del servidor');
-    }finally{
+    } finally {
         db.close();
     }
 });
 
-app.get('/api/especialidades', async (req, res) =>{
+app.get('/api/especialidades', async (req, res) => {
     const db = new DBConnection();
 
-    try{
+    try {
         const especialidades = await db.query('SELECT * FROM tbEspecialidad ORDER BY Nombre_Especialidad');
         res.json(especialidades);
-    }catch(error){
+    } catch (error) {
         console.error('Error al obtener especialidades:', error);
         res.status(500).send('Error del servidor');
-    }finally{
+    } finally {
         db.close();
     }
 });
 
-app.get('/api/proyectos/:id', async (req, res) =>{
+app.get('/api/proyectos/:id', async (req, res) => {
     const db = new DBConnection();
-    const {id} = req.params;
+    const { id } = req.params;
 
-    try{
+    try {
         const query = `
             SELECT p.id_Proyecto, p.nombre_Proyecto, p.link_google_sites, 
                    n.Nombre_Nivel, s.Nombre_SeccionGrupo, e.Nombre_Especialidad
@@ -1214,31 +1237,31 @@ app.get('/api/proyectos/:id', async (req, res) =>{
 
         const [proyecto] = await db.query(query, [id]);
 
-        if(!proyecto){
-            return res.status(404).json({message: 'Proyecto no encontrado'});
+        if (!proyecto) {
+            return res.status(404).json({ message: 'Proyecto no encontrado' });
         }
 
         res.json(proyecto);
-    }catch(error){
+    } catch (error) {
         console.error('Error al obtener proyecto:', error);
         res.status(500).send('Error del servidor');
-    }finally{
+    } finally {
         db.close();
     }
 });
 
-app.put('/api/estudiantes/:id', async (req, res) =>{
+app.put('/api/estudiantes/:id', async (req, res) => {
     const db = new DBConnection();
-    const {id} = req.params;
-    const {nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad} = req.body;
+    const { id } = req.params;
+    const { nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad } = req.body;
 
-    try{
-        if(!nombre_Estudiante || !apellido_Estudiante || !Id_Nivel || !Id_SeccionGrupo){
-            return res.status(400).json({message: 'Faltan campos requeridos'});
+    try {
+        if (!nombre_Estudiante || !apellido_Estudiante || !Id_Nivel || !Id_SeccionGrupo) {
+            return res.status(400).json({ message: 'Faltan campos requeridos' });
         }
 
-        if(Id_Nivel >= 4 && Id_Nivel <= 6 && !Id_Especialidad){
-            return res.status(400).json({message: 'Especialidad requerida para estudiantes de bachillerato'});
+        if (Id_Nivel >= 4 && Id_Nivel <= 6 && !Id_Especialidad) {
+            return res.status(400).json({ message: 'Especialidad requerida para estudiantes de bachillerato' });
         }
 
         const query = `
@@ -1260,32 +1283,177 @@ app.put('/api/estudiantes/:id', async (req, res) =>{
             id
         ]);
 
-        res.json({message: 'Estudiante actualizado exitosamente'});
-    }catch(error){
+        res.json({ message: 'Estudiante actualizado exitosamente' });
+    } catch (error) {
         console.error('Error al actualizar estudiante:', error);
-        res.status(500).json({message: 'Error al actualizar estudiante'});
-    }finally{
+        res.status(500).json({ message: 'Error al actualizar estudiante' });
+    } finally {
         db.close();
     }
 });
 
-app.delete('/api/eliminarEstudiantes/:id', async (req, res) =>{
+app.delete('/api/eliminarEstudiantes/:id', async (req, res) => {
     const db = new DBConnection();
-    const {id} = req.params;
+    const { id } = req.params;
 
-    try{
+    try {
         const query = 'DELETE FROM tbEstudiantes WHERE id_Estudiante = ?';
         await db.query(query, [id]);
-        res.json({message: 'Estudiante elimando exitosamente'});
-    }catch(error){
+        res.json({ message: 'Estudiante elimando exitosamente' });
+    } catch (error) {
         console.error('Error al eliminar estudiantes:', error);
-        res.status(500).json({message: 'Error al eliminar estudiante'});
+        res.status(500).json({ message: 'Error al eliminar estudiante' });
+    } finally {
+        db.close();
+    }
+});
+
+app.post('/api/guardarEstudiantes', async (req, res) => {
+    const db = new DBConnection();
+
+    try {
+        const { codigo, nombres, apellidos, idNivel, idSeccion, idEspecialidad } = req.body;
+
+        if (!codigo || !nombres || !apellidos || !idNivel || !idSeccion) {
+            return res.status(400).json({ message: 'Todos los campos obligatorios deben ser completados' });
+        }
+
+        const query = `
+      INSERT INTO tbEstudiantes 
+      (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad) 
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+        const result = await db.query(query, [
+            codigo, nombres, apellidos, idNivel, idSeccion, idEspecialidad || null
+        ]);
+
+        res.status(201).json({
+            message: 'Estudiante guardado correctamente',
+            id: result.insertId
+        });
+    } catch (error) {
+        console.error('Error al guardar estudiante:', error);
+        res.status(500).json({ message: 'Error del servidor' });
+    } finally {
+        db.close();
+    }
+});
+
+app.post('/api/estudiantes/importar', upload.single('excelFile'), async (req, res) => {
+    const db = new DBConnection();
+
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: 'No se ha proporcionado ningún archivo' });
+        }
+
+        const workbook = XLSX.readFile(req.file.path);
+        const sheet_name_list = workbook.SheetNames;
+        const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+
+        if (data.length === 0) {
+            return res.status(400).json({ message: 'El archivo no contiene datos' });
+        }
+
+        const niveles = await db.query('SELECT Id_Nivel, Nombre_Nivel FROM tbNivel');
+        const nivelesMap = new Map(niveles.map(n => [n.Nombre_Nivel.toLowerCase(), n.Id_Nivel]));
+
+        const secciones = await db.query('SELECT Id_SeccionGrupo, Nombre_SeccionGrupo FROM tbSeccionGrupo');
+        const seccionesMap = new Map(secciones.map(s => [s.Nombre_SeccionGrupo.toLowerCase(), s.Id_SeccionGrupo]));
+
+        const especialidades = await db.query('SELECT Id_Especialidad, Nombre_Especialidad FROM tbEspecialidad');
+        const especialidadesMap = new Map(especialidades.map(e => [e.Nombre_Especialidad.toLowerCase(), e.Id_Especialidad]));
+
+        const estudiantes = [];
+        const errores = [];
+
+        for (let i = 0; i < data.length; i++) {
+            const row = data[i];
+
+            if (!row.Codigo || !row.Nombres || !row.Apellidos || !row.Nivel || !row.Seccion) {
+                errores.push(`Fila ${i + 2}: Faltan campos obligatorios`);
+                continue;
+            }
+
+            let idNivel, idSeccion, idEspecialidad = null;
+
+            const nivelNombre = String(row.Nivel).toLowerCase();
+            idNivel = nivelesMap.get(nivelNombre);
+            if (!idNivel) {
+                errores.push(`Fila ${i + 2}: Nivel '${row.Nivel}' no encontrado`);
+                continue;
+            }
+
+            const seccionNombre = String(row.Seccion).toLowerCase();
+            idSeccion = seccionesMap.get(seccionNombre);
+            if (!idSeccion) {
+                errores.push(`Fila ${i + 2}: Sección '${row.Seccion}' no encontrada`);
+                continue;
+            }
+
+            if (row.Especialidad) {
+                const especialidadNombre = String(row.Especialidad).toLowerCase();
+                idEspecialidad = especialidadesMap.get(especialidadNombre);
+                if (!idEspecialidad) {
+                    errores.push(`Fila ${i + 2}: Especialidad '${row.Especialidad}' no encontrada`);
+                    continue;
+                }
+            }
+
+            estudiantes.push([
+                row.Codigo,
+                row.Nombres,
+                row.Apellidos,
+                idNivel,
+                idSeccion,
+                idEspecialidad
+            ]);
+        }
+
+        if (errores.length > 0 && estudiantes.length === 0) {
+            return res.status(400).json({
+                message: 'No se pudo procesar ningún estudiante',
+                errores
+            });
+        }
+
+        if (estudiantes.length > 0) {
+            const query = `
+        INSERT INTO tbEstudiantes 
+        (Codigo_Carnet, nombre_Estudiante, apellido_Estudiante, Id_Nivel, Id_SeccionGrupo, Id_Especialidad) 
+        VALUES ?
+      `;
+
+            await db.query(query, [estudiantes]);
+        }
+
+        const fs = require('fs');
+        fs.unlinkSync(req.file.path);
+
+        res.json({
+            message: 'Archivo procesado correctamente',
+            insertados: estudiantes.length,
+            errores: errores.length > 0 ? errores : undefined
+        });
+    }catch(error){
+        console.error('Error al procesar archivo Excel:', error);
+
+        try{
+            const fs = require('fs');
+            if(req.file && fs.existsSync(req.file.path)){
+                fs.unlinkSync(req.file.path);
+            }
+        }catch(e){
+            console.error('Error al eliminar archivo temporal:', e);
+        }
+        res.status(500).json({message: 'Error del servidor'});
     }finally{
         db.close();
     }
 });
 
 // Servidor escuchando en el puerto definido
-app.listen(PORT, () =>{
+app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
