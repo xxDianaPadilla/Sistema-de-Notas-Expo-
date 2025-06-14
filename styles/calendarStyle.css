@@ -487,3 +487,135 @@ main{
         width: 480px !important;
     }
 }
+
+
+@media (min-width: 969px) and (max-width: 1920px) {
+ 
+    .container {
+        max-width: 1800px;
+        margin: 0 auto 0 50px;
+    }
+    
+   
+    main {
+        margin-left: 300px;
+        padding: 50px 60px;
+        width: 70%;
+    }
+    
+  
+    .calendar {
+        width: 950px;
+        height: auto;
+        box-shadow: 0 0 15px rgba(29, 29, 29, 0.2);
+        padding: 20px;
+    }
+    
+    
+    .header {
+        padding: 15px;
+    }
+    
+    .monthYear {
+        width: 300px;
+        font-size: 22px;
+    }
+    
+
+    .header button {
+        width: 50px;
+        height: 50px;
+    }
+    
+
+    .days .day {
+        padding: 10px;
+        font-size: 16px;
+    }
+    
+   
+    .dates {
+        gap: 12px;
+    }
+    
+    .date {
+        width: 50px;
+        height: 50px;
+        font-size: 16px;
+    }
+    
+ 
+    .actividades {
+        width: 380px;
+        height: 700px;
+        margin-top: 60px;
+        margin-right: 40px;
+    }
+    
+   
+    .card {
+        padding: 20px;
+        margin: 15px 0;
+    }
+    
+    .card h2 {
+        font-size: 2.2em;
+    }
+    
+    .card p {
+        font-size: 1.3em;
+    }
+    
+  
+    #btnNuevo {
+        width: 55px;
+        height: 55px;
+        font-size: 35px;
+    }
+    
+    
+    .up h1 {
+        font-size: 32px;
+    }
+    
+    .up h3 {
+        font-size: 18px;
+    }
+    
+    .actividades h1 {
+        font-size: 20px;
+    }
+    
+    /* Modales más grandes */
+    .modal-content {
+        width: 400px;
+        padding: 25px;
+    }
+    
+    .modal-content2 {
+        width: 500px;
+        padding: 30px;
+    }
+    
+    .form-input, .date-input {
+        padding: 12px;
+        font-size: 16px;
+    }
+    
+    .form-button {
+        padding: 14px;
+        font-size: 18px;
+    }
+    
+   
+    .menu-lateral {
+        width: 280px;
+    }
+    
+    /* Tooltip */
+    .tooltip {
+        font-size: 14px;
+        padding: 12px;
+        transform: translateY(70px);
+    }
+}
