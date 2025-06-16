@@ -326,6 +326,7 @@ main{
 
 /* Responsive Design */
 @media (max-width: 768px) {
+
     /* Ocultar el margen izquierdo de 250px y hacer que el contenido se ajuste */
     main {
         margin-left: 0;
@@ -369,8 +370,16 @@ main{
     }
 }
 
+
+/********************* RESPONSIVE DISPOSITIVOS PEQUEÑOS ************************************/
+
 @media (max-width: 480px) {
-    /* Ajustar el tamaño de las fuentes más para pantallas muy pequeñas */
+
+    *{
+        box-sizing: border-box; /*Le da un margen parejo a todo*/
+    }
+
+    /* Ajusta el tamaño de las fuentes más para pantallas muy pequeñas */
     .header h1 {
         font-size: 20px;
     }
@@ -381,5 +390,89 @@ main{
 
     .estadoPTC h2 {
         font-size: 60px;
+    }
+
+    .containerUp img{
+        width: 60px;
+    }
+
+    .description {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: auto;
+      }
+    
+    .description p {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+    
+    .description .btnMas {
+        width: 100%;
+        align-self: center;
+    }
+
+    .header, .estadoPTC {
+        width: 100%;
+        height: auto;
+    }
+
+    .header .icon {
+        width: 160px;
+        height: 160px;
+        right: -40px;
+        bottom: -40px;
+    }
+
+    .estadoPTC .icon {
+        width: 40px;
+        height: 40px;
+        right: 20px;
+        bottom: 20px;
+    }
+
+    .containerUp {
+        gap: 20px;
+    }
+    
+    .usuarios {
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    .connected-users {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .containerDown {
+        padding: 0 10px;
+    }
+
+    .actions {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 0 10px 20px 10px;
+    }
+
+    .btn-action {
+        width: 100%;
+        font-size: 15px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .btn-action img {
+        width: 45px;
+        height: 45px;
     }
 }

@@ -378,3 +378,83 @@ input {
 .delete-btn:hover {
     background-color: #c82333; /* Color al pasar el mouse */
 }
+
+/*********************** RESPONSIVE DISPOSITIVOS PEQUEÑOS ******************************/
+
+@media screen and (max-width: 480px) {
+    /* Ocultar barra lateral o moverla arriba */
+    .menu-lateral {
+        width: 100%;
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+    }
+
+    .menu-lateral nav ul {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        width: 100%;
+        padding: 0;
+    }
+
+    .menu-lateral nav ul li {
+        width: auto;
+        padding: 10px;
+    }
+
+    main {
+        margin-left: 0;
+        width: 100%;
+        padding: 10px;
+    }
+
+    #categoriaBox section {
+        width: 100%;
+        font-size: 10px;
+    }
+
+    #roles {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 10px;
+    }
+
+    #newUser {
+        width: 90%;
+        justify-content: center;
+    }
+
+    #cardContainer {
+        width: 100%;
+        padding: 10px;
+        height: auto;
+    }
+
+    .list-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .button-container {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .edit-btn, .delete-btn {
+        width: 48%;
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .forms {
+        width: 90%;
+    }
+
+    #mainForms {
+        width: 95vw;
+    }
+}
