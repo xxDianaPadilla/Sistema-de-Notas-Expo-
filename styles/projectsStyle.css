@@ -884,3 +884,431 @@ input:checked + .slider:before {
 .alerta.error {
     background-color: #f44336;
 }
+
+
+/********************* RESPONSIVE DISPOSITIVOS PEQUEÑOS ************************************/
+
+
+@media (max-width: 480px) {
+    body {
+        display: block;
+        overflow: auto;
+    }
+
+    /* Ajuste del contenido principal */
+
+    main {
+        margin-left: 0;
+        padding: 15px;
+        max-height: none;
+        overflow: visible;
+    }
+
+    .container {
+        width: 100%;
+        margin: 0;
+        padding: 10px;
+    }
+
+    .container-2 {
+        margin: 10px 0;
+        padding: 15px;
+    }
+
+
+    /* Ajuste de títulos */
+    h1 {
+        font-size: 18px;
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+
+    /* Ajuste de las pestañas */
+    .tabs {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+        margin-bottom: 15px;
+    }
+
+    .tab {
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .tab.active {
+        background-color: #333;
+        color: white;
+    }
+
+    #add-button {
+        padding: 12px;
+        font-size: 16px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    /* Ajuste de búsqueda y filtros */
+    .search-filter {
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    #buscar {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+
+    #filtrarBtn {
+        padding: 12px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    #filtro-menu {
+        position: static;
+        transform: none;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    /* Ajuste de la tabla */
+    table {
+        font-size: 14px;
+        table-layout: auto;
+    }
+
+    th, td {
+        padding: 8px 4px;
+        font-size: 12px;
+    }
+
+    th:nth-child(1), td:nth-child(1) {
+        width: 40%;
+    }
+
+    th:nth-child(2), td:nth-child(2) {
+        width: 25%;
+    }
+
+    th:nth-child(3), td:nth-child(3) {
+        width: 35%;
+    }
+
+    /* Ajuste de botones en la tabla */
+    .btn-editar, #btn-link {
+        width: 100%;
+        height: auto;
+        padding: 8px 4px;
+        margin: 2px 0;
+        font-size: 12px;
+    }
+
+    .btn-editar img, #btn-link img {
+        width: 12px;
+        height: 12px;
+        margin-bottom: -1px;
+    }
+
+    /* Ajuste del estado */
+    .estado .circulo {
+        width: 8px;
+        height: 8px;
+    }
+
+    /* Ajuste de modals */
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+        padding: 15px;
+        margin-top: 20px;
+    }
+
+    #editProjectFormModal .modal-content {
+        width: 95%;
+        margin: 5% auto;
+        padding: 15px;
+    }
+
+    .close-btn, .close-edit-btn {
+        font-size: 20px;
+        top: 5px;
+        right: 10px;
+    }
+
+    /* Ajuste de formularios */
+    #projectName, #projectID, #studentList, #editStudentList {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+
+    #projectLevel, #projectSection, #projectEspecialidad {
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 12px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+
+    #projectID {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    #addStudentBtn, #editAddStudentBtn {
+        width: 100%;
+        height: auto;
+        padding: 12px;
+        font-size: 16px;
+        margin-top: 15px;
+    }
+
+    /* Ajuste de botones de formulario */
+    .form-buttons {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .insert-btn, .update-btn, .cancel-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    /* Ajuste de modals de estudiantes */
+    .modal-content2, .students-modal {
+        width: 95%;
+        max-width: none;
+        margin: 10px;
+        padding: 15px;
+        max-height: 90vh;
+    }
+
+    .modal-header, .students-modal-header {
+        padding: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .close-edit-student-btn {
+        align-self: flex-end;
+        font-size: 18px;
+    }
+
+    .modal-body {
+        padding: 10px;
+    }
+
+    .filter-container, .search-container {
+        margin-bottom: 10px;
+    }
+
+    .filter-select, .search-input {
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    .filter-container2 {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .filter-container2 select,
+    .filter-container2 input {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+
+    .students-list, .available-students-list {
+        max-height: 250px;
+    }
+
+    .student-item {
+        padding: 12px 8px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .available-students-list .student-item {
+        padding: 12px;
+    }
+
+    .student-checkbox {
+        margin-right: 0;
+        margin-bottom: 5px;
+        align-self: flex-start;
+    }
+
+    .student-info {
+        width: 100%;
+    }
+
+    .student-carnet {
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .student-assigned-tag, .level-badge {
+        font-size: 10px;
+        margin-left: 0;
+        margin-top: 5px;
+        align-self: flex-start;
+    }
+
+    .selected-student {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 12px;
+    }
+
+    #editStudentList .selected-student {
+        padding: 12px;
+    }
+
+    .remove-student {
+        align-self: flex-end;
+        margin-top: 5px;
+    }
+
+    .modal-footer, .modal-buttons {
+        padding: 10px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .modal-footer button, .modal-buttons button {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+    }
+
+    /* Ajuste de alertas */
+    .alerta {
+        width: 90%;
+        left: 5%;
+        transform: none;
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+
+    /* Ajuste del switch */
+    .switch {
+        width: 40px;
+        height: 20px;
+    }
+
+    .slider:before {
+        height: 14px;
+        width: 14px;
+        left: 3px;
+        bottom: 3px;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(20px);
+    }
+
+    .status-text {
+        font-size: 12px;
+    }
+
+    /* Otro ajustes*/
+
+    main {
+        padding: 10px;
+    }
+
+    .container, .container-2 {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 16px;
+    }
+
+    h2 {
+        font-size: 14px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    th, td {
+        padding: 6px 2px;
+        font-size: 11px;
+    }
+
+    .btn-editar, #btn-link {
+        padding: 6px 2px;
+        font-size: 10px;
+    }
+
+    .btn-editar img, #btn-link img {
+        width: 10px;
+        height: 10px;
+    }
+
+    #add-button {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .tab {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    #buscar, #filtrarBtn {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .modal-content, #editProjectFormModal .modal-content {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .modal-content2, .students-modal {
+        padding: 10px;
+    }
+
+    .student-item {
+        padding: 10px 6px;
+        font-size: 12px;
+    }
+
+    .selected-student {
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    .alerta {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+}
