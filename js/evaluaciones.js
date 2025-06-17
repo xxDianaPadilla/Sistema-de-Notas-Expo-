@@ -1,8 +1,9 @@
-// Script para crear nueva rúbrica o escala
-document.querySelector('.newEva').addEventListener('click', function () {
-    const mainElement = document.querySelector('main'); // Selecciona el elemento <main>
+// Variable global para guardar el tipo seleccionado
+let tipoEvaluacionSeleccionado = null;
 
-    // Añade un overlay oscuro
+// Evento para mostrar opción de nuevo instrumento de evaluación
+document.querySelector('.newEva').addEventListener('click', function () {
+    // Overlay oscuro
     const overlay = document.createElement('div');
     overlay.style.position = 'fixed';
     overlay.style.top = '0';
@@ -26,7 +27,6 @@ document.querySelector('.newEva').addEventListener('click', function () {
     alertContainer.style.zIndex = '1000';
     alertContainer.style.width = '400px';
 
-    // Lo que se muestra en la alerta
     alertContainer.innerHTML = `
         <button id="btnClose" style="
             position: absolute;
@@ -50,32 +50,31 @@ document.querySelector('.newEva').addEventListener('click', function () {
     document.body.appendChild(overlay);
     document.body.appendChild(alertContainer);
 
-    // Botones para redirigir a las respectivas páginas
+    // Botones para mostrar el formulario
     document.getElementById('btnEscala').addEventListener('click', function () {
-    // Redirigir a la página de Escala estimativa
-    window.location.href = '/escala';
+        tipoEvaluacionSeleccionado = 1; // Escala estimativa
+        document.body.removeChild(alertContainer);
+        document.body.removeChild(overlay);
+        mostrarFormulario("Escala estimativa");
     });
 
     document.getElementById('btnRubrica').addEventListener('click', function () {
-        window.location.href = '/newRubric'; 
+        tipoEvaluacionSeleccionado = 2; // Rúbrica
+        document.body.removeChild(alertContainer);
+        document.body.removeChild(overlay);
+        mostrarFormulario("Rúbrica");
     });
 
-// Botón para cerrar (X) la alerta
+    // Botón para cerrar la alerta
     document.getElementById('btnClose').addEventListener('click', function () {
-    document.body.removeChild(alertContainer);
-    document.body.removeChild(overlay);
+        document.body.removeChild(alertContainer);
+        document.body.removeChild(overlay);
     });
-    });
+}
 
-/*// Función para mostrar el formulario según la opción seleccionada
+);
+
 function mostrarFormulario(tipo) {
-    // Eliminar la alerta de la pantalla
-    const overlay = document.querySelector('div[style*="position: fixed"]');
-    const alertContainer = document.querySelector('div[style*="background-color: #fff"]');
-    document.body.removeChild(overlay);
-    document.body.removeChild(alertContainer);
-
-    // Crear la estructura del formulario
     const formularioContainer = document.createElement('div');
     formularioContainer.style.position = 'fixed';
     formularioContainer.style.top = '50%';
@@ -88,6 +87,7 @@ function mostrarFormulario(tipo) {
     formularioContainer.style.textAlign = 'center';
     formularioContainer.style.zIndex = '1000';
     formularioContainer.style.width = '400px';
+
     formularioContainer.innerHTML = `
         <button id="btnCloseForm" style="
             position: absolute;
@@ -129,29 +129,35 @@ function mostrarFormulario(tipo) {
     `;
     document.body.appendChild(formularioContainer);
 
-    // Botón para cerrar el formulario
     document.getElementById('btnCloseForm').addEventListener('click', function () {
         document.body.removeChild(formularioContainer);
     });
 
-    // Cargar los select desde la API
     cargarDatosEnSelect('http://localhost:5501/nivel', 'selectNivel');
     cargarDatosEnSelect('http://localhost:5501/especialidad', 'selectEspecialidad');
     cargarDatosEnSelect('http://localhost:5501/etapa', 'selectEtapa');
+
+    document.getElementById("formEvaluacion").addEventListener("submit", enviarFormulario);
 }
 
-// Función para cargar datos en los select desde la API
 async function cargarDatosEnSelect(url, idSelect) {
     try {
         const response = await fetch(url);
         const data = await response.json();
         const select = document.getElementById(idSelect);
-        select.innerHTML = "<option value=''>Seleccione una opción</option>"; // Opción por defecto
-
+        select.innerHTML = "<option value=''>Seleccione una opción</option>";
         data.forEach(item => {
             const option = document.createElement("option");
-            option.value = item.Id_Nivel || item.Id_Especialidad || item.Id_Etapa;
-            option.textContent = item.Nombre_Nivel || item.Nombre_Especialidad || item.Nombre_Etapa;
+            if (idSelect === "selectNivel") {
+                option.value = item.Id_Nivel;
+                option.textContent = item.Nombre_Nivel;
+            } else if (idSelect === "selectEspecialidad") {
+                option.value = item.Id_Especialidad;
+                option.textContent = item.Nombre_Especialidad;
+            } else if (idSelect === "selectEtapa") {
+                option.value = item.id_etapa || item.Id_Etapa || item.idEtapa;
+                option.textContent = item.nombre_etapa || item.porcentaje_etapa || item.Nombre_Etapa;
+            }
             select.appendChild(option);
         });
     } catch (error) {
@@ -160,54 +166,50 @@ async function cargarDatosEnSelect(url, idSelect) {
     }
 }
 
-// Función para enviar el formulario al backend
 async function enviarFormulario(event) {
-    event.preventDefault(); // Evita que la página se recargue
+    event.preventDefault();
 
-    // Obtener valores del formulario
-    const nombre = document.getElementById("nombre").value;
-    const nivel = document.getElementById("selectNivel").value;
-    const especialidad = document.getElementById("selectEspecialidad").value;
-    const etapa = document.getElementById("selectEtapa").value;
+    const nombre_Rubrica = document.getElementById("nombre").value.trim();
+    const Id_Nivel = document.getElementById("selectNivel").value;
+    const Id_Especialidad = document.getElementById("selectEspecialidad").value;
+    const id_etapa = document.getElementById("selectEtapa").value;
 
-    // Validar que todos los campos estén llenos
-    if (!nombre || !nivel || !especialidad || !etapa) {
+    if (!nombre_Rubrica || !Id_Nivel || !Id_Especialidad || !id_etapa) {
         alert("Por favor, completa todos los campos.");
         return;
     }
 
-    // Datos a enviar
+    if (!tipoEvaluacionSeleccionado) {
+        alert("Tipo de evaluación no seleccionado. Por favor, vuelve a intentarlo.");
+        return;
+    }
+
     const datosEvaluacion = {
-        nombre,
-        nivel,
-        especialidad,
-        etapa
+        nombre_Rubrica,
+        Id_Nivel: parseInt(Id_Nivel),
+        Id_Especialidad: parseInt(Id_Especialidad),
+        id_etapa: parseInt(id_etapa),
+        Id_TipoEvaluacion: tipoEvaluacionSeleccionado,
+        Año: "2025"
     };
 
     try {
-        const response = await fetch("http://localhost:5501/guardarEvaluacion", {
+        const response = await fetch("http://localhost:5501/api/rubricas", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(datosEvaluacion)
         });
 
         const result = await response.json();
+
         if (response.ok) {
             alert("Evaluación guardada con éxito.");
-            document.getElementById("formEvaluacion").reset(); // Limpiar formulario
+            document.getElementById("formEvaluacion").reset();
         } else {
-            alert("Error: " + result.error);
+            alert("Error: " + (result.message || result.error || "No se pudo guardar la evaluación"));
         }
     } catch (error) {
         console.error("Error al guardar la evaluación:", error);
         alert("Hubo un problema al guardar la evaluación.");
     }
 }
-
-// Llamar al evento de envío al formulario
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("formEvaluacion")?.addEventListener("submit", enviarFormulario);
-});
-*/
