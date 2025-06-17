@@ -205,6 +205,19 @@ async function enviarFormulario(event) {
         if (response.ok) {
             alert("Evaluación guardada con éxito.");
             document.getElementById("formEvaluacion").reset();
+
+            const nuevoId = result.id || result.Id || result.Id_Rubrica; // según como venga el id
+
+            if (!nuevoId) {
+                alert("No se pudo obtener el ID de la evaluación creada.");
+                return;
+            }
+
+            if (tipoEvaluacionSeleccionado === 1) {
+                window.location.href = `escala.html?id=${nuevoId}`;
+            } else if (tipoEvaluacionSeleccionado === 2) {
+                window.location.href = `newRubric.html?id=${nuevoId}`;
+            }
         } else {
             alert("Error: " + (result.message || result.error || "No se pudo guardar la evaluación"));
         }

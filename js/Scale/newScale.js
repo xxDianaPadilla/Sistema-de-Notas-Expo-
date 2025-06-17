@@ -1,3 +1,10 @@
+// Obtener el id de la rubrica desde la URL
+const urlParams = new URLSearchParams(window.location.search);
+const idRubrica = parseInt(urlParams.get('id'));
+if (!idRubrica) {
+    alert("No se encontró el id de la rúbrica.");
+}
+
 // Esta función se ejecuta cuando se crea la tabla
 function generarTabla() {
     // Obtener los valores de cantidad de filas desde el input
@@ -7,10 +14,36 @@ function generarTabla() {
     tabla.style.width = '100%';
     tabla.style.borderCollapse = 'collapse';
 
+    // Definir anchos relativos de columnas con colgroup
+    const colgroup = document.createElement('colgroup');
+
+    const colNumero = document.createElement('col');
+    colNumero.style.width = '5%'; // Número pequeño
+    colgroup.appendChild(colNumero);
+
+    const colCriterio = document.createElement('col');
+    colCriterio.style.width = '20%'; // Criterio más pequeño
+    colgroup.appendChild(colCriterio);
+
+    const colDescripcion = document.createElement('col');
+    colDescripcion.style.width = '45%'; // Descripción más grande
+    colgroup.appendChild(colDescripcion);
+
+    const colPonderacion = document.createElement('col');
+    colPonderacion.style.width = '15%';
+    colgroup.appendChild(colPonderacion);
+
+    const colPuntaje = document.createElement('col');
+    colPuntaje.style.width = '15%';
+    colgroup.appendChild(colPuntaje);
+
+    tabla.appendChild(colgroup);
+
     // Crear encabezado
     const encabezado = tabla.createTHead();
     const filaEncabezado = encabezado.insertRow(0);
-    const encabezados = ["N°", "Criterio", "Ponderación", "Puntaje"];
+    // Agregamos la columna Descripción entre Criterio y Ponderación
+    const encabezados = ["N°", "Criterio", "Descripción", "Ponderación", "Puntaje"];
 
     encabezados.forEach(encabezadoTexto => {
         const th = document.createElement('th');
@@ -25,7 +58,7 @@ function generarTabla() {
     const cuerpo = tabla.createTBody();
     for (let i = 0; i < filas; i++) {
         const fila = cuerpo.insertRow();
-        
+
         // Número de fila
         const celdaNumero = fila.insertCell();
         celdaNumero.textContent = i + 1;
@@ -50,6 +83,24 @@ function generarTabla() {
         celdaCriterio.style.border = '1px solid #ddd';
         celdaCriterio.style.padding = '8px';
         textareaCriterio.style.fontFamily = 'Poppins, sans-serif';
+
+        // Descripción (Textarea con ajuste automático)
+        const celdaDescripcion = fila.insertCell();
+        const textareaDescripcion = document.createElement('textarea');
+        textareaDescripcion.style.width = '100%';
+        textareaDescripcion.style.padding = '5px';
+        textareaDescripcion.style.boxSizing = 'border-box';
+        textareaDescripcion.style.resize = 'none';
+        textareaDescripcion.style.overflowWrap = 'break-word';
+        textareaDescripcion.style.whiteSpace = 'pre-wrap';
+        textareaDescripcion.addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+        celdaDescripcion.appendChild(textareaDescripcion);
+        celdaDescripcion.style.border = '1px solid #ddd';
+        celdaDescripcion.style.padding = '8px';
+        textareaDescripcion.style.fontFamily = 'Poppins, sans-serif';
 
         // Ponderación
         const celdaPonderacion = fila.insertCell();
@@ -86,3 +137,4 @@ document.getElementById('filas').addEventListener('input', generarTabla);
 
 // Crear la tabla por defecto al cargar la página
 window.onload = generarTabla;
+
