@@ -326,6 +326,7 @@ main{
 
 /* Responsive Design */
 @media (max-width: 768px) {
+
     /* Ocultar el margen izquierdo de 250px y hacer que el contenido se ajuste */
     main {
         margin-left: 0;
@@ -369,8 +370,16 @@ main{
     }
 }
 
+
+/********************* RESPONSIVE DISPOSITIVOS PEQUEÑOS ************************************/
+
 @media (max-width: 480px) {
-    /* Ajustar el tamaño de las fuentes más para pantallas muy pequeñas */
+
+    *{
+        box-sizing: border-box; /*Le da un margen parejo a todo*/
+    }
+
+    /* Ajusta el tamaño de las fuentes más para pantallas muy pequeñas */
     .header h1 {
         font-size: 20px;
     }
@@ -381,230 +390,5 @@ main{
 
     .estadoPTC h2 {
         font-size: 60px;
-    }
-}
-
-
-@media (min-width: 969px) and (max-width: 1920px) {
-   
-    main {
-        margin-left: 220px; 
-        padding: 30px 40px;
-        max-width: calc(100% - 220px); 
-        box-sizing: border-box;
-    }
-    
-    
-    .containerUp {
-        display: flex;
-        justify-content: space-between;
-        gap: 20px;
-        margin-bottom: 30px;
-        width: 100%;
-        height: 210px;
-    }
-    
-    
-    .header {
-        width: 65%;
-        height: 180px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-    }
-
-    .estadoPTC {
-        width: 35%;
-        height: 180px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-    
-   
-    .containerMiddle h3, .container2 h4, .containerDown h3 {
-        font-size: 20px;
-        margin: 0 0 10px 0;
-    }
-    
-   
-    .container2 {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        gap: 20px;
-        margin-bottom: 20px;
-        
-    }
-    
-   
-    .containerMiddle, .usuarios {
-        width: 50%;
-    }
-    
-    .containerMiddle2 {
-        width: 100%;
-    }
-
-    
-    .description {
-        background-color: #f2f2f2;
-        padding: 20px;
-        border-radius: 10px;
-        width: 100%;
-        height: 250px;
-        margin: 0;
-        box-sizing: border-box;
-        overflow-y: auto;
-    }
-
-    .description p {
-        font-size: 20px;
-        padding: 5px;
-        line-height: 1.5;
-        text-align: justify;
-    }
-
-    
-    .btnMas {
-        margin-top: 15px;
-        height: 40px;
-        font-size: 16px;
-        width: 140px;
-    }
-
-    
-    .connected-users {
-        background-color: #f2f2f2;
-        padding: 15px;
-        border-radius: 10px;
-        width: 100%;
-        height: 250px;
-        margin: 0;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        overflow-y: auto;
-    }
-    
-   
-    .user-card {
-        padding: 10px 15px;
-        border-radius: 8px;
-        min-height: 30px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .user-info strong {
-        font-size: 20px;
-    }
-    
-    .user-info span {
-        font-size: 18px;
-        color: #5A5A5A;
-    }
-    
-    .status-dot {
-        width: 10px;
-        height: 10px;
-    }
-    
-  
-    .containerDown {
-        margin-top: 0;
-    }
-    
-
-    .actions {
-        display: flex;
-        justify-content: space-between;
-        gap: 20px;
-        margin-top: 10px;
-        width: 100%;
-    }
-
-    .btn-action {
-        flex: 1;
-        height: 140px;
-        padding: 15px;
-        font-size: 18px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .btn-action img {
-        width: 60px;
-        margin-bottom: 10px;
-    }
-    
-    
-    .description::-webkit-scrollbar, .connected-users::-webkit-scrollbar {
-        width: 5px;
-    }
-    
-    .description::-webkit-scrollbar-track, .connected-users::-webkit-scrollbar-track {
-        background: #f2f2f2;
-    }
-    
-    .description::-webkit-scrollbar-thumb, .connected-users::-webkit-scrollbar-thumb {
-        background: #ccc;
-        border-radius: 3px;
-    }
-}
-
-
-@media (min-width: 1800px) and (max-width: 1920px) {
-    main {
-        padding: 30px 60px; 
-    }
-    
-  
-    .containerUp, .container2 {
-        max-width: 1600px; 
-        margin: 0 auto 20px auto;
-    }
-    
-    
-    .header, .estadoPTC {
-        height: 190px;
-    }
-    
-    .description, .connected-users {
-        height: 280px;
-    }
-    
-    
-    .actions {
-        max-width: 1600px;
-        margin: 15px auto 0 auto;
-    }
-    
-    .btn-action {
-        height: 150px;
-    }
-    
-   
-    .description p {
-        font-size: 21px;
-        line-height: 1.6;
-    }
-}
-
-
-@media (min-width: 1200px) {
-    .menu-lateral {
-        width: 220px; 
-    }
-    
-   
-    .menu-hamburguesa {
-        display: none; 
     }
 }

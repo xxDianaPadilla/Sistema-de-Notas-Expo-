@@ -383,14 +383,270 @@ main{
     }
 }
 
-@media (min-width: 768px) and (max-width: 1240px){
-    .calendar{
-        width: 580px;
+
+
+
+/*********************** RESPONSIVE DISPOSITIVOS PEQUEÑOS ******************************/
+
+
+
+@media (max-width: 480px) {
+    body {
+        flex-direction: column;
+        overflow-x: hidden;
     }
 
-    .actividades{
-        width: 300px;
-        height: 535px;
+    
+    /* Ajuste del contenido principal */
+
+    main {
+        margin-left: 0;
+        padding: 20px 15px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .up {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .up .parte1 h1 {
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
+
+    .up .parte1 h3 {
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    #btnNuevo {
+        margin-top: 10px;
+        width: 35px;
+        height: 35px;
+        font-size: 24px;
+    }
+
+    /* Ajuste del calendario */
+
+    .calendar {
+        width: 100%;
+        max-width: 350px;
+        margin: 0 auto 20px;
+        padding: 15px;
+        box-shadow: 0 2px 8px rgba(29, 29, 29, 0.1);
+    }
+
+    .header {
+        padding: 10px 5px;
+    }
+
+    .monthYear {
+        font-size: 16px;
+        width: auto;
+        flex: 1;
+    }
+
+    .header button {
+        width: 35px;
+        height: 35px;
+    }
+
+    .header button img {
+        width: 16px;
+        height: 16px;
+    }
+
+    .days {
+        margin: 10px 0;
+    }
+
+    .day {
+        font-size: 12px;
+        padding: 8px 2px;
+    }
+
+    .dates {
+        gap: 2px;
+    }
+
+    .date {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+        padding: 5px;
+        margin: 1px;
+    }
+
+    /* Ajuste de la sección de actividades */
+
+    .actividades {
+        width: 100%;
+        max-width: 350px;
+        height: auto;
+        min-height: 200px;
+        margin: 0 auto;
+        margin-top: 20px;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+
+    .actividades h1 {
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    /* Ajuste de las Cards */
+
+    .card {
+        margin: 8px 0;
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .card h2 {
+        font-size: 1.5em;
+    }
+
+    .card span {
+        font-size: 0.7em;
+    }
+
+    .card p {
+        font-size: 1em;
+    }
+
+   
+    .tooltip {
+        font-size: 0.7em;
+        padding: 8px;
+        top: 50px;
+        transform: translateY(40px);
+    }
+
+    /* Ajuste de los modales */
+
+    .modal-content {
+        width: 90%;
+        max-width: 300px;
+        margin: 0 20px;
+        padding: 15px;
+    }
+
+    .modal-content h2 {
+        font-size: 18px;
+    }
+
+    .modal-content p {
+        font-size: 14px;
+    }
+
+    .modal-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .modal-buttons button {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .modal-content2 {
+        width: 90%;
+        max-width: 350px;
+        margin: 0 20px;
+        padding: 15px;
+    }
+
+    .modal-content2 h2 {
+        font-size: 18px;
+    }
+
+    .form-label {
+        font-size: 12px;
+    }
+
+    .form-input {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .date-picker-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .date-input {
+        width: 100%;
+    }
+
+    .form-button {
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    /* Otros ajustes*/
+
+    main {
+        padding: 15px 10px;
+    }
+
+    .calendar {
+        max-width: 320px;
+        padding: 10px;
+    }
+
+    .up .parte1 h1 {
+        font-size: 20px;
+    }
+
+    .up .parte1 h3 {
+        font-size: 12px;
+    }
+
+    .day {
+        font-size: 10px;
+        padding: 5px 1px;
+    }
+
+    .date {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+
+    .actividades {
+        max-width: 320px;
+        padding: 10px;
+    }
+
+    .monthYear {
+        font-size: 14px;
+    }
+
+    .header button {
+        width: 30px;
+        height: 30px;
+    }
+
+    .header button img {
+        width: 14px;
+        height: 14px;
+    }
+
+    #btnNuevo {
+        width: 30px;
+        height: 30px;
+        font-size: 20px;
     }
 }
 
