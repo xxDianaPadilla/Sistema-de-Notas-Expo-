@@ -4,15 +4,9 @@ class DBConnection {
   constructor() {
     this.connection = mysql.createConnection({
       host: 'localhost', 
-<<<<<<< HEAD
       user: 'Amarilis',    
       password: 'Chalateca_1006', 
       database: 'basededatosnotasexpo' 
-=======
-      user: 'root',    
-      password: 'Pancho', 
-      database: 'BasededatosNotasEXPO' 
->>>>>>> master
     });
 
     this.connect();
