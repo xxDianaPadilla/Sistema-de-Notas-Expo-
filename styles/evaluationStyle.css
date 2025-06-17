@@ -192,3 +192,188 @@ input, select {
 .btn-cancelar:hover {
     background: #d32f2f;
 }
+
+@media screen and (min-width: 1600px) and (max-width: 1679px) {
+    .evaluaciones {
+        font-size: 20px;
+        padding: 18px 24px;
+    }
+    
+    main {
+        padding: 45px;
+    }
+    
+    .evaluations {
+        padding-left: 8%;
+        padding-right: 8%;
+    }
+    
+    .newEva {
+        width: 12vw;
+        font-size: 15px;
+        padding: 1.2vh;
+    }
+    
+    .content {
+        height: 550px;
+        padding: 24px;
+    }
+    
+    .form-box {
+        width: 350px;
+        padding: 24px;
+    }
+}
+
+
+@media screen and (min-width: 1680px) and (max-width: 1919px) {
+    .evaluaciones {
+        font-size: 21px;
+        padding: 20px 26px;
+    }
+    
+    main {
+        padding: 50px;
+    }
+    
+    .evaluations {
+        padding-left: 7%;
+        padding-right: 7%;
+    }
+    
+    .newEva {
+        width: 11vw;
+        font-size: 16px;
+        padding: 1.3vh;
+    }
+    
+    .content {
+        height: 580px;
+        padding: 26px;
+    }
+    
+    .filtro {
+        width: 11vw;
+        font-size: 17px;
+    }
+    
+    .form-box {
+        width: 380px;
+        padding: 26px;
+    }
+}
+
+
+@media screen and (min-width: 1920px) {
+    .evaluaciones {
+        font-size: 22px;
+        padding: 22px 28px;
+    }
+    
+    main {
+        margin-left: 280px;
+        padding: 55px;
+    }
+    
+    .evaluations {
+        padding-left: 6%;
+        padding-right: 6%;
+    }
+    
+    .newEva {
+        width: 10vw;
+        font-size: 17px;
+        padding: 1.4vh;
+    }
+    
+    .content {
+        height: 620px;
+        padding: 28px;
+        margin-top: 2.5%;
+    }
+    
+    .filtro {
+        width: 10vw;
+        font-size: 18px;
+        padding-left: 8vh;
+        padding-right: 8vh;
+    }
+    
+    .form-box {
+        width: 420px;
+        padding: 28px;
+    }
+    
+    .form-box h2 {
+        margin-bottom: 18px;
+        font-size: 20px;
+    }
+    
+    input, select {
+        padding: 12px;
+        margin: 6px 0;
+    }
+    
+    .btn-guardar, .btn-cancelar {
+        padding: 12px;
+        font-size: 16px;
+    }
+}
+
+
+@media screen and (min-width: 2560px) {
+    .evaluaciones {
+        font-size: 24px;
+        padding: 25px 32px;
+    }
+    
+    main {
+        margin-left: 320px;
+        padding: 65px;
+    }
+    
+    .evaluations {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+    
+    .newEva {
+        width: 8vw;
+        font-size: 18px;
+        padding: 1.6vh;
+    }
+    
+    .content {
+        height: 700px;
+        padding: 32px;
+        margin-top: 3%;
+    }
+    
+    .filtro {
+        width: 8vw;
+        font-size: 19px;
+        padding-left: 10vh;
+        padding-right: 10vh;
+    }
+    
+    .form-box {
+        width: 480px;
+        padding: 32px;
+    }
+    
+    .form-box h2 {
+        margin-bottom: 20px;
+        font-size: 22px;
+    }
+    
+    input, select {
+        padding: 14px;
+        margin: 8px 0;
+        font-size: 16px;
+    }
+    
+    .btn-guardar, .btn-cancelar {
+        padding: 14px;
+        font-size: 17px;
+    }
+}

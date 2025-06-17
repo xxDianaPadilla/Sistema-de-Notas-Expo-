@@ -140,21 +140,25 @@ thead {
     color: #000000;
 }
 
-th, td {
+th,
+td {
     padding: 10px;
     text-align: left;
     width: auto;
 }
 
-th:nth-child(1), td:nth-child(1) {
+th:nth-child(1),
+td:nth-child(1) {
     width: 50%;
 }
 
-th:nth-child(2), td:nth-child(2) {
+th:nth-child(2),
+td:nth-child(2) {
     width: 30%;
 }
 
-th:nth-child(3), td:nth-child(3) {
+th:nth-child(3),
+td:nth-child(3) {
     width: 40%;
 }
 
@@ -286,7 +290,8 @@ tr {
     background-color: #ff8c1a;
 }
 
-.modal, #editProjectFormModal {
+.modal,
+#editProjectFormModal {
     display: none;
     position: fixed;
     z-index: 1000;
@@ -320,7 +325,8 @@ tr {
     color: #333;
 }
 
-.close-btn, .close-edit-btn {
+.close-btn,
+.close-edit-btn {
     float: right;
     font-size: 24px;
     cursor: pointer;
@@ -381,15 +387,15 @@ tr {
     border-radius: 50%;
 }
 
-input:checked + .slider {
+input:checked+.slider {
     background-color: #4caf50;
 }
 
-input:focus + .slider {
+input:focus+.slider {
     box-shadow: 0 0 1px #4caf50;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
     transform: translateX(26px);
 }
 
@@ -407,7 +413,8 @@ input:checked + .slider:before {
     text-align: right;
 }
 
-.insert-btn, .update-btn {
+.insert-btn,
+.update-btn {
     background-color: #06AECCDB;
     padding: 10px;
     border: none;
@@ -448,7 +455,10 @@ input:checked + .slider:before {
     background-color: #d32f2f;
 }
 
-#projectName, #projectID, #studentList, #editStudentList {
+#projectName,
+#projectID,
+#studentList,
+#editStudentList {
     width: 96%;
     padding: 10px;
     background-color: #1D1D1B;
@@ -463,7 +473,9 @@ input:checked + .slider:before {
     margin-bottom: 15px;
 }
 
-#projectLevel, #projectSection, #projectEspecialidad {
+#projectLevel,
+#projectSection,
+#projectEspecialidad {
     padding: 10px;
     height: 40px;
     background-color: #1D1D1B;
@@ -490,7 +502,8 @@ input:checked + .slider:before {
     margin-bottom: 10px;
 }
 
-#studentList, #editStudentList {
+#studentList,
+#editStudentList {
     height: 100px;
     margin-top: 10px;
 }
@@ -534,7 +547,8 @@ input:checked + .slider:before {
     background-color: #f9f9f9;
 }
 
-#addStudentBtn, #editAddStudentBtn {
+#addStudentBtn,
+#editAddStudentBtn {
     width: 30%;
     height: 50px;
     background-color: #1D1D1B;
@@ -563,7 +577,8 @@ input:checked + .slider:before {
     background-color: #D9D9D926;
 }
 
-.modal-overlay, #editStudentsModalOverlay {
+.modal-overlay,
+#editStudentsModalOverlay {
     display: none;
     position: fixed;
     top: 0;
@@ -581,7 +596,8 @@ input:checked + .slider:before {
     background-color: rgba(0, 0, 0, 0.7);
 }
 
-.modal-content2, .students-modal {
+.modal-content2,
+.students-modal {
     background-color: #1e1e1e;
     border-radius: 8px;
     width: 80%;
@@ -601,7 +617,8 @@ input:checked + .slider:before {
     border: none;
 }
 
-.modal-header, .students-modal-header {
+.modal-header,
+.students-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -615,7 +632,8 @@ input:checked + .slider:before {
     border-bottom: 1px solid #ddd;
 }
 
-.modal-header h2, .students-modal-header h2 {
+.modal-header h2,
+.students-modal-header h2 {
     color: #ffffff;
     margin: 0;
     font-size: 1.2rem;
@@ -638,7 +656,8 @@ input:checked + .slider:before {
     overflow-y: auto;
 }
 
-.modal-footer, .modal-buttons {
+.modal-footer,
+.modal-buttons {
     padding: 15px;
     display: flex;
     justify-content: flex-end;
@@ -651,11 +670,13 @@ input:checked + .slider:before {
     border-top: none;
 }
 
-.filter-container, .search-container {
+.filter-container,
+.search-container {
     margin-bottom: 15px;
 }
 
-.filter-select, .search-input{
+.filter-select,
+.search-input {
     width: 100%;
     padding: 8px 12px;
     background-color: #333;
@@ -686,7 +707,8 @@ input:checked + .slider:before {
     width: 60%;
 }
 
-.students-list, .available-students-list {
+.students-list,
+.available-students-list {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -994,25 +1016,30 @@ input:checked + .slider:before {
         table-layout: auto;
     }
 
-    th, td {
+    th,
+    td {
         padding: 8px 4px;
         font-size: 12px;
     }
 
-    th:nth-child(1), td:nth-child(1) {
+    th:nth-child(1),
+    td:nth-child(1) {
         width: 40%;
     }
 
-    th:nth-child(2), td:nth-child(2) {
+    th:nth-child(2),
+    td:nth-child(2) {
         width: 25%;
     }
 
-    th:nth-child(3), td:nth-child(3) {
+    th:nth-child(3),
+    td:nth-child(3) {
         width: 35%;
     }
 
     /* Ajuste de botones en la tabla */
-    .btn-editar, #btn-link {
+    .btn-editar,
+    #btn-link {
         width: 100%;
         height: auto;
         padding: 8px 4px;
@@ -1020,7 +1047,8 @@ input:checked + .slider:before {
         font-size: 12px;
     }
 
-    .btn-editar img, #btn-link img {
+    .btn-editar img,
+    #btn-link img {
         width: 12px;
         height: 12px;
         margin-bottom: -1px;
@@ -1046,21 +1074,27 @@ input:checked + .slider:before {
         padding: 15px;
     }
 
-    .close-btn, .close-edit-btn {
+    .close-btn,
+    .close-edit-btn {
         font-size: 20px;
         top: 5px;
         right: 10px;
     }
 
     /* Ajuste de formularios */
-    #projectName, #projectID, #studentList, #editStudentList {
+    #projectName,
+    #projectID,
+    #studentList,
+    #editStudentList {
         width: 100%;
         padding: 12px;
         font-size: 16px;
         box-sizing: border-box;
     }
 
-    #projectLevel, #projectSection, #projectEspecialidad {
+    #projectLevel,
+    #projectSection,
+    #projectEspecialidad {
         width: 100%;
         margin-bottom: 10px;
         padding: 12px;
@@ -1073,7 +1107,8 @@ input:checked + .slider:before {
         margin-bottom: 15px;
     }
 
-    #addStudentBtn, #editAddStudentBtn {
+    #addStudentBtn,
+    #editAddStudentBtn {
         width: 100%;
         height: auto;
         padding: 12px;
@@ -1088,14 +1123,17 @@ input:checked + .slider:before {
         margin-top: 20px;
     }
 
-    .insert-btn, .update-btn, .cancel-btn {
+    .insert-btn,
+    .update-btn,
+    .cancel-btn {
         width: 100%;
         padding: 12px;
         font-size: 16px;
     }
 
     /* Ajuste de modals de estudiantes */
-    .modal-content2, .students-modal {
+    .modal-content2,
+    .students-modal {
         width: 95%;
         max-width: none;
         margin: 10px;
@@ -1103,7 +1141,8 @@ input:checked + .slider:before {
         max-height: 90vh;
     }
 
-    .modal-header, .students-modal-header {
+    .modal-header,
+    .students-modal-header {
         padding: 10px;
         flex-direction: column;
         align-items: flex-start;
@@ -1119,11 +1158,13 @@ input:checked + .slider:before {
         padding: 10px;
     }
 
-    .filter-container, .search-container {
+    .filter-container,
+    .search-container {
         margin-bottom: 10px;
     }
 
-    .filter-select, .search-input {
+    .filter-select,
+    .search-input {
         padding: 12px;
         font-size: 16px;
     }
@@ -1141,7 +1182,8 @@ input:checked + .slider:before {
         box-sizing: border-box;
     }
 
-    .students-list, .available-students-list {
+    .students-list,
+    .available-students-list {
         max-height: 250px;
     }
 
@@ -1171,7 +1213,8 @@ input:checked + .slider:before {
         margin-top: 5px;
     }
 
-    .student-assigned-tag, .level-badge {
+    .student-assigned-tag,
+    .level-badge {
         font-size: 10px;
         margin-left: 0;
         margin-top: 5px;
@@ -1194,121 +1237,836 @@ input:checked + .slider:before {
         margin-top: 5px;
     }
 
-    .modal-footer, .modal-buttons {
+    .modal-footer,
+    .modal-buttons {
         padding: 10px;
         flex-direction: column;
         gap: 10px;
     }
 
-    .modal-footer button, .modal-buttons button {
+    .modal-footer button,
+    .modal-buttons button {
         width: 100%;
         padding: 12px;
         font-size: 16px;
     }
 
     /* Ajuste de alertas */
-    .alerta {
-        width: 90%;
-        left: 5%;
-        transform: none;
-        padding: 12px 15px;
-        font-size: 14px;
+
+    @media screen and (min-width: 1920px) {
+        main {
+            margin-left: 250px;
+            padding: 50px;
+        }
+
+        .container {
+            width: 97%;
+            padding: 30px;
+        }
+
+        .container-2 {
+            padding: 30px;
+        }
+
+        #buscar {
+            width: 40%;
+            padding: 12px;
+            font-size: 16px;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            font-size: 16px;
+        }
+
+        .btn-editar,
+        #btn-link {
+            width: 180px;
+            height: 35px;
+            font-size: 14px;
+        }
+
+        .modal-content {
+            width: 45%;
+            padding: 30px;
+        }
+
+        #editProjectFormModal .modal-content {
+            width: 70%;
+            max-width: 800px;
+            padding: 30px;
+        }
+
+        .modal-content2,
+        .students-modal {
+            width: 70%;
+            max-width: 800px;
+        }
+
+        .students-modal {
+            padding: 30px;
+        }
+
+        #projectName,
+        #projectID,
+        #studentList,
+        #editStudentList {
+            padding: 12px;
+            font-size: 16px;
+        }
+
+        #projectLevel,
+        #projectSection,
+        #projectEspecialidad {
+            padding: 12px;
+            height: 45px;
+            font-size: 16px;
+        }
     }
 
-    /* Ajuste del switch */
-    .switch {
-        width: 40px;
-        height: 20px;
+
+    @media screen and (min-width: 1600px) and (max-width: 1919px) {
+        main {
+            margin-left: 240px;
+            padding: 45px;
+        }
+
+        .container {
+            width: 96%;
+            padding: 25px;
+        }
+
+        .container-2 {
+            padding: 25px;
+        }
+
+        #buscar {
+            width: 35%;
+            padding: 10px;
+            font-size: 15px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            font-size: 15px;
+        }
+
+        .btn-editar,
+        #btn-link {
+            width: 170px;
+            height: 32px;
+            font-size: 13px;
+        }
+
+        .modal-content {
+            width: 50%;
+            padding: 25px;
+        }
+
+        #editProjectFormModal .modal-content {
+            width: 75%;
+            max-width: 700px;
+            padding: 25px;
+        }
+
+        .modal-content2,
+        .students-modal {
+            width: 75%;
+            max-width: 700px;
+        }
+
+        .students-modal {
+            padding: 25px;
+        }
     }
 
-    .slider:before {
-        height: 14px;
-        width: 14px;
-        left: 3px;
-        bottom: 3px;
+
+    @media screen and (min-width: 1440px) and (max-width: 1599px) {
+        main {
+            margin-left: 230px;
+            padding: 40px;
+        }
+
+        .container {
+            width: 95%;
+            padding: 20px;
+        }
+
+        .container-2 {
+            padding: 20px;
+        }
+
+        #buscar {
+            width: 30%;
+            padding: 8px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+        }
+
+        .btn-editar,
+        #btn-link {
+            width: 160px;
+            height: 30px;
+        }
+
+        .modal-content {
+            width: 50%;
+            padding: 20px;
+        }
+
+        #editProjectFormModal .modal-content {
+            width: 80%;
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        .modal-content2,
+        .students-modal {
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .students-modal {
+            padding: 20px;
+        }
     }
 
-    input:checked + .slider:before {
-        transform: translateX(20px);
+
+    @media screen and (min-width: 1280px) and (max-width: 1439px) {
+        main {
+            margin-left: 220px;
+            padding: 30px;
+        }
+
+        .container {
+            width: 94%;
+            padding: 15px;
+        }
+
+        .container-2 {
+            padding: 15px;
+        }
+
+        .tabs {
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tab {
+            font-size: 16px;
+            padding: 8px 12px;
+        }
+
+        #add-button {
+            font-size: 16px;
+            padding: 8px 12px;
+        }
+
+        #buscar {
+            width: 40%;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .btn-editar,
+        #btn-link {
+            width: 140px;
+            height: 28px;
+            font-size: 12px;
+        }
+
+        .modal-content {
+            width: 60%;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        #editProjectFormModal .modal-content {
+            width: 85%;
+            max-width: 550px;
+            padding: 20px;
+        }
+
+        .modal-content2,
+        .students-modal {
+            width: 85%;
+            max-width: 550px;
+        }
+
+        .students-modal {
+            padding: 20px;
+        }
+
+        #projectLevel {
+            width: 25%;
+        }
+
+        #projectSection {
+            width: 15%;
+        }
+
+        #projectEspecialidad {
+            width: 40%;
+        }
+
+        #projectID {
+            width: 25%;
+        }
     }
 
-    .status-text {
-        font-size: 12px;
+
+    @media screen and (min-width: 1024px) and (max-width: 1279px) {
+        main {
+            margin-left: 200px;
+            padding: 20px;
+        }
+
+        .container {
+            width: 93%;
+            padding: 12px;
+        }
+
+        .container-2 {
+            padding: 12px;
+        }
+
+        .tabs {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .tab {
+            font-size: 14px;
+            padding: 6px 10px;
+        }
+
+        #add-button {
+            font-size: 14px;
+            padding: 6px 10px;
+            align-self: flex-end;
+        }
+
+        .search-filter {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #buscar {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        #filtrarBtn {
+            align-self: flex-start;
+            font-size: 14px;
+        }
+
+
+        .container-2 {
+            overflow-x: auto;
+        }
+
+        table {
+            min-width: 600px;
+        }
+
+        th,
+        td {
+            padding: 6px;
+            font-size: 13px;
+        }
+
+        .btn-editar,
+        #btn-link {
+            width: 120px;
+            height: 26px;
+            font-size: 11px;
+        }
+
+        .modal-content {
+            width: 70%;
+            padding: 15px;
+            font-size: 13px;
+            margin-top: 50px;
+        }
+
+        #editProjectFormModal .modal-content {
+            width: 90%;
+            max-width: 500px;
+            padding: 15px;
+        }
+
+        .modal-content2,
+        .students-modal {
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .students-modal {
+            padding: 15px;
+        }
+
+        #projectLevel,
+        #projectSection,
+        #projectEspecialidad {
+            width: 100%;
+            margin-bottom: 10px;
+            height: 35px;
+        }
+
+        #projectID {
+            width: 100%;
+        }
     }
 
-    /* Otro ajustes*/
 
-    main {
-        padding: 10px;
+    @media screen and (max-width: 1023px) {
+        body {
+            overflow: auto;
+        }
+
+        main {
+            margin-left: 0;
+            padding: 15px;
+            margin-top: 60px;
+        }
+
+        .container {
+            width: 100%;
+            padding: 10px;
+            margin: 0;
+        }
+
+        .container-2 {
+            padding: 10px;
+            overflow-x: auto;
+        }
+
+        .tabs {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tab,
+        #add-button {
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            padding: 10px;
+        }
+
+        .search-filter {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #buscar {
+            width: 100%;
+            padding: 10px;
+        }
+
+        #filtrarBtn {
+            width: 100%;
+            padding: 10px;
+            text-align: center;
+        }
+
+
+        table,
+        thead,
+        tbody,
+        th,
+        td,
+        tr {
+            display: block;
+        }
+
+        thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+        tr {
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #ffffff;
+        }
+
+        td {
+            border: none;
+            position: relative;
+            padding: 8px 8px 8px 35%;
+            font-size: 13px;
+        }
+
+        td:before {
+            content: attr(data-label) ": ";
+            position: absolute;
+            left: 6px;
+            width: 30%;
+            padding-right: 10px;
+            white-space: nowrap;
+            font-weight: bold;
+        }
+
+        .btn-editar,
+        #btn-link {
+            width: 100px;
+            height: 24px;
+            font-size: 10px;
+            margin: 2px 0;
+        }
+
+        .modal-content {
+            width: 95%;
+            padding: 15px;
+            font-size: 14px;
+            margin: 20px auto;
+        }
+
+        #editProjectFormModal .modal-content {
+            width: 95%;
+            max-width: none;
+            padding: 15px;
+            margin: 20px auto;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content2,
+        .students-modal {
+            width: 95%;
+            max-width: none;
+            max-height: 90vh;
+        }
+
+        .students-modal {
+            padding: 15px;
+        }
+
+        #projectLevel,
+        #projectSection,
+        #projectEspecialidad,
+        #projectID {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .form-buttons {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .insert-btn,
+        .update-btn,
+        .cancel-btn {
+            width: 100%;
+            padding: 12px;
+        }
+
+        .modal-footer,
+        .modal-buttons {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modal-footer button,
+        .modal-buttons button {
+            width: 100%;
+        }
     }
 
-    .container, .container-2 {
-        padding: 10px;
+
+    @media screen and (max-height: 800px) {
+
+        .modal-content,
+        #editProjectFormModal .modal-content {
+            margin-top: 20px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-content2,
+        .students-modal {
+            max-height: 85vh;
+        }
     }
 
-    h1 {
-        font-size: 16px;
+    @media screen and (max-height: 600px) {
+
+        .modal-content,
+        #editProjectFormModal .modal-content {
+            margin-top: 10px;
+            max-height: 90vh;
+            padding: 15px;
+        }
+
+        .modal-content2,
+        .students-modal {
+            max-height: 90vh;
+        }
+
+        .students-modal {
+            padding: 15px;
+        }
+
+        main {
+            padding: 20px;
+        }
     }
 
-    h2 {
-        font-size: 14px;
+
+    @media screen and (min-width: 2560px) {
+        main {
+            margin-left: 280px;
+            padding: 60px;
+        }
+
+        .container {
+            width: 98%;
+            padding: 40px;
+        }
+
+        .container-2 {
+            padding: 40px;
+        }
+
+        #buscar {
+            width: 45%;
+            padding: 15px;
+            font-size: 18px;
+        }
+
+        th,
+        td {
+            padding: 20px;
+            font-size: 18px;
+        }
+
+        .btn-editar,
+        #btn-link {
+            width: 200px;
+            height: 40px;
+            font-size: 16px;
+        }
+
+        .modal-content {
+            width: 40%;
+            padding: 40px;
+        }
+
+        #editProjectFormModal .modal-content {
+            width: 60%;
+            max-width: 1000px;
+            padding: 40px;
+        }
+
+        .modal-content2,
+        .students-modal {
+            width: 60%;
+            max-width: 1000px;
+        }
+
+        .students-modal {
+            padding: 40px;
+        }
+
+        .tab,
+        #add-button {
+            font-size: 20px;
+            padding: 12px 16px;
+        }
+
+        #projectName,
+        #projectID,
+        #studentList,
+        #editStudentList {
+            padding: 15px;
+            font-size: 18px;
+        }
+
+        #projectLevel,
+        #projectSection,
+        #projectEspecialidad {
+            padding: 15px;
+            height: 50px;
+            font-size: 18px;
+        }
     }
 
-    table {
-        font-size: 12px;
+    @media screen and (max-width: 768px) {
+        .proyecto {
+            flex-direction: column;
+            gap: 10px;
+            text-align: center;
+        }
+
+        .filter-container2 {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-container2 select,
+        .filter-container2 input {
+            width: 100%;
+        }
+
+        .alerta {
+            width: 90%;
+            left: 5%;
+            transform: none;
+            padding: 12px 15px;
+            font-size: 14px;
+        }
+
+        /* Ajuste del switch */
+        .switch {
+            width: 40px;
+            height: 20px;
+        }
+
+        .slider:before {
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
+
+        .status-text {
+            font-size: 12px;
+        }
+
+        /* Otro ajustes*/
+
+        main {
+            padding: 10px;
+        }
+
+        .container,
+        .container-2 {
+            padding: 10px;
+        }
+
+        h1 {
+            font-size: 16px;
+        }
+
+        h2 {
+            font-size: 14px;
+        }
+
+        table {
+            font-size: 12px;
+        }
+
+        th,
+        td {
+            padding: 6px 2px;
+            font-size: 11px;
+        }
+
+        .btn-editar,
+        #btn-link {
+            padding: 6px 2px;
+            font-size: 10px;
+        }
+
+        .btn-editar img,
+        #btn-link img {
+            width: 10px;
+            height: 10px;
+        }
+
+        #add-button {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .tab {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        #buscar,
+        #filtrarBtn {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .modal-content,
+        #editProjectFormModal .modal-content {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .modal-content2,
+        .students-modal {
+            padding: 10px;
+        }
+
+        .student-item {
+            padding: 10px 6px;
+            font-size: 12px;
+        }
+
+        .selected-student {
+            padding: 10px;
+            font-size: 12px;
+        }
+
+        .alerta {
+            padding: 10px 12px;
+            font-size: 12px;
+        }
     }
 
-    th, td {
-        padding: 6px 2px;
-        font-size: 11px;
-    }
 
-    .btn-editar, #btn-link {
-        padding: 6px 2px;
-        font-size: 10px;
-    }
+    @media print {
+        main {
+            margin-left: 0;
+            padding: 20px;
+        }
 
-    .btn-editar img, #btn-link img {
-        width: 10px;
-        height: 10px;
-    }
+        .modal,
+        #editProjectFormModal,
+        .modal-overlay,
+        #editStudentsModalOverlay {
+            display: none !important;
+        }
 
-    #add-button {
-        padding: 10px;
-        font-size: 14px;
-    }
+        .btn-editar,
+        #btn-link,
+        #add-button {
+            display: none;
+        }
 
-    .tab {
-        padding: 10px;
-        font-size: 14px;
-    }
+        table {
+            font-size: 12px;
+        }
 
-    #buscar, #filtrarBtn {
-        padding: 10px;
-        font-size: 14px;
-    }
-
-    .modal-content, #editProjectFormModal .modal-content {
-        padding: 10px;
-        font-size: 14px;
-    }
-
-    .modal-content2, .students-modal {
-        padding: 10px;
-    }
-
-    .student-item {
-        padding: 10px 6px;
-        font-size: 12px;
-    }
-
-    .selected-student {
-        padding: 10px;
-        font-size: 12px;
-    }
-
-    .alerta {
-        padding: 10px 12px;
-        font-size: 12px;
+        th,
+        td {
+            padding: 5px;
+        }
     }
 }

@@ -297,3 +297,275 @@
 }
 
 
+
+
+@media screen and (min-width: 1920px) {
+    .filter-controls {
+        margin-right: 800px;
+        gap: 30px;
+    }
+    
+    .search-box {
+        width: 500px;
+    }
+    
+    #cardContainer2 {
+        width: 96%;
+        padding: 15px;
+    }
+    
+    .student-card {
+        padding: 20px 25px;
+        grid-template-columns: 1fr 200px 200px;
+    }
+    
+    .modal-content {
+        width: 70%;
+        max-width: 800px;
+        padding: 50px;
+    }
+}
+
+
+@media screen and (min-width: 1600px) and (max-width: 1919px) {
+    .filter-controls {
+        margin-right: 700px;
+        gap: 25px;
+    }
+    
+    .search-box {
+        width: 450px;
+    }
+    
+    #cardContainer2 {
+        width: 95%;
+        padding: 12px;
+    }
+    
+    .student-card {
+        padding: 18px 22px;
+        grid-template-columns: 1fr 180px 180px;
+    }
+    
+    .modal-content {
+        width: 75%;
+        max-width: 700px;
+        padding: 45px;
+    }
+}
+
+
+@media screen and (min-width: 1440px) and (max-width: 1599px) {
+    .filter-controls {
+        margin-right: 500px;
+        gap: 20px;
+    }
+    
+    .search-box {
+        width: 380px;
+    }
+    
+    #cardContainer2 {
+        width: 94%;
+        padding: 10px;
+    }
+    
+    .student-card {
+        padding: 15px 20px;
+        grid-template-columns: 1fr 160px 160px;
+    }
+    
+    .modal-content {
+        width: 80%;
+        max-width: 600px;
+        padding: 40px;
+    }
+}
+
+
+@media screen and (min-width: 1280px) and (max-width: 1439px) {
+    .filter-controls {
+        margin-right: 300px;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .search-box {
+        width: 300px;
+    }
+    
+    #cardContainer2 {
+        width: 93%;
+        padding: 8px;
+    }
+    
+    .student-card {
+        padding: 12px 15px;
+        grid-template-columns: 1fr 140px 140px;
+        font-size: 14px;
+    }
+    
+    .modal-content {
+        width: 85%;
+        max-width: 550px;
+        padding: 35px;
+        margin-top: 20px;
+    }
+    
+    .btn {
+        padding: 5px 10px;
+        font-size: 12px;
+        min-width: 70px;
+    }
+}
+
+
+@media screen and (min-width: 1024px) and (max-width: 1279px) {
+    .filter-controls {
+        margin-right: 100px;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .search-box {
+        width: 250px;
+    }
+    
+    #cardContainer2 {
+        width: 92%;
+        padding: 8px;
+    }
+    
+    .student-card {
+        padding: 10px 12px;
+        grid-template-columns: 1fr 120px 120px;
+        font-size: 13px;
+    }
+    
+    .modal-content {
+        width: 90%;
+        max-width: 500px;
+        padding: 30px;
+        margin-top: 30px;
+    }
+    
+    .btn {
+        padding: 4px 8px;
+        font-size: 11px;
+        min-width: 60px;
+    }
+    
+    .action-buttons {
+        gap: 5px;
+    }
+}
+
+
+@media screen and (max-width: 1023px) {
+    .filter-controls {
+        margin-right: 0;
+        gap: 10px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-box {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .filter-dropdown {
+        width: 100%;
+        max-width: 200px;
+    }
+    
+    #cardContainer2 {
+        width: 100%;
+        padding: 5px;
+    }
+    
+    .student-card {
+        padding: 8px 10px;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 5px;
+        font-size: 12px;
+    }
+    
+    .student-info {
+        text-align: center;
+    }
+    
+    .student-id {
+        text-align: center;
+        padding-right: 0;
+    }
+    
+    .action-buttons {
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        max-width: 400px;
+        padding: 20px;
+        margin-top: 50px;
+    }
+    
+    .btn {
+        padding: 6px 12px;
+        font-size: 12px;
+        min-width: 70px;
+    }
+    
+    .form-group input,
+    .form-group select {
+        font-size: 14px;
+    }
+}
+
+
+@media screen and (max-height: 800px) {
+    .modal-content {
+        margin-top: 20px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+}
+
+@media screen and (max-height: 600px) {
+    .modal-content {
+        margin-top: 10px;
+        max-height: 95vh;
+        padding: 20px;
+    }
+}
+
+
+@media screen and (min-width: 2560px) {
+    .filter-controls {
+        margin-right: 1000px;
+        gap: 40px;
+    }
+    
+    .search-box {
+        width: 600px;
+    }
+    
+    #cardContainer2 {
+        width: 97%;
+        padding: 20px;
+    }
+    
+    .student-card {
+        padding: 25px 30px;
+        grid-template-columns: 1fr 220px 220px;
+    }
+    
+    .modal-content {
+        width: 60%;
+        max-width: 900px;
+        padding: 60px;
+    }
+}

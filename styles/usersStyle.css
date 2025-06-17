@@ -66,20 +66,28 @@ body {
     margin-bottom: 3%;
 }
 
-.tipoCat1, .tipoCat2 {
-    transition: background-color 0.3s ease; /* Transición para el cambio de color de fondo */
-    padding: 10px; /* Espaciado interno */
-    cursor: pointer; /* Cambiar cursor a puntero */
+.tipoCat1,
+.tipoCat2 {
+    transition: background-color 0.3s ease;
+    /* Transición para el cambio de color de fondo */
+    padding: 10px;
+    /* Espaciado interno */
+    cursor: pointer;
+    /* Cambiar cursor a puntero */
 }
 
 .tipoCat1.active {
-    background-color: #e0e0e0; /* Fondo claro para la sección activa */
-    border-bottom: 3px solid #8a8282; /* Borde inferior para indicar la sección activa */
+    background-color: #e0e0e0;
+    /* Fondo claro para la sección activa */
+    border-bottom: 3px solid #8a8282;
+    /* Borde inferior para indicar la sección activa */
 }
 
 .tipoCat2.active {
-    background-color: #e0e0e0; /* Fondo claro para la sección activa */
-    border-bottom: 3px solid #8a8282; /* Borde inferior para indicar la sección activa */
+    background-color: #e0e0e0;
+    /* Fondo claro para la sección activa */
+    border-bottom: 3px solid #8a8282;
+    /* Borde inferior para indicar la sección activa */
 }
 
 .tipoCat1 {
@@ -87,7 +95,7 @@ body {
 }
 
 .tipoCat2 {
-    background-color: #c0c0c0; 
+    background-color: #c0c0c0;
 }
 
 main {
@@ -329,36 +337,45 @@ input {
 
 #cardContainer {
     display: flex;
-    flex-direction: column; /* Cambiar a columna para lista */
-    gap: 10px; /* Espacio entre elementos de la lista */
+    flex-direction: column;
+    /* Cambiar a columna para lista */
+    gap: 10px;
+    /* Espacio entre elementos de la lista */
     margin: 20px;
 }
 
 .list-item {
     display: flex;
-    justify-content: space-between; /* Espacio entre la información y los botones */
-    align-items: center; /* Centrar verticalmente */
-    border: 1px solid #000; /* Bordes de la lista */
+    justify-content: space-between;
+    /* Espacio entre la información y los botones */
+    align-items: center;
+    /* Centrar verticalmente */
+    border: 1px solid #000;
+    /* Bordes de la lista */
     border-radius: 4px;
     padding: 10px;
     background-color: #f9f9f9;
 }
 
-.user-info{
+.user-info {
     display: flex;
-    flex-direction: column; /* Alinear nombre y correo en columna */
+    flex-direction: column;
+    /* Alinear nombre y correo en columna */
 }
 
 .user-name {
-    font-weight: bold; /* Nombre en negrita */
+    font-weight: bold;
+    /* Nombre en negrita */
 }
 
 .button-container {
     display: flex;
-    gap: 10px; /* Espacio entre los botones */
+    gap: 10px;
+    /* Espacio entre los botones */
 }
 
-.edit-btn, .delete-btn {
+.edit-btn,
+.delete-btn {
     background-color: #007bff;
     color: white;
     border: none;
@@ -368,20 +385,24 @@ input {
 }
 
 .edit-btn:hover {
-    background-color: #0056b3; /* Color al pasar el mouse */
+    background-color: #0056b3;
+    /* Color al pasar el mouse */
 }
 
 .delete-btn {
-    background-color: #dc3545; /* Color para el botón de eliminar */
+    background-color: #dc3545;
+    /* Color para el botón de eliminar */
 }
 
 .delete-btn:hover {
-    background-color: #c82333; /* Color al pasar el mouse */
+    background-color: #c82333;
+    /* Color al pasar el mouse */
 }
 
 /*********************** RESPONSIVE DISPOSITIVOS PEQUEÑOS ******************************/
 
 @media screen and (max-width: 480px) {
+
     /* Ocultar barra lateral o moverla arriba */
     .menu-lateral {
         width: 100%;
@@ -444,7 +465,8 @@ input {
         justify-content: space-between;
     }
 
-    .edit-btn, .delete-btn {
+    .edit-btn,
+    .delete-btn {
         width: 48%;
         font-size: 14px;
         padding: 10px;
@@ -456,5 +478,315 @@ input {
 
     #mainForms {
         width: 95vw;
+    }
+
+    @media screen and (max-width: 1440px) and (min-width: 1200px) {
+        main {
+            width: calc(100% - 240px);
+            margin-left: 240px;
+        }
+
+        #cardContainer {
+            width: 92%;
+        }
+
+        #newUser,
+        #newUser2 {
+            width: 12vw;
+            font-size: 14px;
+        }
+
+        #roles {
+            font-size: 15px;
+        }
+    }
+
+
+    @media screen and (min-width: 1441px) and (max-width: 1920px) {
+        main {
+            width: calc(100% - 260px);
+            margin-left: 260px;
+        }
+
+        #cardContainer {
+            width: 94%;
+            height: 78vh;
+        }
+
+        #newUser,
+        #newUser2 {
+            width: 11vw;
+            font-size: 15px;
+            padding: 1.2vh 1vw;
+        }
+
+        #roles {
+            font-size: 17px;
+        }
+
+        #categoriaBox section {
+            font-size: 13px;
+            padding: 1.2% 0%;
+        }
+
+        .forms {
+            width: 28%;
+        }
+
+        input {
+            font-size: 17px;
+            padding: 6px 12px;
+        }
+
+        .list-item {
+            padding: 12px;
+        }
+
+        .user-name {
+            font-size: 17px;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            padding: 9px 14px;
+            font-size: 14px;
+        }
+    }
+
+
+    @media screen and (min-width: 1921px) and (max-width: 2560px) {
+        main {
+            width: calc(100% - 280px);
+            margin-left: 280px;
+        }
+
+        #cardContainer {
+            width: 96%;
+            height: 80vh;
+        }
+
+        #newUser,
+        #newUser2 {
+            width: 9vw;
+            font-size: 16px;
+            padding: 1.3vh 1.2vw;
+        }
+
+        #roles {
+            font-size: 18px;
+        }
+
+        #categoriaBox section {
+            font-size: 14px;
+            padding: 1.3% 0%;
+        }
+
+        .forms {
+            width: 30%;
+        }
+
+        input {
+            font-size: 18px;
+            padding: 7px 14px;
+        }
+
+        .list-item {
+            padding: 14px;
+        }
+
+        .user-name {
+            font-size: 18px;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            padding: 10px 16px;
+            font-size: 15px;
+        }
+
+        .users {
+            font-size: 20px;
+            padding: 18px 25px;
+        }
+    }
+
+
+    @media screen and (min-width: 2561px) {
+        main {
+            width: calc(100% - 300px);
+            margin-left: 300px;
+        }
+
+        #cardContainer {
+            width: 97%;
+            height: 82vh;
+        }
+
+        #newUser,
+        #newUser2 {
+            width: 8vw;
+            font-size: 17px;
+            padding: 1.4vh 1.3vw;
+        }
+
+        #roles {
+            font-size: 19px;
+        }
+
+        #categoriaBox section {
+            font-size: 15px;
+            padding: 1.4% 0%;
+        }
+
+        .forms {
+            width: 25%;
+        }
+
+        input {
+            font-size: 19px;
+            padding: 8px 16px;
+        }
+
+        .list-item {
+            padding: 16px;
+        }
+
+        .user-name {
+            font-size: 19px;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            padding: 11px 18px;
+            font-size: 16px;
+        }
+
+        .users {
+            font-size: 22px;
+            padding: 20px 30px;
+        }
+    }
+
+
+    @media screen and (max-width: 1199px) and (min-width: 768px) {
+        main {
+            width: calc(100% - 220px);
+            margin-left: 220px;
+        }
+
+        #cardContainer {
+            width: 90%;
+            height: 70vh;
+        }
+
+        #newUser,
+        #newUser2 {
+            width: 15vw;
+            font-size: 13px;
+        }
+
+        #roles {
+            font-size: 14px;
+        }
+
+        .forms {
+            width: 35%;
+        }
+
+        #categoriaBox section {
+            font-size: 11px;
+        }
+    }
+
+
+    @media screen and (max-width: 767px) {
+        main {
+            width: 100%;
+            margin-left: 0;
+            padding: 10px;
+        }
+
+        #cardContainer {
+            width: 95%;
+            height: 65vh;
+        }
+
+        #newUser,
+        #newUser2 {
+            width: 25vw;
+            font-size: 12px;
+            padding: 8px;
+        }
+
+        #roles {
+            font-size: 13px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #roles p {
+            margin: 5px 0;
+        }
+
+        .forms {
+            width: 90%;
+        }
+
+        #categoriaBox section {
+            font-size: 10px;
+            padding: 2% 0%;
+        }
+
+        .list-item {
+            flex-direction: column;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .button-container {
+            margin-top: 10px;
+            justify-content: center;
+        }
+
+        .user-info {
+            margin-bottom: 10px;
+        }
+    }
+
+
+    @media screen and (max-width: 480px) {
+        #cardContainer {
+            width: 98%;
+            height: 60vh;
+            margin: 10px;
+        }
+
+        #newUser,
+        #newUser2 {
+            width: 35vw;
+            font-size: 11px;
+        }
+
+        #roles {
+            font-size: 12px;
+        }
+
+        .forms {
+            width: 95%;
+        }
+
+        input {
+            font-size: 14px;
+        }
+
+        .list-item {
+            padding: 8px;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            padding: 6px 10px;
+            font-size: 12px;
+        }
     }
 }

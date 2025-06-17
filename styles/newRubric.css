@@ -121,3 +121,231 @@ input[type="text"], input[type="number"] {
 input[type="number"]:not([readonly]) {
     background-color: #f9f9f9; 
 }
+
+
+@media screen and (min-width: 1600px) and (max-width: 1679px) {
+    main {
+        padding: 45px;
+    }
+    
+    .newTable {
+        max-width: 650px;
+        gap: 18px;
+    }
+    
+    .newTable h1 {
+        font-size: 26px;
+    }
+    
+    #formTabla {
+        gap: 12px;
+    }
+    
+    #formTabla label,
+    #formTabla input {
+        max-width: 280px;
+    }
+    
+    .rubric {
+        width: 1300px;
+    }
+    
+    th, td {
+        padding: 14px;
+    }
+    
+    th:nth-child(2), td:nth-child(2) {
+        width: 600px;
+    }
+    
+    th:nth-child(1), td:nth-child(1) {
+        width: 70px;
+    }
+    
+    th:nth-child(3), td:nth-child(3),
+    th:nth-child(4), td:nth-child(4),
+    th:nth-child(5), td:nth-child(5),
+    th:nth-child(6), td:nth-child(6),
+    th:nth-child(7), td:nth-child(7) {
+        width: 110px;
+    }
+    
+    input[type="text"], input[type="number"] {
+        padding: 6px;
+    }
+}
+
+
+@media screen and (min-width: 1680px) and (max-width: 1919px) {
+    main {
+        padding: 50px;
+    }
+    
+    .newTable {
+        max-width: 700px;
+        gap: 20px;
+    }
+    
+    .newTable h1 {
+        font-size: 28px;
+    }
+    
+    #formTabla {
+        gap: 14px;
+    }
+    
+    #formTabla label,
+    #formTabla input {
+        max-width: 300px;
+    }
+    
+    .rubric {
+        width: 1400px;
+    }
+    
+    th, td {
+        padding: 15px;
+    }
+    
+    th:nth-child(2), td:nth-child(2) {
+        width: 650px;
+    }
+    
+    th:nth-child(1), td:nth-child(1) {
+        width: 75px;
+    }
+    
+    th:nth-child(3), td:nth-child(3),
+    th:nth-child(4), td:nth-child(4),
+    th:nth-child(5), td:nth-child(5),
+    th:nth-child(6), td:nth-child(6),
+    th:nth-child(7), td:nth-child(7) {
+        width: 115px;
+    }
+    
+    input[type="text"], input[type="number"] {
+        padding: 7px;
+    }
+}
+
+
+@media screen and (min-width: 1920px) {
+    main {
+        margin-left: 280px;
+        padding: 55px;
+    }
+    
+    .newTable {
+        max-width: 750px;
+        gap: 22px;
+    }
+    
+    .newTable h1 {
+        font-size: 30px;
+    }
+    
+    #formTabla {
+        gap: 16px;
+    }
+    
+    #formTabla label,
+    #formTabla input {
+        max-width: 320px;
+        font-size: 16px;
+    }
+    
+    .rubric {
+        width: 1500px;
+    }
+    
+    #tablaContenedor {
+        margin-top: 15px;
+    }
+    
+    th, td {
+        padding: 16px;
+        font-size: 15px;
+    }
+    
+    th:nth-child(2), td:nth-child(2) {
+        width: 700px;
+    }
+    
+    th:nth-child(1), td:nth-child(1) {
+        width: 80px;
+    }
+    
+    th:nth-child(3), td:nth-child(3),
+    th:nth-child(4), td:nth-child(4),
+    th:nth-child(5), td:nth-child(5),
+    th:nth-child(6), td:nth-child(6),
+    th:nth-child(7), td:nth-child(7) {
+        width: 120px;
+    }
+    
+    input[type="text"], input[type="number"] {
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+
+
+@media screen and (min-width: 2560px) {
+    main {
+        margin-left: 320px;
+        padding: 65px;
+    }
+    
+    .newTable {
+        max-width: 850px;
+        gap: 25px;
+    }
+    
+    .newTable h1 {
+        font-size: 34px;
+    }
+    
+    #formTabla {
+        gap: 18px;
+    }
+    
+    #formTabla label,
+    #formTabla input {
+        max-width: 350px;
+        font-size: 18px;
+    }
+    
+    .rubric {
+        width: 1700px;
+    }
+    
+    #tablaContenedor {
+        margin-top: 20px;
+    }
+    
+    th, td {
+        padding: 18px;
+        font-size: 16px;
+    }
+    
+    th:nth-child(2), td:nth-child(2) {
+        width: 800px;
+    }
+    
+    th:nth-child(1), td:nth-child(1) {
+        width: 90px;
+    }
+    
+    th:nth-child(3), td:nth-child(3),
+    th:nth-child(4), td:nth-child(4),
+    th:nth-child(5), td:nth-child(5),
+    th:nth-child(6), td:nth-child(6),
+    th:nth-child(7), td:nth-child(7) {
+        width: 130px;
+    }
+    
+    input[type="text"], input[type="number"] {
+        padding: 10px;
+        font-size: 16px;
+    }
+}
