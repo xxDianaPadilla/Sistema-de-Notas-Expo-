@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const db = require("./conexion"); // Asegúrate de que este archivo es tu conexión a MySQL
+const db = require("./conexion");
 
 // Insertar una nueva rúbrica
 router.post("/insertRubrica", (req, res) => {

@@ -1493,6 +1493,110 @@ app.get('/api/seccion-grupos', async (req, res) => {
     }
 });
 
+// Endpoint para obtener niveles
+app.get('/nivel', async (req, res) => {
+    const db = new DBConnection();
+    try {
+        const query = `SELECT Id_Nivel, Nombre_Nivel FROM tbNivel ORDER BY Nombre_Nivel ASC`;
+        const niveles = await db.query(query);
+        res.json(niveles);
+    } catch (err) {
+        console.error('Error al obtener niveles:', err.message);
+        res.status(500).send('Error del servidor al obtener niveles');
+    } finally {
+        db.close();
+    }
+});
+
+// Endpoint para obtener etapas
+app.get('/etapa', async (req, res) => {
+    const db = new DBConnection();
+    try {
+        const query = `SELECT id_etapa, porcentaje_etapa FROM tbEtapa ORDER BY porcentaje_etapa ASC`;
+        const etapas = await db.query(query);
+        res.json(etapas);
+    } catch (err) {
+        console.error('Error al obtener etapas:', err.message);
+        res.status(500).send('Error del servidor al obtener etapas');
+    } finally {
+        db.close();
+    }
+});
+
+// Endpoint para agregar una nueva rúbrica o escala
+app.post('/api/rubricas', async (req, res) => {
+    const db = new DBConnection();
+
+    const { nombre_Rubrica, Id_Nivel, Id_Especialidad, id_etapa, Id_TipoEvaluacion, Año } = req.body;
+
+    if (!nombre_Rubrica || !Id_Nivel || !Id_Especialidad || !id_etapa || !Id_TipoEvaluacion || !Año) {
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
+
+    try {
+        const query = `
+            INSERT INTO tbRubrica (nombre_Rubrica, Id_Nivel, Id_Especialidad, Año, id_etapa, id_TipoEvaluacion)
+            VALUES (?, ?, ?, ?, ?, ?)
+        `;
+        const values = [nombre_Rubrica, Id_Nivel, Id_Especialidad, Año, id_etapa, Id_TipoEvaluacion];
+
+        const result = await db.query(query, values);
+
+        const nuevoId = result.insertId;
+
+        res.status(201).json({
+            message: 'Evaluación guardada exitosamente',
+            id: nuevoId
+        });
+    } catch (error) {
+        console.error('Error al insertar rúbrica:', error.message);
+        res.status(500).json({ message: 'Error del servidor' });
+    } finally {
+        db.close();
+    }
+});
+
+// Endpoint para agregar un nuevo criterio
+app.post('/api/criterios', async (req, res) => {
+    const db = new DBConnection();
+
+    const {
+        id_Rubrica,
+        nombre_Criterio,
+        descripcion_Criterio,
+        puntaje_Criterio,
+        ponderacion_Criterio
+    } = req.body;
+
+    // Validar campos obligatorios
+    if (!id_Rubrica || !nombre_Criterio) {
+        return res.status(400).json({ message: 'id_Rubrica y nombre_Criterio son obligatorios' });
+    }
+
+    try {
+        const query = `
+            INSERT INTO tbCriterios (id_Rubrica, nombre_Criterio, descripcion_Criterio, puntaje_Criterio, ponderacion_Criterio)
+            VALUES (?, ?, ?, ?, ?)
+        `;
+        const values = [
+            id_Rubrica,
+            nombre_Criterio,
+            descripcion_Criterio || '',
+            puntaje_Criterio || 0,
+            ponderacion_Criterio || 0
+        ];
+
+        await db.query(query, values);
+
+        res.status(201).json({ message: 'Criterio guardado exitosamente' });
+    } catch (error) {
+        console.error('Error al insertar criterio:', error.message);
+        res.status(500).json({ message: 'Error del servidor' });
+    } finally {
+        db.close();
+    }
+});
+
 app.get('/api/estudiantes', async (req, res) => {
     const db = new DBConnection();
     const { nivel, minNivel, maxNivel, search } = req.query;
