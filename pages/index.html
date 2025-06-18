@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Notas Expo</title>
+    <title>Sistema de Notas Expo - Login</title>
     <link rel="icon" href="/logoRedondo.png" type="icon/png">
     <link rel="stylesheet" href="/style.css">
 </head>
-
 <body>
     <div class="background">
+        <!-- Círculos decorativos -->
         <div class="circle circle-1"></div>
         <div class="circle circle-2"></div>
         <div class="circle circle-3"></div>
@@ -45,69 +44,182 @@
         <div class="circle circle-32"></div>
         <div class="circle circle-33"></div>
         <div class="circle circle-34"></div>
+        
         <div class="login-container">
             <div class="logo">
-                <img src="/logo2 1.png" alt="">
+                <img src="/logo2 1.png" alt="Logo">
             </div>
             <h1>¡Bienvenido al Sistema de Notas PTC!</h1>
             <p>Accede al sistema con tus credenciales.</p>
+            
+            <!-- Mensaje de error/información -->
+            <div id="message" style="display: none; padding: 10px; margin-bottom: 15px; border-radius: 5px; text-align: center;"></div>
+            
             <form id="loginForm">
-                <input type="text" id="username" placeholder="Usuario" required>
+                <input type="email" id="username" placeholder="Correo electrónico" required autocomplete="email">
                 <div class="password-container">
-                    <input type="password" id="password" placeholder="Contraseña" required>
-                <span class="toggle-password" onclick="togglePassword()">
-                    <img id="password-icon" src="/no_ver_contrasena.png" alt="">
-                </span>
+                    <input type="password" id="password" placeholder="Contraseña" required autocomplete="current-password">
+                    <span class="toggle-password" onclick="togglePassword()">
+                        <img id="password-icon" src="/no_ver_contrasena.png" alt="Toggle password">
+                    </span>
                 </div>
-                <button type="submit" class="login-btn">Acceder</button>
+                <button type="submit" class="login-btn" id="loginBtn">Acceder</button>
             </form>
+            
+            <p style="margin-top: 20px; font-size: 12px; color: #666;">
+                La sesión expira después de 30 minutos de inactividad
+            </p>
         </div>
     </div>
-    <script src="/cerrarSesion.js"></script>
+
     <script>
+        // Función para mostrar mensajes
+        function showMessage(message, type = 'error') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+            messageDiv.style.backgroundColor = type === 'error' ? '#f44336' : '#4CAF50';
+            messageDiv.style.color = 'white';
+            
+            // Ocultar mensaje después de 5 segundos
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
         // Función para alternar la visibilidad de la contraseña
         function togglePassword() {
             const passwordInput = document.getElementById("password");
             const passwordIcon = document.getElementById("password-icon");
+            
             if (passwordInput.type === "password") {
                 passwordInput.type = "text";
-                passwordIcon.src = "/ver_contrasena.png"; // Cambia la imagen a la de "ver"
+                passwordIcon.src = "/ver_contrasena.png";
             } else {
                 passwordInput.type = "password";
-                passwordIcon.src = "/no_ver_contrasena.png"; // Cambia la imagen a la de "no ver"
+                passwordIcon.src = "/no_ver_contrasena.png";
             }
         }
 
-        // Manejar el envío del formulario
-        document.getElementById("loginForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Evitar el envío del formulario por defecto
-
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-
-            // Enviar los datos al servidor para iniciar sesión
-            fetch('/api/login', {
-                method: 'POST',
+        // Verificar si el usuario ya está autenticado al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Página de login cargada');
+            
+            // Verificar si venimos de una sesión expirada
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('expired') === 'true') {
+                showMessage('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.', 'info');
+            }
+            
+            // Verificar si ya hay una sesión activa
+            fetch('/api/verificar-sesion', {
+                method: 'GET',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ correo: username, contraseña: password })
+                }
             })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+                console.log('Estado de verificación de sesión:', response.status);
+                if (response.ok) {
+                    console.log('Sesión activa encontrada, redirigiendo al dashboard...');
+                    window.location.replace('/dashboard.html');
                 }
-                return response.json();
-            })
-            .then(data => {
-                alert(data.message);
-                // Aquí puedes redirigir al usuario a otra página o realizar otras acciones
-                window.location.href = '/dashboard.html'; // Redirigir a la página del dashboard
             })
             .catch(error => {
-                console.error("Error al iniciar sesión:", error);
-                alert("Error al iniciar sesión. Verifica tus credenciales.");
+                console.log('No hay sesión activa, permaneciendo en login');
             });
+        });
+
+        // Manejar el envío del formulario
+        document.getElementById("loginForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value;
+            const loginBtn = document.getElementById("loginBtn");
+
+            // Validaciones
+            if (!username || !password) {
+                showMessage("Por favor, completa todos los campos.");
+                return;
+            }
+
+            // Validar formato de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(username)) {
+                showMessage("Por favor, ingresa un correo electrónico válido.");
+                return;
+            }
+
+            // Deshabilitar botón y mostrar estado de carga
+            const originalText = loginBtn.textContent;
+            loginBtn.textContent = 'Iniciando sesión...';
+            loginBtn.disabled = true;
+
+            try {
+                console.log('Enviando credenciales al servidor...');
+                
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ 
+                        correo: username, 
+                        contraseña: password 
+                    })
+                });
+
+                const data = await response.json();
+                console.log('Respuesta del servidor:', response.status);
+
+                if (response.ok) {
+                    // Login exitoso
+                    console.log('Login exitoso:', data.message);
+                    showMessage('¡Inicio de sesión exitoso! Redirigiendo...', 'success');
+                    
+                    // Limpiar formulario
+                    document.getElementById("loginForm").reset();
+                    
+                    // Pequeña espera para mostrar el mensaje
+                    setTimeout(() => {
+                        window.location.replace('/dashboard.html');
+                    }, 1000);
+                } else {
+                    // Error en login
+                    throw new Error(data.message || 'Error al iniciar sesión');
+                }
+            } catch (error) {
+                console.error("Error durante el login:", error);
+                
+                // Mostrar mensaje de error específico
+                if (error.message.includes('Credenciales inválidas')) {
+                    showMessage("Correo o contraseña incorrectos. Por favor, verifica tus credenciales.");
+                } else if (error.message.includes('requeridos')) {
+                    showMessage("Por favor, completa todos los campos.");
+                } else {
+                    showMessage(error.message || "Error al iniciar sesión. Por favor, intenta nuevamente.");
+                }
+            } finally {
+                // Rehabilitar botón
+                loginBtn.textContent = originalText;
+                loginBtn.disabled = false;
+            }
+        });
+
+        // Prevenir el envío del formulario con Enter si hay campos vacíos
+        document.getElementById("loginForm").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                const username = document.getElementById("username").value.trim();
+                const password = document.getElementById("password").value;
+                
+                if (!username || !password) {
+                    event.preventDefault();
+                    showMessage("Por favor, completa todos los campos.");
+                }
+            }
         });
     </script>
 </body>
