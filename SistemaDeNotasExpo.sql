@@ -343,3 +343,14 @@ select * from tbTipoEvaluacion
 SELECT id_etapa, porcentaje_etapa FROM tbEtapa ORDER BY porcentaje_etapa ASC
 
 select * from tbEtapa
+
+SELECT 
+        r.id_Rubrica,
+        r.nombre_Rubrica,
+        r.Año,
+        e.nombre_etapa,
+        t.nombre_TipoEvaluacion
+      FROM tbRubrica r
+      INNER JOIN tbEtapa e ON r.id_etapa = e.id_etapa
+      INNER JOIN tbTipoEvaluacion t ON r.id_TipoEvaluacion = t.id_TipoEvaluacion
+      ORDER BY r.id_Rubrica DESC

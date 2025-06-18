@@ -1237,6 +1237,35 @@ app.post('/api/criterios', async (req, res) => {
     }
 });
 
+// Endpoint para obtener rubricas
+app.get('/api/rubricas', async (req, res) => {
+  const db = new DBConnection();
+
+  try {
+    const query = `
+      SELECT 
+        r.id_Rubrica,
+        r.nombre_Rubrica,
+        r.Año,
+        e.porcentaje_etapa,
+        t.nombre_TipoEvaluacion
+      FROM tbRubrica r
+      INNER JOIN tbEtapa e ON r.id_etapa = e.id_etapa
+      INNER JOIN tbTipoEvaluacion t ON r.id_TipoEvaluacion = t.id_TipoEvaluacion
+      ORDER BY r.id_Rubrica DESC
+    `;
+
+    const rubricas = await db.query(query, []);
+
+    res.status(200).json(rubricas);
+  } catch (error) {
+    console.error('Error al obtener las rúbricas:', error.message);
+    res.status(500).json({ message: 'Error al obtener las rúbricas' });
+  } finally {
+    db.close();
+  }
+});
+
 app.get('/api/estudiantes', async (req, res) => {
     const db = new DBConnection();
     const { nivel, minNivel, maxNivel, search } = req.query;
