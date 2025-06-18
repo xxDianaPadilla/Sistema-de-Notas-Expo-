@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPTC | Inicio</title>
-    <link rel="icon" href="/logoRedondo.png" type="icon/png">
+    <title>SPTC | Calendario</title>
+    <link rel="icon" href="/logoRedondo.png" type="image/png">
     <!--Estilo propio-->
     <link rel="stylesheet" href="/calendarStyle.css">
-
     <!--Estilo menú-->
     <link rel="stylesheet" href="/menu.css">
+    <!-- Google Fonts para Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -43,7 +44,7 @@
             </div>
             <span id="porcentaje"></span>
         </div>
-        <button class="cerrar-sesion"><img src="/logout.svg" alt="home"> Cerrar Sesión</button>
+        <button class="cerrar-sesion"><img src="/logout.svg" alt="cerrar sesión"> Cerrar Sesión</button>
     </aside>
 
     <!--Alerta para cerrar sesión-->
@@ -57,8 +58,14 @@
         </div>
     </div>
 
-    <!--Content-->
-    <div class="container"></div>
+    <!--Botón para menú móvil (hamburguesa)-->
+    <button class="menu-toggle" id="menuToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!--Content Principal-->
     <main>
         <div class="up">
             <div class="parte1">
@@ -66,37 +73,129 @@
                 <h3>Fechas y actividades importantes</h3>
             </div>
             <div class="boton">
-                <button id="btnNuevo">+</button>
+                <button id="btnNuevo" title="Agregar nueva actividad">+</button>
             </div>
         </div>
-        <br>
-        <div class="calendar">
-            <div class="header">
-            <button id="prevBtn"><img src="/arrow1.svg" alt="Anterior"></button>
-            <div class="monthYear" id="monthYear"></div>
-            <button id="nextBtn"><img src="/arrow2.svg" alt="Siguiente"></button>
-        </div>
-        <div class="days">
-            <div class="day">Lunes</div>
-            <div class="day">Martes</div>
-            <div class="day">Miércoles</div>
-            <div class="day">Jueves</div>
-            <div class="day">Viernes</div>
-            <div class="day">Sábado</div>
-            <div class="day">Domingo</div>
-        </div>
-        <div class="dates" id="dates"></div>
+
+        <div class="container">
+            <!-- Calendario Principal -->
+            <div class="calendar">
+                <div class="header">
+                    <button id="prevBtn" title="Mes anterior">
+                        <img src="/arrow1.svg" alt="Anterior">
+                    </button>
+                    <div class="monthYear" id="monthYear"></div>
+                    <button id="nextBtn" title="Mes siguiente">
+                        <img src="/arrow2.svg" alt="Siguiente">
+                    </button>
+                </div>
+                <div class="days">
+                    <div class="day">Lun</div>
+                    <div class="day">Mar</div>
+                    <div class="day">Mié</div>
+                    <div class="day">Jue</div>
+                    <div class="day">Vie</div>
+                    <div class="day">Sáb</div>
+                    <div class="day">Dom</div>
+                </div>
+                <div class="dates" id="dates"></div>
+            </div>
+
+            <!-- Sidebar de Actividades -->
+            <section class="actividades">
+                <div class="card">
+                    <h1>Etapas Próximas:</h1>
+                </div>
+                <!-- Aquí se cargarán dinámicamente las actividades -->
+                <div id="actividadesContainer"></div>
+            </section>
         </div>
     </main>
-    <section class="actividades">
-        <div class="card">
-            <h1>Etapas Próximas:</h1>
+
+    <!-- Modal para ver/editar actividades -->
+    <div class="modal" id="activityModal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2 id="modalTitle">Actividad</h2>
+            <p id="modalDescription">Descripción de la actividad</p>
+            <p id="modalDate">Fecha: </p>
+            <div class="modal-buttons">
+                <button class="edit-btn" id="editBtn">Editar</button>
+                <button class="delete-btn" id="deleteBtn">Eliminar</button>
+            </div>
         </div>
-    </section>
-    </div> 
+    </div>
+
+    <!-- Modal para crear/editar actividades -->
+    <div class="modal" id="createModal" style="display: none;">
+        <div class="modal-content2">
+            <span class="close2" id="closeCreateModal">&times;</span>
+            <h2>Nueva Actividad</h2>
+            <form id="activityForm">
+                <label class="form-label" for="activityTitle">Título:</label>
+                <input type="text" class="form-input" id="activityTitle" required>
+                
+                <label class="form-label" for="activityDescription">Descripción:</label>
+                <textarea class="form-input" id="activityDescription" rows="3"></textarea>
+                
+                <div class="date-picker-container">
+                    <div style="flex: 1;">
+                        <label class="date-label">Fecha de inicio:</label>
+                        <input type="date" class="date-input" id="startDate" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label class="date-label">Fecha de fin:</label>
+                        <input type="date" class="date-input" id="endDate">
+                    </div>
+                </div>
+                
+                <label class="form-label" for="activityColor">Color:</label>
+                <select class="form-input" id="activityColor">
+                    <option value="#e74c3c">Rojo</option>
+                    <option value="#f39c12">Naranja</option>
+                    <option value="#f1c40f">Amarillo</option>
+                    <option value="#27ae60">Verde</option>
+                    <option value="#3498db">Azul</option>
+                    <option value="#9b59b6">Morado</option>
+                </select>
+                
+                <button type="submit" class="form-button">Guardar Actividad</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="/menu.js"></script>
     <script src="/configFechas.js"></script>
     <script src="/cerrarSesion.js"></script>
     <script src="/actividades.js"></script>
+    
+    <!-- Script para el menú responsive -->
+    <script>
+        // Toggle del menú móvil
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.querySelector('.menu-lateral').classList.toggle('active');
+            this.classList.toggle('active');
+        });
+
+        // Cerrar menú al hacer click fuera
+        document.addEventListener('click', function(e) {
+            const menuLateral = document.querySelector('.menu-lateral');
+            const menuToggle = document.getElementById('menuToggle');
+            
+            if (!menuLateral.contains(e.target) && !menuToggle.contains(e.target)) {
+                menuLateral.classList.remove('active');
+                menuToggle.classList.remove('active');
+            }
+        });
+
+        // Manejar redimensionado de ventana
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 992) {
+                document.querySelector('.menu-lateral').classList.remove('active');
+                document.getElementById('menuToggle').classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>
