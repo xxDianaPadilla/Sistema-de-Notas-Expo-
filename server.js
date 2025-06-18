@@ -1671,6 +1671,28 @@ app.get('/api/estudiantes', async (req, res) => {
     }
 });
 
+// Endpoint para eliminar una rúbrica
+app.delete('/api/rubricas/:id', async (req, res) => {
+  const db = new DBConnection();
+  const id = req.params.id;
+
+  try {
+    const query = `DELETE FROM tbRubrica WHERE id_Rubrica = ?`;
+    const result = await db.query(query, [id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Rúbrica no encontrada' });
+    }
+
+    res.status(200).json({ message: 'Rúbrica eliminada correctamente' });
+  } catch (error) {
+    console.error('Error al eliminar rúbrica:', error.message);
+    res.status(500).json({ message: 'Error del servidor' });
+  } finally {
+    db.close();
+  }
+});
+
 app.get('/api/niveles', async (req, res) => {
     const db = new DBConnection();
 
