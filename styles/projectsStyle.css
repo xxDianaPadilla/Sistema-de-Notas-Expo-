@@ -91,6 +91,7 @@ h1 {
     border-radius: 5px;
     border: none;
     cursor: pointer;
+    margin-left: 1000px; 
 }
 
 #filtrarBtn img {

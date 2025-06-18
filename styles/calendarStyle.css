@@ -1,25 +1,20 @@
-/*CONFIGURACIÓN DE FECHAS*/
-
 @import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 
 * {
     margin: 0;
     padding: 0;
-  }
-  
-  body , html{
     box-sizing: border-box;
-    height: 100%;
+}
+
+body {
+    min-height: 100vh;
     display: flex;
     align-items: start;
     justify-content: start;
     background: #E0E0E0;
-    overflow-y: scroll;
-  }
-
-  body{
-    overflow-y: auto !important;
-  }
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+}
 
 .inicio {
     text-decoration: none;
@@ -34,51 +29,59 @@
     box-sizing: border-box;
 }
 
-main{
+main {
     margin-left: 250px;
-    padding: 40px;
+    padding: 20px;
+    max-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    width: calc(100% - 250px);
+    transition: all 0.3s ease;
 }
 
-.container{
+.container {
     display: flex; 
     justify-content: space-between;
-    align-items: flex-start; 
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
-.actividades{
-    margin-top: 60px;
-    margin-right: 20px;
+.actividades {
+    margin-top: 10px;
     background-color: #f2f2f2;
     padding: 20px;
     border-radius: 10px; 
     position: relative; 
     margin-bottom: 20px; 
     width: 300px;
-    height: 650px;
+    min-width: 280px;
+    max-height: 650px;
+    overflow-y: auto;
     justify-content: center; 
     align-items: center; 
     text-align: center;
-    overflow-y: auto;
-    overflow-x: hidden;
+    flex-shrink: 0;
 }
 
-.actividades h1{
+.actividades h1 {
     font-size: 16px;
     font-weight: normal;
     color: #5A5A5A;
 }
 
-.up{
+.up {
     display: flex; 
     justify-content: space-between;
     align-items: flex-start; 
 }
 
-#btnNuevo{
+#btnNuevo {
     margin-top: 20px;
     padding-top: 5%;
-    background-color: #1d1d1d;
-    color: #fefefe;
+    background-color: transparent;
+    color: #000000;
     border-radius: 100%;
     border: none;
     width: 40px;
@@ -87,20 +90,21 @@ main{
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
+    flex-shrink: 0;
+    margin-right: 350px;
+    margin-bottom: 10px;
 }
 
-#btnNuevo:hover{
-    background-color: #3f3f3f;
-}
-
-.up h3{
+.up h3 {
     font-size: 16px;
     font-weight: normal;
     color: #5A5A5A;
 }
 
 .calendar {
-    width: 880px;
+    width: 100%;
+    max-width: 880px;
+    min-width: 300px;
     height: auto;
     display: flex;
     flex-direction: column;
@@ -108,6 +112,8 @@ main{
     background: #f2f2f2;
     border-radius: 10px;
     box-shadow: 0 0 10px #1d1d1d;
+    flex: 1;
+    margin-top: 10px;
 }
 
 .header {
@@ -115,14 +121,17 @@ main{
     justify-content: space-between;
     align-items: center;
     padding: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .monthYear {
     text-align: center;
     font-weight: 600;
-    width: 250px;
+    min-width: 150px;
+    flex: 1;
 }
-  
+
 .header button {
     display: flex;
     align-items: center;
@@ -134,32 +143,35 @@ main{
     width: 40px;
     height: 40px;
     box-shadow: 0 0 4px #1d1d1d;
+    flex-shrink: 0;
 }
 
 .days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
 }
-  
+
 .day {
     text-align: center;
     padding: 5px;
     color: #999FA6;
     font-weight: 500;
+    font-size: 0.9em;
 }
 
 .dates {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
-  }
-  
-  .date {
+}
+
+.date {
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 10px;
+    padding: 8px;
     margin: auto;
     cursor: pointer;
     font-weight: 600;
@@ -167,22 +179,23 @@ main{
     width: 40px;
     height: 40px;
     transition: 0.2s;
-  }
+    font-size: 0.9em;
+}
 
 .date:hover, .date.active {
-  background: #1d1d1d;
-  color: #fff;
+    background: #1d1d1d;
+    color: #fff;
 }
 
 .date.inactive {
-  color: #d2d2d2;
+    color: #d2d2d2;
 }
 
 .date.inactive:hover {
-  color: #fff;
+    color: #fff;
 }
 
-.card{
+.card {
     margin: 10px 0;
     padding: 15px;
     border-radius: 8px;
@@ -192,28 +205,28 @@ main{
     cursor: pointer;
 }
 
-.card h2{
+.card h2 {
     font-size: 2em;
     margin: 0;
 }
 
-.card span{
+.card span {
     display: block;
     font-size: 0.8em;
 }
 
-.card p{
+.card p {
     margin: 5px 0 0;
     font-size: 1.2em;
 }
 
-.date.actividad{
+.date.actividad {
     color: #ffffff;
     border: 50%;
     position: relative;
 }
 
-.tooltip{
+.tooltip {
     position: absolute;
     color: #ffff;
     padding: 10px;
@@ -226,7 +239,7 @@ main{
     transform: translateY(60px);
 }
 
-.modal{
+.modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -237,51 +250,57 @@ main{
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    padding: 20px;
 }
 
-.modal-content{
+.modal-content {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
-    width: 300px;
+    width: 100%;
+    max-width: 300px;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     position: relative;
     font-family: 'Poppins', sans-serif;
 }
 
-.modal-content h2{
+.modal-content h2 {
     margin: 0 0 10px;
 }
 
-.modal-content p{
+.modal-content p {
     margin: 10px 0;
 }
 
-.modal-buttons{
+.modal-buttons {
     display: flex;
     justify-content: space-around;
     margin-top: 20px;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-.modal-buttons button{
+.modal-buttons button {
     padding: 10px 15px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    flex: 1;
+    min-width: 80px;
 }
 
-.modal-buttons .edit-btn{
+.modal-buttons .edit-btn {
     background-color: #4caf50;
     color: #ffffff;
 }
 
-.modal-buttons .delete-btn{
+.modal-buttons .delete-btn {
     background-color: #f44336;
     color: #ffffff;
 }
 
-.close{
+.close {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -290,19 +309,20 @@ main{
     font-weight: bold; 
 }
 
-.modal-content2{
+.modal-content2 {
     background-color: #1c1c1c;
     color: #ffffff;
     padding: 20px;
     border-radius: 8px;
-    width: 400px;
+    width: 100%;
+    max-width: 400px;
     margin: 0 auto;
     position: relative;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     font-family: 'Poppins', sans-serif;
 }
 
-.close2{
+.close2 {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -311,49 +331,53 @@ main{
     cursor: pointer;
 }
 
-.modal-content2 h2{
+.modal-content2 h2 {
     font-size: 20px;
     margin-bottom: 10px;
 }
 
-.form-label{
+.form-label {
     font-size: 14px;
     display: block;
     margin: 10px 0 5px;
 }
 
-.form-input{
-    width: 95%;
+.form-input {
+    width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     background-color: #333;
     color: #ffffff;
     font-size: 14px;
+    box-sizing: border-box;
 }
 
-.date-picker-container{
+.date-picker-container {
     display: flex;
     justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-.date-label{
+.date-label {
     font-size: 14px;
     color: #e74c3c;
     font-weight: bold;
 }
 
-.date-input{
-    width: 80%;
+.date-input {
+    width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     background-color: #333;
     color: #ffffff;
     font-size: 14px;
+    box-sizing: border-box;
 }
 
-.form-button{
+.form-button {
     display: block;
     width: 100%;
     padding: 10px;
@@ -368,510 +392,387 @@ main{
     text-transform: uppercase;
 }
 
-.form-button:hover{
+.form-button:hover {
     background-color: #e67e22;
 }
 
-@media (min-width: 969px) and (max-width: 1920px) {
+/* ESTILOS PARA MENÚ HAMBURGUESA */
+.menu-toggle {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    background: #1d1d1d;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 45px;
+    height: 45px;
+}
 
-    .calendar{
-        width: 820px;
+.menu-toggle span {
+    display: block;
+    height: 3px;
+    width: 25px;
+    background: #fff;
+    margin: 3px 0;
+    transition: 0.3s;
+    transform-origin: center;
+}
+
+.menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(7px, 7px);
+}
+
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* ESTILOS PARA OVERLAY DEL MENÚ */
+.menu-lateral::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.menu-lateral.active::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* MEDIA QUERIES PARA RESPONSIVE */
+
+/* Tablets grandes y escritorios pequeños */
+@media screen and (max-width: 1200px) {
+    main {
+        margin-left: 220px;
+        width: calc(100% - 220px);
+        padding: 15px;
     }
-
-    .actividades{
-        height: 620px;
+    
+    .actividades {
+        width: 250px;
+        min-width: 220px;
+    }
+    
+    .calendar {
+        max-width: 100%;
     }
 }
 
-
-
-
-/*********************** RESPONSIVE DISPOSITIVOS PEQUEÑOS ******************************/
-
-
-
-@media (max-width: 480px) {
-    body {
-        flex-direction: column;
-        overflow-x: hidden;
+/* Tablets */
+@media screen and (max-width: 992px) {
+    .menu-toggle {
+        display: flex;
     }
-
     
-    /* Ajuste del contenido principal */
-
+    .menu-lateral {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 999;
+    }
+    
+    .menu-lateral.active {
+        transform: translateX(0);
+    }
+    
     main {
         margin-left: 0;
-        padding: 20px 15px;
         width: 100%;
-        box-sizing: border-box;
+        padding: 70px 15px 15px;
     }
-
+    
     .container {
         flex-direction: column;
         align-items: center;
     }
-
-    .up {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        margin-bottom: 20px;
+    
+    .actividades {
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        max-height: 400px;
+        margin-top: 20px;
+        order: 2;
     }
-
-    .up .parte1 h1 {
-        font-size: 24px;
-        margin-bottom: 5px;
+    
+    .calendar {
+        order: 1;
+        width: 100%;
+        max-width: 600px;
     }
-
-    .up .parte1 h3 {
-        font-size: 14px;
-        margin-bottom: 15px;
-    }
-
-    #btnNuevo {
-        margin-top: 10px;
+    
+    .date {
         width: 35px;
         height: 35px;
-        font-size: 24px;
+        padding: 6px;
+        font-size: 0.85em;
     }
+}
 
-    /* Ajuste del calendario */
-
+/* Móviles grandes */
+@media screen and (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+    
+    .menu-toggle {
+        top: 10px;
+        left: 10px;
+        width: 40px;
+        height: 40px;
+    }
+    
+    main {
+        padding: 60px 10px 10px;
+    }
+    
     .calendar {
-        width: 100%;
-        max-width: 350px;
-        margin: 0 auto 20px;
-        padding: 15px;
-        box-shadow: 0 2px 8px rgba(29, 29, 29, 0.1);
+        padding: 8px;
+        max-width: 100%;
     }
-
+    
     .header {
-        padding: 10px 5px;
+        padding: 5px;
+        gap: 5px;
     }
-
+    
     .monthYear {
-        font-size: 16px;
-        width: auto;
-        flex: 1;
+        font-size: 1.1em;
+        min-width: 120px;
     }
-
+    
     .header button {
         width: 35px;
         height: 35px;
     }
-
-    .header button img {
-        width: 16px;
-        height: 16px;
-    }
-
-    .days {
-        margin: 10px 0;
-    }
-
-    .day {
-        font-size: 12px;
-        padding: 8px 2px;
-    }
-
-    .dates {
-        gap: 2px;
-    }
-
+    
     .date {
-        width: 35px;
-        height: 35px;
-        font-size: 14px;
-        padding: 5px;
-        margin: 1px;
+        width: 30px;
+        height: 30px;
+        padding: 4px;
+        font-size: 0.8em;
     }
-
-    /* Ajuste de la sección de actividades */
-
+    
+    .day {
+        padding: 3px;
+        font-size: 0.8em;
+    }
+    
     .actividades {
-        width: 100%;
-        max-width: 350px;
-        height: auto;
-        min-height: 200px;
-        margin: 0 auto;
-        margin-top: 20px;
         padding: 15px;
-        box-sizing: border-box;
+        margin-top: 15px;
     }
-
-    .actividades h1 {
-        font-size: 14px;
-        margin-bottom: 15px;
-    }
-
-    /* Ajuste de las Cards */
-
-    .card {
-        margin: 8px 0;
-        padding: 12px;
-        font-size: 14px;
-    }
-
+    
     .card h2 {
         font-size: 1.5em;
     }
-
-    .card span {
-        font-size: 0.7em;
-    }
-
+    
     .card p {
         font-size: 1em;
     }
-
-   
-    .tooltip {
-        font-size: 0.7em;
-        padding: 8px;
-        top: 50px;
-        transform: translateY(40px);
-    }
-
-    /* Ajuste de los modales */
-
-    .modal-content {
-        width: 90%;
-        max-width: 300px;
-        margin: 0 20px;
-        padding: 15px;
-    }
-
-    .modal-content h2 {
-        font-size: 18px;
-    }
-
-    .modal-content p {
-        font-size: 14px;
-    }
-
-    .modal-buttons {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .modal-buttons button {
-        width: 100%;
-        padding: 12px;
-        font-size: 14px;
-    }
-
-    .modal-content2 {
-        width: 90%;
-        max-width: 350px;
-        margin: 0 20px;
-        padding: 15px;
-    }
-
-    .modal-content2 h2 {
-        font-size: 18px;
-    }
-
-    .form-label {
-        font-size: 12px;
-    }
-
-    .form-input {
-        font-size: 12px;
-        padding: 8px;
-    }
-
-    .date-picker-container {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .date-input {
-        width: 100%;
-    }
-
-    .form-button {
-        font-size: 14px;
-        padding: 12px;
-    }
-
-    /* Otros ajustes*/
-
-    main {
-        padding: 15px 10px;
-    }
-
-    .calendar {
-        max-width: 320px;
-        padding: 10px;
-    }
-
-    .up .parte1 h1 {
-        font-size: 20px;
-    }
-
-    .up .parte1 h3 {
-        font-size: 12px;
-    }
-
-    .day {
-        font-size: 10px;
-        padding: 5px 1px;
-    }
-
-    .date {
-        width: 30px;
-        height: 30px;
-        font-size: 12px;
-    }
-
-    .actividades {
-        max-width: 320px;
-        padding: 10px;
-    }
-
-    .monthYear {
-        font-size: 14px;
-    }
-
-    .header button {
-        width: 30px;
-        height: 30px;
-    }
-
-    .header button img {
-        width: 14px;
-        height: 14px;
-    }
-
+    
     #btnNuevo {
-        width: 30px;
-        height: 30px;
-        font-size: 20px;
-    }
-}
-
-@media (min-width: 480px) and (max-width: 1045px){
-
-    .calendar{
-        width: 500px;
-    }
-
-    .actividades{
-        width: 300px;
-        height: 535px;
-    }
-}
-
-@media (min-width: 380px) and (max-width: 985px){
-
-    .calendar{
-        width: 600px;
-    }
-
-    .actividades{
-        top: 600px;
-        right: 660px;
-        height: 100px;
-        width: 580px !important;
-    }
-
-    .card{
-        width: 580px !important;
-    }
-}
-
-@media (min-width: 320px) and (max-width: 905px){
-    .calendar{
-        width: 580px;
-    }
-}
-
-@media (min-width: 310px) and (max-width: 875px){
-    .calendar{
-        width: 540px;
-    }
-}
-
-@media (min-width: 290px) and (max-width: 868px){
-    .actividades{
-        width: 520px !important;
-        right: 600px;
-    }
-
-    .card{
-        width: 520px !important;
-    }
-}
-
-@media (min-width: 310px) and (max-width: 845px){
-    .actividades{
-        width: 500px !important;
-        right: 595px;
-    }
-
-    .card{
-        width: 500px !important;
-    }
-}
-
-@media (min-width: 310px) and (max-width: 833px){
-    .calendar{
-        width: 520px;
-    }
-
-    .actividades{
-        width: 495px !important;
-        right: 580px;
-    }
-
-    .card{
-        width: 495px !important;
-    }
-}
-
-@media (min-width: 290px) and (max-width: 815px){
-    .calendar{
-        width: 495px;
-    }
-
-    .actividades{
-        width: 480px !important;
-        right: 560px;
-    }
-
-    .card{
-        width: 480px !important;
-    }
-}
-
-
-@media (min-width: 969px) and (max-width: 1920px) {
- 
-    .container {
-        max-width: 1800px;
-        margin: 0 auto 0 50px;
+        width: 35px;
+        height: 35px;
+        font-size: 24px;
     }
     
-   
+    .modal-content2 {
+        max-width: 350px;
+        padding: 15px;
+    }
+}
+
+/* Móviles pequeños */
+@media screen and (max-width: 480px) {
+    .inicio {
+        padding: 10px 15px;
+        font-size: 16px;
+    }
+    
+    .menu-toggle {
+        top: 8px;
+        left: 8px;
+        width: 38px;
+        height: 38px;
+    }
+    
     main {
-        margin-left: 300px;
-        padding: 50px 60px;
-        width: 70%;
+        padding: 55px 8px 8px;
     }
     
-  
     .calendar {
-        width: 950px;
-        height: auto;
-        box-shadow: 0 0 15px rgba(29, 29, 29, 0.2);
-        padding: 20px;
+        padding: 6px;
     }
-    
     
     .header {
-        padding: 15px;
+        flex-direction: column;
+        gap: 10px;
     }
     
     .monthYear {
-        width: 300px;
-        font-size: 22px;
+        order: 2;
+        width: 100%;
     }
     
-
     .header button {
-        width: 50px;
-        height: 50px;
-    }
-    
-
-    .days .day {
-        padding: 10px;
-        font-size: 16px;
-    }
-    
-   
-    .dates {
-        gap: 12px;
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
     }
     
     .date {
-        width: 50px;
-        height: 50px;
-        font-size: 16px;
+        width: 28px;
+        height: 28px;
+        padding: 2px;
+        font-size: 0.75em;
     }
     
- 
+    .day {
+        padding: 2px;
+        font-size: 0.7em;
+    }
+    
+    .dates {
+        gap: 2px;
+    }
+    
+    .days {
+        gap: 1px;
+    }
+    
     .actividades {
-        width: 380px;
-        height: 700px;
-        margin-top: 60px;
-        margin-right: 40px;
+        padding: 12px;
+        width: 100%;
     }
     
-   
     .card {
-        padding: 20px;
-        margin: 15px 0;
+        padding: 12px;
+        margin: 8px 0;
     }
     
     .card h2 {
-        font-size: 2.2em;
-    }
-    
-    .card p {
         font-size: 1.3em;
     }
     
-  
-    #btnNuevo {
-        width: 55px;
-        height: 55px;
-        font-size: 35px;
+    .card span {
+        font-size: 0.7em;
     }
     
-    
-    .up h1 {
-        font-size: 32px;
+    .card p {
+        font-size: 0.9em;
     }
     
-    .up h3 {
-        font-size: 18px;
-    }
-    
-    .actividades h1 {
-        font-size: 20px;
-    }
-    
-    /* Modales más grandes */
-    .modal-content {
-        width: 400px;
-        padding: 25px;
-    }
-    
+    .modal-content,
     .modal-content2 {
-        width: 500px;
-        padding: 30px;
-    }
-    
-    .form-input, .date-input {
+        max-width: 280px;
         padding: 12px;
-        font-size: 16px;
     }
     
-    .form-button {
-        padding: 14px;
-        font-size: 18px;
+    .modal-buttons {
+        flex-direction: column;
+        gap: 8px;
     }
     
-   
-    .menu-lateral {
-        width: 280px;
+    .modal-buttons button {
+        width: 100%;
     }
     
-    /* Tooltip */
-    .tooltip {
-        font-size: 14px;
-        padding: 12px;
-        transform: translateY(70px);
+    .date-picker-container {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .form-input,
+    .date-input {
+        padding: 8px;
+        font-size: 13px;
+    }
+}
+
+/* Móviles muy pequeños */
+@media screen and (max-width: 360px) {
+    .calendar {
+        padding: 4px;
+    }
+    
+    .date {
+        width: 24px;
+        height: 24px;
+        font-size: 0.7em;
+    }
+    
+    .day {
+        font-size: 0.65em;
+        padding: 1px;
+    }
+    
+    .header button {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .monthYear {
+        font-size: 1em;
+    }
+    
+    .modal-content,
+    .modal-content2 {
+        max-width: 260px;
+        padding: 10px;
+    }
+}
+
+/* Orientación horizontal en móviles */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    main {
+        padding: 5px;
+        max-height: 100vh;
+    }
+    
+    .container {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+    
+    .actividades {
+        width: 200px;
+        max-height: 300px;
+        margin-top: 10px;
+    }
+    
+    .calendar {
+        flex: 1;
+        max-width: calc(100% - 220px);
+    }
+    
+    .card {
+        padding: 8px;
+        margin: 5px 0;
+    }
+    
+    .card h2 {
+        font-size: 1.2em;
     }
 }
