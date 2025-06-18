@@ -7,10 +7,16 @@ const cors = require('cors'); // Middleware para permitir solicitudes desde otro
 
 const bcrypt = require('bcrypt'); // Para encriptar contraseñas
 const jwt = require('jsonwebtoken'); // Para manejar JWT
-const cookieParser = require('cookie-parser'); // Para manejar cookies
 const multer = require('multer');
 const XLSX = require('xlsx');
 const path = require('path');
+const cookieParser = require('cookie-parser');
+
+const JWT_SECRET = process.env.JWT_SECRET || 'tu_secreto_super_seguro_2024';
+const JWT_EXPIRES_IN = '30m'; // Token expira en 30 minutos
+
+app.use(cookieParser());
+
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -43,6 +49,9 @@ app.use(express.static('styles'));
 app.use(express.static('img'));
 app.use(express.static('js'));
 app.use('/formsUsers', express.static('pages/formsUsers'));
+
+
+
 
 // Ruta para servir la página principal
 app.get('/index', (req, res) => {
@@ -983,6 +992,336 @@ app.put('/actualizarProyecto', async (req, res) => {
     }
 });
 
+
+
+//---------------------------------------------------------------------------Login y Autenticación---------------------------------------------------------------------------
+// Agregar estos endpoints después de tu configuración inicial en server.js
+
+// Middleware para verificar el token JWT
+const verificarToken = (req, res, next) => {
+    const token = req.cookies.authToken;
+    
+    if (!token) {
+        return res.status(401).json({ message: 'No autorizado: Token no encontrado' });
+    }
+    
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.usuario = decoded;
+        next();
+    } catch (error) {
+        if (error.name === 'TokenExpiredError') {
+            res.clearCookie('authToken');
+            return res.status(401).json({ message: 'Token expirado' });
+        }
+        return res.status(401).json({ message: 'Token inválido' });
+    }
+};
+
+
+// Middleware para servir archivos estáticos con verificación de autenticación
+app.use((req, res, next) => {
+    // Lista de rutas que requieren autenticación
+    const rutasProtegidas = [
+        '/dashboard.html',
+        '/users.html',
+        '/projects.html',
+        '/evaluation.html',
+        '/configFechas.html',
+        '/escala.html',
+        '/newRubric.html'
+    ];
+    
+    // Verificar si la ruta requiere autenticación
+    const requiereAuth = rutasProtegidas.some(ruta => req.path.includes(ruta));
+    
+    if (requiereAuth) {
+        // Verificar si hay token
+        const token = req.cookies.authToken;
+        
+        if (!token) {
+            // Redirigir al login si no hay token
+            return res.redirect('/index.html?expired=true');
+        }
+        
+        try {
+            // Verificar el token
+            const decoded = jwt.verify(token, JWT_SECRET);
+            req.usuario = decoded;
+            next();
+        } catch (error) {
+            // Token inválido o expirado
+            res.clearCookie('authToken');
+            return res.redirect('/index.html?expired=true');
+        }
+    } else {
+        // No requiere autenticación
+        next();
+    }
+});
+
+// Endpoint de login
+app.post('/api/login', async (req, res) => {
+    const db = new DBConnection();
+    const { correo, contraseña } = req.body;
+    
+    try {
+        // Validar entrada
+        if (!correo || !contraseña) {
+            return res.status(400).json({ message: 'Correo y contraseña son requeridos' });
+        }
+        
+        // Buscar usuario
+        const query = `
+            SELECT u.*, r.nombreRol 
+            FROM tbUsuario u
+            INNER JOIN tbRol r ON u.Id_Rol = r.Id_Rol
+            WHERE u.Correo_Usuario = ?
+        `;
+        
+        const [usuario] = await db.query(query, [correo]);
+        
+        if (!usuario) {
+            return res.status(401).json({ message: 'Credenciales inválidas' });
+        }
+        
+        // Verificar contraseña
+        const contraseñaValida = await bcrypt.compare(contraseña, usuario.Contra_Usuario);
+        
+        if (!contraseñaValida) {
+            return res.status(401).json({ message: 'Credenciales inválidas' });
+        }
+        
+        // Actualizar estado de conexión y última actividad
+        await db.query(
+            'UPDATE tbUsuario SET Estado_Conexion = TRUE, FechaHora_Conexion = NOW(), Ultima_Actividad = NOW() WHERE Id_Usuario = ?',
+            [usuario.Id_Usuario]
+        );
+        
+        // Crear token JWT
+        const token = jwt.sign(
+            {
+                id: usuario.Id_Usuario,
+                nombre: usuario.Nombre_Usuario,
+                apellido: usuario.Apellido_Usuario,
+                correo: usuario.Correo_Usuario,
+                rol: usuario.nombreRol,
+                idRol: usuario.Id_Rol
+            },
+            JWT_SECRET,
+            { expiresIn: JWT_EXPIRES_IN }
+        );
+        
+        // Configurar cookie
+        res.cookie('authToken', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 30 * 60 * 1000 // 30 minutos
+        });
+        
+        res.status(200).json({
+            message: 'Login exitoso',
+            usuario: {
+                id: usuario.Id_Usuario,
+                nombre: usuario.Nombre_Usuario,
+                apellido: usuario.Apellido_Usuario,
+                rol: usuario.nombreRol
+            }
+        });
+        
+    } catch (error) {
+        console.error('Error en login:', error);
+        res.status(500).json({ message: 'Error del servidor' });
+    } finally {
+        db.close();
+    }
+});
+
+// Endpoint de logout
+app.post('/api/logout', verificarToken, async (req, res) => {
+    const db = new DBConnection();
+    
+    try {
+        // Actualizar estado de conexión
+        await db.query(
+            'UPDATE tbUsuario SET Estado_Conexion = FALSE WHERE Id_Usuario = ?',
+            [req.usuario.id]
+        );
+        
+        // Limpiar cookie
+        res.clearCookie('authToken');
+        
+        res.status(200).json({ message: 'Logout exitoso' });
+    } catch (error) {
+        console.error('Error en logout:', error);
+        res.status(500).json({ message: 'Error del servidor' });
+    } finally {
+        db.close();
+    }
+});
+
+app.get('/usuarios-conectados', verificarToken, async (req, res) => {
+    const db = new DBConnection();
+    try {
+        const query = `
+            SELECT 
+                tbUsuario.Id_Usuario,
+                tbUsuario.Nombre_Usuario AS Nombre,
+                tbUsuario.Apellido_Usuario AS Apellido,
+                tbRol.nombreRol AS Rol,
+                tbUsuario.FechaHora_Conexion AS FechaConexion,
+                tbUsuario.Estado_Conexion,
+                tbUsuario.Ultima_Actividad
+            FROM
+                tbUsuario
+            INNER JOIN
+                tbRol
+            ON
+                tbUsuario.Id_Rol = tbRol.Id_Rol
+            WHERE
+                tbUsuario.Estado_Conexion = TRUE
+            ORDER BY
+                tbUsuario.Ultima_Actividad DESC
+        `;
+        const usuarios = await db.query(query);
+        res.json(usuarios);
+    } catch (err) {
+        console.error('Error obteniendo usuarios conectados:', err.message);
+        res.status(500).send('Error del servidor');
+    } finally {
+        db.close();
+    }
+});
+
+// Endpoint para obtener información del usuario actual
+app.get('/api/usuario-actual', verificarToken, (req, res) => {
+    res.json({
+        id: req.usuario.id,
+        nombre: req.usuario.nombre,
+        apellido: req.usuario.apellido,
+        correo: req.usuario.correo,
+        rol: req.usuario.idRol,
+        nombreRol: req.usuario.rol
+    });
+});
+
+// Actualizar el endpoint de verificar sesión para incluir más información
+app.get('/api/verificar-sesion', verificarToken, async (req, res) => {
+    const db = new DBConnection();
+    
+    try {
+        // Actualizar última actividad
+        await db.query(
+            'UPDATE tbUsuario SET Ultima_Actividad = NOW() WHERE Id_Usuario = ?',
+            [req.usuario.id]
+        );
+        
+        // Obtener información actualizada del usuario
+        const [usuario] = await db.query(
+            `SELECT u.*, r.nombreRol 
+             FROM tbUsuario u
+             INNER JOIN tbRol r ON u.Id_Rol = r.Id_Rol
+             WHERE u.Id_Usuario = ?`,
+            [req.usuario.id]
+        );
+        
+        res.status(200).json({
+            valido: true,
+            usuario: {
+                id: usuario.Id_Usuario,
+                nombre: usuario.Nombre_Usuario,
+                apellido: usuario.Apellido_Usuario,
+                correo: usuario.Correo_Usuario,
+                rol: usuario.nombreRol,
+                idRol: usuario.Id_Rol
+            }
+        });
+    } catch (error) {
+        console.error('Error verificando sesión:', error);
+        res.status(500).json({ message: 'Error del servidor' });
+    } finally {
+        db.close();
+    }
+});
+
+// Job para limpiar sesiones inactivas (ejecutar cada 5 minutos)
+setInterval(async () => {
+    const db = new DBConnection();
+    try {
+        // Marcar como desconectados a usuarios inactivos por más de 35 minutos
+        await db.query(
+            `UPDATE tbUsuario 
+             SET Estado_Conexion = FALSE 
+             WHERE Estado_Conexion = TRUE 
+             AND Ultima_Actividad < DATE_SUB(NOW(), INTERVAL 35 MINUTE)`
+        );
+    } catch (error) {
+        console.error('Error limpiando sesiones inactivas:', error);
+    } finally {
+        db.close();
+    }
+}, 5 * 60 * 1000); // 5 minutos
+
+// Endpoint para refrescar token (mantener sesión activa)
+app.post('/api/refrescar-token', verificarToken, async (req, res) => {
+    const db = new DBConnection();
+    
+    try {
+        // Crear nuevo token
+        const nuevoToken = jwt.sign(
+            {
+                id: req.usuario.id,
+                nombre: req.usuario.nombre,
+                apellido: req.usuario.apellido,
+                correo: req.usuario.correo,
+                rol: req.usuario.rol,
+                idRol: req.usuario.idRol
+            },
+            JWT_SECRET,
+            { expiresIn: JWT_EXPIRES_IN }
+        );
+        
+        // Actualizar última actividad
+        await db.query(
+            'UPDATE tbUsuario SET Ultima_Actividad = NOW() WHERE Id_Usuario = ?',
+            [req.usuario.id]
+        );
+        
+        // Enviar nueva cookie
+        res.cookie('authToken', nuevoToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 30 * 60 * 1000
+        });
+        
+        res.status(200).json({ message: 'Token refrescado exitosamente' });
+    } catch (error) {
+        console.error('Error refrescando token:', error);
+        res.status(500).json({ message: 'Error del servidor' });
+    } finally {
+        db.close();
+    }
+});
+
+// Aplicar middleware de verificación a todas las rutas protegidas
+// Ejemplo: app.use('/api/rutas-protegidas', verificarToken);
+
+// Para rutas específicas que necesitan autenticación, agregar verificarToken:
+// app.get('/usuarios-conectados', verificarToken, async (req, res) => { ... });
+// app.get('/etapas', verificarToken, async (req, res) => { ... });
+// etc...
+
+
+
+
+
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 // Endpoint para agregar un nuevo usuario
 app.post('/api/usuarios', async (req, res) => {
     const db = new DBConnection();
@@ -1010,6 +1349,8 @@ app.post('/api/usuarios', async (req, res) => {
         db.close();
     }
 });
+
+
 
 // Select Usuarios
 app.get('/api/usuarios', async (req, res) => {
@@ -1052,71 +1393,90 @@ app.delete('/api/usuarios/:id', async (req, res) => {
     }
 });
 
-// Endpoint para iniciar sesión y generar un JWT
-app.post('/api/login', async (req, res) => {
+
+// Endpoint para obtener un usuario específico por ID
+app.get('/api/usuarios/:id', async (req, res) => {
     const db = new DBConnection();
-    const { correo, contraseña } = req.body;
+    const { id } = req.params;
 
     try {
-        const query = 'SELECT * FROM tbUsuario WHERE Correo_Usuario = ?';
-        const [usuario] = await db.query(query, [correo]);
+        const query = 'SELECT * FROM tbUsuario WHERE Id_Usuario = ?';
+        const [usuario] = await db.query(query, [id]);
 
         if (!usuario) {
-            return res.status(401).json({ message: 'Credenciales inválidas' });
+            return res.status(404).json({ message: 'Usuario no encontrado' });
         }
 
-        // Comparar la contraseña proporcionada con la almacenada
-        const isMatch = await bcrypt.compare(contraseña, usuario.Contra_Usuario);
-        if (!isMatch) {
-            return res.status(401).json({ message: 'Credenciales inválidas' });
-        }
-
-        // Generar un token JWT
-        const token = jwt.sign({ id: usuario.Id_Usuario, rol: usuario.Id_Rol }, 'tu_secreto', { expiresIn: '1h' });
-
-        // Establecer el token en una cookie
-        res.cookie('token', token, { httpOnly: true, secure: true }); // Asegúrate de usar secure: true en producción
-
-        res.json({ message: 'Inicio de sesión exitoso' });
+        res.json(usuario);
     } catch (error) {
-        console.error('Error al iniciar sesión:', error.message);
+        console.error('Error al obtener usuario:', error);
         res.status(500).send('Error del servidor');
     } finally {
         db.close();
     }
 });
 
-// Middleware para verificar el token JWT
-const authenticateJWT = (req, res, next) => {
-    const token = req.cookies.token; // Obtener el token de las cookies
-    if (token) {
-        jwt.verify(token, 'tu_secreto', (err, user) => {
-            if (err) {
-                return res.sendStatus(403);
-            }
-            req.user = user;
-            next();
-        });
-    } else {
-        res.sendStatus(401);
+// Endpoint para actualizar un usuario
+app.put('/api/usuarios/:id', async (req, res) => {
+    const db = new DBConnection();
+    const { id } = req.params;
+    const { nombre, apellido, correo, contraseña, idRol } = req.body;
+
+    if (!nombre || !apellido || !correo || !idRol) {
+        return res.status(400).json({ message: 'Nombre, apellido, correo y rol son obligatorios' });
     }
-};
 
-// Ejemplo de uso del middleware en una ruta protegida
-app.get('/api/protegida', authenticateJWT, (req, res) => {
-    res.json({ message: 'Esta es una ruta protegida', user: req.user });
+    try {
+        let query;
+        let values;
+
+        // Si se proporciona contraseña, actualizarla también
+        if (contraseña) {
+            const hashedPassword = await bcrypt.hash(contraseña, 10);
+            query = `
+                UPDATE tbUsuario 
+                SET Nombre_Usuario = ?, 
+                    Apellido_Usuario = ?, 
+                    Correo_Usuario = ?, 
+                    Contra_Usuario = ?, 
+                    Id_Rol = ?
+                WHERE Id_Usuario = ?
+            `;
+            values = [nombre, apellido, correo, hashedPassword, idRol, id];
+        } else {
+            // Si no se proporciona contraseña, no actualizarla
+            query = `
+                UPDATE tbUsuario 
+                SET Nombre_Usuario = ?, 
+                    Apellido_Usuario = ?, 
+                    Correo_Usuario = ?, 
+                    Id_Rol = ?
+                WHERE Id_Usuario = ?
+            `;
+            values = [nombre, apellido, correo, idRol, id];
+        }
+
+        const result = await db.query(query, values);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        res.json({ message: 'Usuario actualizado exitosamente' });
+    } catch (error) {
+        console.error('Error al actualizar usuario:', error.message);
+        res.status(500).send('Error del servidor');
+    } finally {
+        db.close();
+    }
 });
 
-// Endpoint para cerrar sesión y eliminar el token
-app.post('/api/logout', (req, res) => {
-    res.clearCookie('token'); // Eliminar la cookie del token
-    res.json({ message: 'Sesión cerrada exitosamente' });
-});
 
-// Endpoint para obtener el rol del usuario logueado
-app.get('/api/rol', authenticateJWT, (req, res) => {
-    res.json({ rol: req.user.rol });
-});
+
+
+
+
+
 
 // Endpoint para obtener las secciones/grupos
 app.get('/api/seccion-grupos', async (req, res) => {
@@ -1589,4 +1949,5 @@ app.post('/api/estudiantes/importar', upload.single('excelFile'), async (req, re
 // Servidor escuchando en el puerto definido
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`);
+    console.log(`Token JWT expira en: ${JWT_EXPIRES_IN}`);
 });

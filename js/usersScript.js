@@ -2,6 +2,9 @@
 const openFormBtn = document.getElementById("newUser");
 const modalContainer = document.getElementById("modalContainer");
 
+// Variable para almacenar el usuario que se está editando
+let usuarioEditando = null;
+
 // Abrir el formulario para elegir rol
 openFormBtn.addEventListener("click", () => {
     // Cargar el archivo HTML del formulario para elegir rol
@@ -42,28 +45,28 @@ function initializeRoleSelectionListeners() {
     // Listener para cada botón de rol
     if (btnAdmin) {
         btnAdmin.addEventListener("click", () => {
-            loadForm("/formsUsers/formAddAdmin.html");
+            loadForm("/formsUsers/formAddAdmin.html", 1);
         });
     }
     if (btnEstud) {
         btnEstud.addEventListener("click", () => {
-            loadForm("/formsUsers/formAddEstud.html");
+            loadForm("/formsUsers/formAddEstud.html", 2);
         });
     }
     if (btnDocen) {
         btnDocen.addEventListener("click", () => {
-            loadForm("/formsUsers/formAddDocente.html");
+            loadForm("/formsUsers/formAddDocente.html", 3);
         });
     }
     if (btnEvalu) {
         btnEvalu.addEventListener("click", () => {
-            loadForm("/formsUsers/formAddEvaluador.html");
+            loadForm("/formsUsers/formAddEvaluador.html", 4);
         });
     }
 }
 
 // Función para cargar el formulario de un rol específico
-function loadForm(formUrl) {
+function loadForm(formUrl, rolId) {
     fetch(formUrl)
         .then((response) => {
             if (!response.ok) {
@@ -78,6 +81,11 @@ function loadForm(formUrl) {
             modalContainer.style.width = "100%";
             modalContainer.style.height = "100%";
 
+            // Si estamos editando, llenar los campos
+            if (usuarioEditando) {
+                fillFormWithUserData(rolId);
+            }
+
             // Reasignar funcionalidad al botón de cerrar
             initializeCloseButton();
             initializeSaveButtonAdm();
@@ -88,6 +96,40 @@ function loadForm(formUrl) {
         .catch((error) => console.error("Error cargando el formulario:", error));
 }
 
+// Función para llenar el formulario con los datos del usuario a editar
+function fillFormWithUserData(rolId) {
+    let nombreInput, apellidoInput, correoInput;
+    
+    switch(rolId) {
+        case 1: // Administrador
+            nombreInput = document.getElementById("nombreAdm");
+            apellidoInput = document.getElementById("apellidoAdm");
+            correoInput = document.getElementById("correoAdm");
+            break;
+        case 2: // Estudiante
+            nombreInput = document.getElementById("nombreEst");
+            apellidoInput = document.getElementById("apellidoEst");
+            correoInput = document.getElementById("correoEst");
+            break;
+        case 3: // Docente
+            nombreInput = document.getElementById("nombreDoc");
+            apellidoInput = document.getElementById("apellidoDoc");
+            correoInput = document.getElementById("correoDoc");
+            break;
+        case 4: // Evaluador
+            nombreInput = document.getElementById("nombreEvaluador");
+            apellidoInput = document.getElementById("apellidoEvaluador");
+            correoInput = document.getElementById("correoEvaluador");
+            break;
+    }
+
+    if (nombreInput && apellidoInput && correoInput) {
+        nombreInput.value = usuarioEditando.Nombre_Usuario;
+        apellidoInput.value = usuarioEditando.Apellido_Usuario;
+        correoInput.value = usuarioEditando.Correo_Usuario;
+    }
+}
+
 // Función para cerrar el modal
 function closeModal() {
     modalContainer.style.width = "0%";
@@ -95,6 +137,7 @@ function closeModal() {
     modalContainer.classList.add("hidden");
     setTimeout(() => {
         modalContainer.innerHTML = ""; // Limpiar contenido después de cerrar
+        usuarioEditando = null; // Limpiar usuario editando
     }, 500); // Coincidir con la duración de la transición
 }
 
@@ -134,8 +177,18 @@ function initializeSaveButtonAdm() {
             const contraseña = document.getElementById("contraseñaAdm").value;
             const confirmarContraseña = document.getElementById("confirmarContraseñaAdm").value;
 
-            // Validar que las contraseñas coincidan
-            if (contraseña !== confirmarContraseña) {
+            // Si estamos editando, no requerir contraseña
+            if (!usuarioEditando) {
+                // Validar que las contraseñas coincidan solo si se está creando
+                if (contraseña !== confirmarContraseña) {
+                    alert("Las contraseñas no coinciden.");
+                    return;
+                }
+                if (!contraseña) {
+                    alert("La contraseña es obligatoria.");
+                    return;
+                }
+            } else if (contraseña && contraseña !== confirmarContraseña) {
                 alert("Las contraseñas no coinciden.");
                 return;
             }
@@ -147,13 +200,20 @@ function initializeSaveButtonAdm() {
                 nombre: nombre,
                 apellido: apellido,
                 correo: correo,
-                contraseña: contraseña,
                 idRol: idRol
             };
 
+            // Solo incluir contraseña si se proporcionó
+            if (contraseña) {
+                datosUsuario.contraseña = contraseña;
+            }
+
+            const url = usuarioEditando ? `/api/usuarios/${usuarioEditando.Id_Usuario}` : '/api/usuarios';
+            const method = usuarioEditando ? 'PUT' : 'POST';
+
             // Enviar los datos al servidor
-            fetch('/api/usuarios', {
-                method: 'POST',
+            fetch(url, {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -166,9 +226,17 @@ function initializeSaveButtonAdm() {
                 return response.json();
             })
             .then(data => {
-                alert("Usuario guardado con éxito.");
+                alert(usuarioEditando ? "Usuario actualizado con éxito." : "Usuario guardado con éxito.");
                 closeModal(); // Cierra el modal después de guardar
-                loadUsuarios();
+                
+                // Obtener el rol activo para recargar solo esos usuarios
+                const activeRole = document.querySelector('.role.active');
+                if (activeRole) {
+                    const idRol = getIdRol(activeRole.textContent);
+                    loadUsuarios(idRol);
+                } else {
+                    loadUsuarios(1); // Por defecto cargar administradores
+                }
             })
             .catch(error => console.error("Error al guardar el usuario:", error));
         });
@@ -187,8 +255,18 @@ function initializeSaveButtonEst() {
             const contraseña = document.getElementById("contraseñaEst").value;
             const confirmarContraseña = document.getElementById("confirmarContraseñaEst").value;
 
-            // Validar que las contraseñas coincidan
-            if (contraseña !== confirmarContraseña) {
+            // Si estamos editando, no requerir contraseña
+            if (!usuarioEditando) {
+                // Validar que las contraseñas coincidan solo si se está creando
+                if (contraseña !== confirmarContraseña) {
+                    alert("Las contraseñas no coinciden.");
+                    return;
+                }
+                if (!contraseña) {
+                    alert("La contraseña es obligatoria.");
+                    return;
+                }
+            } else if (contraseña && contraseña !== confirmarContraseña) {
                 alert("Las contraseñas no coinciden.");
                 return;
             }
@@ -200,13 +278,20 @@ function initializeSaveButtonEst() {
                 nombre: nombre,
                 apellido: apellido,
                 correo: correo,
-                contraseña: contraseña,
                 idRol: idRol
             };
 
+            // Solo incluir contraseña si se proporcionó
+            if (contraseña) {
+                datosUsuario.contraseña = contraseña;
+            }
+
+            const url = usuarioEditando ? `/api/usuarios/${usuarioEditando.Id_Usuario}` : '/api/usuarios';
+            const method = usuarioEditando ? 'PUT' : 'POST';
+
             // Enviar los datos al servidor
-            fetch('/api/usuarios', {
-                method: 'POST',
+            fetch(url, {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -219,9 +304,17 @@ function initializeSaveButtonEst() {
                 return response.json();
             })
             .then(data => {
-                alert("Usuario guardado con éxito.");
+                alert(usuarioEditando ? "Usuario actualizado con éxito." : "Usuario guardado con éxito.");
                 closeModal(); // Cierra el modal después de guardar
-                loadUsuarios();
+                
+                // Obtener el rol activo para recargar solo esos usuarios
+                const activeRole = document.querySelector('.role.active');
+                if (activeRole) {
+                    const idRol = getIdRol(activeRole.textContent);
+                    loadUsuarios(idRol);
+                } else {
+                    loadUsuarios(2); // Por defecto cargar estudiantes
+                }
             })
             .catch(error => console.error("Error al guardar el usuario:", error));
         });
@@ -240,12 +333,21 @@ function initializeSaveButtonDoc() {
             const contraseña = document.getElementById("contraseñaDoc").value;
             const confirmarContraseña = document.getElementById("confirmarContraseñaDoc").value;
 
-            // Validar que las contraseñas coincidan
-            if (contraseña !== confirmarContraseña) {
+            // Si estamos editando, no requerir contraseña
+            if (!usuarioEditando) {
+                // Validar que las contraseñas coincidan solo si se está creando
+                if (contraseña !== confirmarContraseña) {
+                    alert("Las contraseñas no coinciden.");
+                    return;
+                }
+                if (!contraseña) {
+                    alert("La contraseña es obligatoria.");
+                    return;
+                }
+            } else if (contraseña && contraseña !== confirmarContraseña) {
                 alert("Las contraseñas no coinciden.");
                 return;
             }
-
          
             const idRol = 3; // selección del rol
 
@@ -254,13 +356,20 @@ function initializeSaveButtonDoc() {
                 nombre: nombre,
                 apellido: apellido,
                 correo: correo,
-                contraseña: contraseña,
                 idRol: idRol
             };
 
+            // Solo incluir contraseña si se proporcionó
+            if (contraseña) {
+                datosUsuario.contraseña = contraseña;
+            }
+
+            const url = usuarioEditando ? `/api/usuarios/${usuarioEditando.Id_Usuario}` : '/api/usuarios';
+            const method = usuarioEditando ? 'PUT' : 'POST';
+
             // Enviar los datos al servidor
-            fetch('/api/usuarios', {
-                method: 'POST',
+            fetch(url, {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -273,9 +382,17 @@ function initializeSaveButtonDoc() {
                 return response.json();
             })
             .then(data => {
-                alert("Usuario guardado con éxito.");
+                alert(usuarioEditando ? "Usuario actualizado con éxito." : "Usuario guardado con éxito.");
                 closeModal(); // Cierra el modal después de guardar
-                loadUsuarios();
+                
+                // Obtener el rol activo para recargar solo esos usuarios
+                const activeRole = document.querySelector('.role.active');
+                if (activeRole) {
+                    const idRol = getIdRol(activeRole.textContent);
+                    loadUsuarios(idRol);
+                } else {
+                    loadUsuarios(3); // Por defecto cargar docentes
+                }
             })
             .catch(error => console.error("Error al guardar el usuario:", error));
         });
@@ -294,12 +411,21 @@ function initializeSaveButtonEvaluador() {
             const contraseña = document.getElementById("contraseñaEvaluador").value;
             const confirmarContraseña = document.getElementById("confirmarContraseñaEvaluador").value;
 
-            // Validar que las contraseñas coincidan
-            if (contraseña !== confirmarContraseña) {
+            // Si estamos editando, no requerir contraseña
+            if (!usuarioEditando) {
+                // Validar que las contraseñas coincidan solo si se está creando
+                if (contraseña !== confirmarContraseña) {
+                    alert("Las contraseñas no coinciden.");
+                    return;
+                }
+                if (!contraseña) {
+                    alert("La contraseña es obligatoria.");
+                    return;
+                }
+            } else if (contraseña && contraseña !== confirmarContraseña) {
                 alert("Las contraseñas no coinciden.");
                 return;
             }
-
          
             const idRol = 4; // selección del rol
 
@@ -308,13 +434,20 @@ function initializeSaveButtonEvaluador() {
                 nombre: nombre,
                 apellido: apellido,
                 correo: correo,
-                contraseña: contraseña,
                 idRol: idRol
             };
 
+            // Solo incluir contraseña si se proporcionó
+            if (contraseña) {
+                datosUsuario.contraseña = contraseña;
+            }
+
+            const url = usuarioEditando ? `/api/usuarios/${usuarioEditando.Id_Usuario}` : '/api/usuarios';
+            const method = usuarioEditando ? 'PUT' : 'POST';
+
             // Enviar los datos al servidor
-            fetch('/api/usuarios', {
-                method: 'POST',
+            fetch(url, {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -327,9 +460,17 @@ function initializeSaveButtonEvaluador() {
                 return response.json();
             })
             .then(data => {
-                alert("Usuario guardado con éxito.");
+                alert(usuarioEditando ? "Usuario actualizado con éxito." : "Usuario guardado con éxito.");
                 closeModal(); // Cierra el modal después de guardar
-                loadUsuarios();
+                
+                // Obtener el rol activo para recargar solo esos usuarios
+                const activeRole = document.querySelector('.role.active');
+                if (activeRole) {
+                    const idRol = getIdRol(activeRole.textContent);
+                    loadUsuarios(idRol);
+                } else {
+                    loadUsuarios(4); // Por defecto cargar evaluadores
+                }
             })
             .catch(error => console.error("Error al guardar el usuario:", error));
         });
@@ -373,7 +514,8 @@ function initializeSaveButtonEvaluador() {
 }
 
 function loadUsuarios(idRol) {
-    fetch(`/api/usuarios?rol=${idRol}`)
+    const url = idRol ? `/api/usuarios?rol=${idRol}` : '/api/usuarios';
+    fetch(url)
         .then((response) => {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -409,11 +551,56 @@ function displayUsuarios(usuarios) {
 }
 
 //----------------------------------------------------------------------------UPDATE------------------------------------------------------------------------------------------------
+// Función para editar usuario
+async function editUser(id) {
+    try {
+        // Primero obtener los datos del usuario
+        const response = await fetch(`/api/usuarios/${id}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const usuario = await response.json();
+        
+        // Guardar el usuario que se está editando
+        usuarioEditando = usuario;
+        
+        // Determinar el formulario correcto según el rol
+        let formUrl;
+        switch(usuario.Id_Rol) {
+            case 1:
+                formUrl = "/formsUsers/formAddAdmin.html";
+                break;
+            case 2:
+                formUrl = "/formsUsers/formAddEstud.html";
+                break;
+            case 3:
+                formUrl = "/formsUsers/formAddDocente.html";
+                break;
+            case 4:
+                formUrl = "/formsUsers/formAddEvaluador.html";
+                break;
+            default:
+                alert("Rol de usuario no válido");
+                return;
+        }
+        
+        // Abrir el modal y cargar el formulario
+        modalContainer.style.width = "100%";
+        modalContainer.style.height = "100%";
+        modalContainer.classList.remove("hidden");
+        
+        // Cargar el formulario correspondiente
+        loadForm(formUrl, usuario.Id_Rol);
+        
+    } catch (error) {
+        console.error("Error al cargar usuario para editar:", error);
+        alert("Error al cargar los datos del usuario");
+    }
+}
  
- 
- //----------------------------------------------------------------------------DELETE------------------------------------------------------------------------------------------------
- // Función para eliminar usuario
- function deleteUser(id) {
+//----------------------------------------------------------------------------DELETE------------------------------------------------------------------------------------------------
+// Función para eliminar usuario
+function deleteUser(id) {
     if (confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
         fetch(`/api/usuarios/${id}`, {
             method: 'DELETE'
@@ -423,11 +610,26 @@ function displayUsuarios(usuarios) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             alert("Usuario eliminado con éxito.");
-            loadUsuarios(); // Recargar la lista de usuarios
+            
+            // Obtener el rol activo para recargar solo esos usuarios
+            const activeRole = document.querySelector('.role.active');
+            if (activeRole) {
+                const idRol = getIdRol(activeRole.textContent);
+                loadUsuarios(idRol);
+            } else {
+                loadUsuarios(); // Cargar todos si no hay rol activo
+            }
         })
         .catch(error => console.error("Error al eliminar usuario:", error));
     }
 }
 
 // Llamar a la función para cargar usuarios al cargar la página
-document.addEventListener("DOMContentLoaded", loadUsuarios);
+document.addEventListener("DOMContentLoaded", () => {
+    // Activar por defecto "Administradores"
+    const adminRole = document.querySelector('.role');
+    if (adminRole) {
+        adminRole.classList.add('active');
+        loadUsuarios(1); // Cargar administradores por defecto
+    }
+});
