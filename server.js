@@ -1,19 +1,18 @@
-// Importando las dependencias necesarias
-const express = require('express'); // Framework para crear servidores web en Node.js
-const DBConnection = require('./js/claseConexion'); // Clase para manejar la conexión con la base de datos
-const app = express(); // Creando una instancia de Express
-const PORT = 5501; // Definiendo el puerto en el que correrá el servidor
-const cors = require('cors'); // Middleware para permitir solicitudes desde otros dominios
+const express = require('express');
+const DBConnection = require('./js/claseConexion');
+const app = express();
+const PORT = 5501;
+const cors = require('cors');
 
-const bcrypt = require('bcrypt'); // Para encriptar contraseñas
-const jwt = require('jsonwebtoken'); // Para manejar JWT
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const XLSX = require('xlsx');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'tu_secreto_super_seguro_2024';
-const JWT_EXPIRES_IN = '30m'; // Token expira en 30 minutos
+const JWT_EXPIRES_IN = '30m';
 
 app.use(cookieParser());
 
@@ -38,64 +37,28 @@ const upload = multer({
     }
 });
 
-// Configurando de middlewares
-app.use(cors()); // Habilitando CORS para permitir conexiones desde otros dominios
-app.use(express.json()); // Habilitando el uso de JSON en las solicitudes
-app.use(express.urlencoded({ extended: true })); // Habilitando el procesamiento de formularios URL-encoded
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Configuración de archivos estáticos (frontend)
 app.use(express.static('pages'));
 app.use(express.static('styles'));
 app.use(express.static('img'));
 app.use(express.static('js'));
 app.use('/formsUsers', express.static('pages/formsUsers'));
 
-
-
-
-// Ruta para servir la página principal
 app.get('/index', (req, res) => {
     res.sendFile(__dirname + '/pages/index.html');
 });
 
 app.get('/escala', (req, res) => {
-    res.sendFile(__dirname + '/pages/escala.html'); // Página de Escala estimativa
+    res.sendFile(__dirname + '/pages/escala.html');
 });
 
 app.get('/newRubric', (req, res) => {
     res.sendFile(__dirname + '/pages/newRubric.html');
 });
 
-// Endpoint para obtener la lista de usuarios conectados (Un select)
-app.get('/usuarios-conectados', async (req, res) => {
-    const db = new DBConnection();
-    try {
-        const query = `
-            SELECT 
-                tbUsuario.Nombre_Usuario AS Nombre,
-                tbUsuario.Apellido_Usuario AS Apellido,
-                tbRol.nombreRol AS Rol,
-                tbUsuario.FechaHora_Conexion AS FechaConexion
-            FROM
-                tbUsuario
-            INNER JOIN
-                tbRol
-            ON
-                tbUsuario.Id_Rol = tbRol.Id_Rol
-            ORDER BY
-                tbUsuario.FechaHora_Conexion DESC
-        `;
-        const usuarios = await db.query(query);
-        res.json(usuarios);
-    } catch (err) {
-        console.error('Error obteniendo usuarios conectados:', err.message);
-        res.status(500).send('Error del servidor');
-    } finally {
-        db.close();
-    }
-});
-
-// Endpoint para obtener las etapas (Un select)
 app.get('/etapas', async (req, res) => {
     const db = new DBConnection();
     try {
@@ -119,7 +82,6 @@ app.get('/etapas', async (req, res) => {
     }
 });
 
-// Endpoint para obtener actividades (Un select)
 app.get('/actividades', async (req, res) => {
     const db = new DBConnection();
     try {
@@ -142,7 +104,6 @@ app.get('/actividades', async (req, res) => {
     }
 });
 
-// Endpoint para eliminar una actividad por ID
 app.delete('/actividades/:id', async (req, res) => {
     const db = new DBConnection();
     console.log('Datos recibidos:', req.body);
@@ -155,7 +116,6 @@ app.delete('/actividades/:id', async (req, res) => {
     }
 });
 
-// Endpoint para actualizar una actividad por ID
 app.put('/actividades/:id', async (req, res) => {
     const db = new DBConnection();
     const { id } = req.params;
@@ -213,7 +173,6 @@ app.put('/actividades/:id', async (req, res) => {
     }
 });
 
-// Endpoint para agregar una nueva actividad 
 app.post('/actividades', async (req, res) => {
     const db = new DBConnection();
     const { Titulo_Actividad, Fecha_Inicio, Fecha_Fin } = req.body;
@@ -262,7 +221,6 @@ app.post('/actividades', async (req, res) => {
     }
 });
 
-// Endpoint para actualizar las etapas por ID
 app.put('/etapas/:id', async (req, res) => {
     const db = new DBConnection();
     const { id } = req.params;
@@ -315,7 +273,6 @@ app.put('/etapas/:id', async (req, res) => {
     }
 });
 
-// Endpoint para obtener la etapa actual según la fecha
 app.get('/etapa-actual', async (req, res) => {
     const db = new DBConnection();
     const fechaHoy = new Date().toISOString().split('T')[0];
@@ -344,7 +301,6 @@ app.get('/etapa-actual', async (req, res) => {
     }
 });
 
-// Endpoint para obtener los proyectos existentes
 app.get('/proyectos', (req, res) => {
     const db = new DBConnection();
     const query = `
@@ -992,19 +948,13 @@ app.put('/actualizarProyecto', async (req, res) => {
     }
 });
 
-
-
-//---------------------------------------------------------------------------Login y Autenticación---------------------------------------------------------------------------
-// Agregar estos endpoints después de tu configuración inicial en server.js
-
-// Middleware para verificar el token JWT
 const verificarToken = (req, res, next) => {
     const token = req.cookies.authToken;
-    
+
     if (!token) {
         return res.status(401).json({ message: 'No autorizado: Token no encontrado' });
     }
-    
+
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
         req.usuario = decoded;
@@ -1018,10 +968,98 @@ const verificarToken = (req, res, next) => {
     }
 };
 
+app.get('/usuarios-conectados', verificarToken, async (req, res) => {
+    const db = new DBConnection();
+    
+    try {
+        await db.query(`
+            UPDATE tbUsuario 
+            SET Estado_Conexion = FALSE 
+            WHERE Estado_Conexion = TRUE 
+              AND (
+                Ultima_Actividad IS NULL 
+                OR Ultima_Actividad < DATE_SUB(NOW(), INTERVAL 15 MINUTE)
+              )
+        `);
 
-// Middleware para servir archivos estáticos con verificación de autenticación
+        await db.query(`
+            UPDATE tbHistorialConexiones 
+            SET 
+                Estado_Sesion = 'timeout',
+                Fecha_Fin_Sesion = NOW(),
+                Duracion_Sesion = TIMESTAMPDIFF(MINUTE, Fecha_Inicio_Sesion, NOW())
+            WHERE Estado_Sesion = 'activa' 
+              AND Id_Usuario IN (
+                SELECT Id_Usuario 
+                FROM tbUsuario 
+                WHERE (Ultima_Actividad < DATE_SUB(NOW(), INTERVAL 15 MINUTE) OR Ultima_Actividad IS NULL)
+                  AND Estado_Conexion = FALSE
+              )
+        `);
+
+        const query = `
+            SELECT 
+                u.Id_Usuario,
+                u.Nombre_Usuario AS Nombre,
+                u.Apellido_Usuario AS Apellido,
+                r.nombreRol AS Rol,
+                u.FechaHora_Conexion,
+                u.Ultima_Actividad,
+                u.Estado_Conexion,
+                h_reciente.Fecha_Inicio_Sesion AS FechaConexion,
+                h_reciente.Fecha_Fin_Sesion,
+                h_reciente.IP_Conexion,
+                h_reciente.Estado_Sesion,
+                h_reciente.Duracion_Sesion,
+                CASE 
+                    WHEN u.Estado_Conexion = TRUE 
+                         AND u.Ultima_Actividad >= DATE_SUB(NOW(), INTERVAL 15 MINUTE) 
+                    THEN 'CONECTADO'
+                    WHEN h_activa.Id_Historial IS NOT NULL 
+                    THEN 'CONECTADO'
+                    WHEN h_reciente.Fecha_Fin_Sesion IS NOT NULL 
+                    THEN 'DESCONECTADO'
+                    ELSE 'INACTIVO'
+                END AS Estado_Actual
+            FROM tbUsuario u
+            INNER JOIN tbRol r ON u.Id_Rol = r.Id_Rol
+            LEFT JOIN tbHistorialConexiones h_activa ON u.Id_Usuario = h_activa.Id_Usuario 
+                AND h_activa.Estado_Sesion = 'activa'
+            LEFT JOIN tbHistorialConexiones h_reciente ON u.Id_Usuario = h_reciente.Id_Usuario
+                AND h_reciente.Fecha_Inicio_Sesion = (
+                    SELECT MAX(Fecha_Inicio_Sesion) 
+                    FROM tbHistorialConexiones 
+                    WHERE Id_Usuario = u.Id_Usuario
+                      AND Fecha_Inicio_Sesion >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
+                )
+            WHERE (
+                (u.Estado_Conexion = TRUE 
+                 AND u.Ultima_Actividad >= DATE_SUB(NOW(), INTERVAL 15 MINUTE))
+                OR
+                (h_activa.Id_Historial IS NOT NULL)
+                OR
+                (h_reciente.Id_Historial IS NOT NULL)
+            )
+            ORDER BY 
+                u.Estado_Conexion DESC,
+                COALESCE(u.Ultima_Actividad, u.FechaHora_Conexion, h_reciente.Fecha_Inicio_Sesion) DESC
+        `;
+
+        const usuarios = await db.query(query);
+        res.json(usuarios);
+        
+    } catch (err) {
+        console.error('Error obteniendo usuarios conectados:', err.message);
+        res.status(500).json({ 
+            error: 'Error del servidor', 
+            details: err.message 
+        });
+    } finally {
+        db.close();
+    }
+});
+
 app.use((req, res, next) => {
-    // Lista de rutas que requieren autenticación
     const rutasProtegidas = [
         '/dashboard.html',
         '/users.html',
@@ -1031,74 +1069,78 @@ app.use((req, res, next) => {
         '/escala.html',
         '/newRubric.html'
     ];
-    
-    // Verificar si la ruta requiere autenticación
+
     const requiereAuth = rutasProtegidas.some(ruta => req.path.includes(ruta));
-    
+
     if (requiereAuth) {
-        // Verificar si hay token
         const token = req.cookies.authToken;
-        
+
         if (!token) {
-            // Redirigir al login si no hay token
             return res.redirect('/index.html?expired=true');
         }
-        
+
         try {
-            // Verificar el token
             const decoded = jwt.verify(token, JWT_SECRET);
             req.usuario = decoded;
             next();
         } catch (error) {
-            // Token inválido o expirado
             res.clearCookie('authToken');
             return res.redirect('/index.html?expired=true');
         }
     } else {
-        // No requiere autenticación
         next();
     }
 });
 
-// Endpoint de login
 app.post('/api/login', async (req, res) => {
     const db = new DBConnection();
     const { correo, contraseña } = req.body;
-    
+
     try {
-        // Validar entrada
         if (!correo || !contraseña) {
             return res.status(400).json({ message: 'Correo y contraseña son requeridos' });
         }
-        
-        // Buscar usuario
+
         const query = `
             SELECT u.*, r.nombreRol 
             FROM tbUsuario u
             INNER JOIN tbRol r ON u.Id_Rol = r.Id_Rol
             WHERE u.Correo_Usuario = ?
         `;
-        
+
         const [usuario] = await db.query(query, [correo]);
-        
+
         if (!usuario) {
             return res.status(401).json({ message: 'Credenciales inválidas' });
         }
-        
-        // Verificar contraseña
+
         const contraseñaValida = await bcrypt.compare(contraseña, usuario.Contra_Usuario);
-        
+
         if (!contraseñaValida) {
             return res.status(401).json({ message: 'Credenciales inválidas' });
         }
-        
-        // Actualizar estado de conexión y última actividad
+
+        const ipUsuario = req.ip || req.connection.remoteAddress || 'Desconocida';
+
+        await db.query(`
+            UPDATE tbHistorialConexiones 
+            SET 
+                Fecha_Fin_Sesion = NOW(),
+                Duracion_Sesion = TIMESTAMPDIFF(MINUTE, Fecha_Inicio_Sesion, NOW()),
+                Estado_Sesion = 'cerrada'
+            WHERE Id_Usuario = ? AND Estado_Sesion = 'activa'
+        `, [usuario.Id_Usuario]);
+
         await db.query(
             'UPDATE tbUsuario SET Estado_Conexion = TRUE, FechaHora_Conexion = NOW(), Ultima_Actividad = NOW() WHERE Id_Usuario = ?',
             [usuario.Id_Usuario]
         );
-        
-        // Crear token JWT
+
+        await db.query(`
+            INSERT INTO tbHistorialConexiones (Id_Usuario, Fecha_Inicio_Sesion, IP_Conexion, Estado_Sesion)
+            VALUES (?, NOW(), ?, 'activa')
+        `, [usuario.Id_Usuario, ipUsuario]);
+
         const token = jwt.sign(
             {
                 id: usuario.Id_Usuario,
@@ -1111,25 +1153,25 @@ app.post('/api/login', async (req, res) => {
             JWT_SECRET,
             { expiresIn: JWT_EXPIRES_IN }
         );
-        
-        // Configurar cookie
+
         res.cookie('authToken', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
-            maxAge: 30 * 60 * 1000 // 30 minutos
+            maxAge: 30 * 60 * 1000
         });
-        
+
         res.status(200).json({
             message: 'Login exitoso',
             usuario: {
                 id: usuario.Id_Usuario,
                 nombre: usuario.Nombre_Usuario,
                 apellido: usuario.Apellido_Usuario,
-                rol: usuario.nombreRol
+                rol: usuario.nombreRol,
+                idRol: usuario.Id_Rol
             }
         });
-        
+
     } catch (error) {
         console.error('Error en login:', error);
         res.status(500).json({ message: 'Error del servidor' });
@@ -1138,20 +1180,27 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// Endpoint de logout
 app.post('/api/logout', verificarToken, async (req, res) => {
     const db = new DBConnection();
-    
+
     try {
-        // Actualizar estado de conexión
+        const usuarioId = req.usuario.id;
+
         await db.query(
-            'UPDATE tbUsuario SET Estado_Conexion = FALSE WHERE Id_Usuario = ?',
-            [req.usuario.id]
+            'UPDATE tbUsuario SET Estado_Conexion = FALSE, Ultima_Actividad = NOW() WHERE Id_Usuario = ?',
+            [usuarioId]
         );
-        
-        // Limpiar cookie
+
+        await db.query(`
+            UPDATE tbHistorialConexiones 
+            SET 
+                Fecha_Fin_Sesion = NOW(),
+                Duracion_Sesion = TIMESTAMPDIFF(MINUTE, Fecha_Inicio_Sesion, NOW()),
+                Estado_Sesion = 'cerrada'
+            WHERE Id_Usuario = ? AND Estado_Sesion = 'activa'
+        `, [usuarioId]);
+
         res.clearCookie('authToken');
-        
         res.status(200).json({ message: 'Logout exitoso' });
     } catch (error) {
         console.error('Error en logout:', error);
@@ -1194,7 +1243,6 @@ app.get('/usuarios-conectados', verificarToken, async (req, res) => {
     }
 });
 
-// Endpoint para obtener información del usuario actual
 app.get('/api/usuario-actual', verificarToken, (req, res) => {
     res.json({
         id: req.usuario.id,
@@ -1206,18 +1254,15 @@ app.get('/api/usuario-actual', verificarToken, (req, res) => {
     });
 });
 
-// Actualizar el endpoint de verificar sesión para incluir más información
 app.get('/api/verificar-sesion', verificarToken, async (req, res) => {
     const db = new DBConnection();
-    
+
     try {
-        // Actualizar última actividad
         await db.query(
             'UPDATE tbUsuario SET Ultima_Actividad = NOW() WHERE Id_Usuario = ?',
             [req.usuario.id]
         );
-        
-        // Obtener información actualizada del usuario
+
         const [usuario] = await db.query(
             `SELECT u.*, r.nombreRol 
              FROM tbUsuario u
@@ -1225,7 +1270,7 @@ app.get('/api/verificar-sesion', verificarToken, async (req, res) => {
              WHERE u.Id_Usuario = ?`,
             [req.usuario.id]
         );
-        
+
         res.status(200).json({
             valido: true,
             usuario: {
@@ -1245,11 +1290,9 @@ app.get('/api/verificar-sesion', verificarToken, async (req, res) => {
     }
 });
 
-// Job para limpiar sesiones inactivas (ejecutar cada 5 minutos)
 setInterval(async () => {
     const db = new DBConnection();
     try {
-        // Marcar como desconectados a usuarios inactivos por más de 35 minutos
         await db.query(
             `UPDATE tbUsuario 
              SET Estado_Conexion = FALSE 
@@ -1261,14 +1304,12 @@ setInterval(async () => {
     } finally {
         db.close();
     }
-}, 5 * 60 * 1000); // 5 minutos
+}, 5 * 60 * 1000);
 
-// Endpoint para refrescar token (mantener sesión activa)
 app.post('/api/refrescar-token', verificarToken, async (req, res) => {
     const db = new DBConnection();
-    
+
     try {
-        // Crear nuevo token
         const nuevoToken = jwt.sign(
             {
                 id: req.usuario.id,
@@ -1281,21 +1322,19 @@ app.post('/api/refrescar-token', verificarToken, async (req, res) => {
             JWT_SECRET,
             { expiresIn: JWT_EXPIRES_IN }
         );
-        
-        // Actualizar última actividad
+
         await db.query(
             'UPDATE tbUsuario SET Ultima_Actividad = NOW() WHERE Id_Usuario = ?',
             [req.usuario.id]
         );
-        
-        // Enviar nueva cookie
+
         res.cookie('authToken', nuevoToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
             maxAge: 30 * 60 * 1000
         });
-        
+
         res.status(200).json({ message: 'Token refrescado exitosamente' });
     } catch (error) {
         console.error('Error refrescando token:', error);
@@ -1305,24 +1344,6 @@ app.post('/api/refrescar-token', verificarToken, async (req, res) => {
     }
 });
 
-// Aplicar middleware de verificación a todas las rutas protegidas
-// Ejemplo: app.use('/api/rutas-protegidas', verificarToken);
-
-// Para rutas específicas que necesitan autenticación, agregar verificarToken:
-// app.get('/usuarios-conectados', verificarToken, async (req, res) => { ... });
-// app.get('/etapas', verificarToken, async (req, res) => { ... });
-// etc...
-
-
-
-
-
-
-//------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-// Endpoint para agregar un nuevo usuario
 app.post('/api/usuarios', async (req, res) => {
     const db = new DBConnection();
     const { nombre, apellido, correo, contraseña, idRol } = req.body;
@@ -1332,7 +1353,6 @@ app.post('/api/usuarios', async (req, res) => {
     }
 
     try {
-        // Encriptar la contraseña
         const hashedPassword = await bcrypt.hash(contraseña, 10);
         const query = `
             INSERT INTO tbUsuario (Nombre_Usuario, Apellido_Usuario, Correo_Usuario, Contra_Usuario, Id_Rol, FechaHora_Conexion)
@@ -1350,18 +1370,15 @@ app.post('/api/usuarios', async (req, res) => {
     }
 });
 
-
-
-// Select Usuarios
 app.get('/api/usuarios', async (req, res) => {
     const db = new DBConnection();
-    const { rol } = req.query; // Obtener el rol de la consulta
+    const { rol } = req.query;
 
     let query = 'SELECT * FROM tbUsuario';
     const values = [];
 
     if (rol) {
-        query += ' WHERE Id_Rol = ?'; // Filtrar por rol
+        query += ' WHERE Id_Rol = ?';
         values.push(rol);
     }
 
@@ -1375,8 +1392,6 @@ app.get('/api/usuarios', async (req, res) => {
         db.close();
     }
 });
-
-//Delete
 
 app.delete('/api/usuarios/:id', async (req, res) => {
     const db = new DBConnection();
@@ -1393,8 +1408,6 @@ app.delete('/api/usuarios/:id', async (req, res) => {
     }
 });
 
-
-// Endpoint para obtener un usuario específico por ID
 app.get('/api/usuarios/:id', async (req, res) => {
     const db = new DBConnection();
     const { id } = req.params;
@@ -1416,7 +1429,6 @@ app.get('/api/usuarios/:id', async (req, res) => {
     }
 });
 
-// Endpoint para actualizar un usuario
 app.put('/api/usuarios/:id', async (req, res) => {
     const db = new DBConnection();
     const { id } = req.params;
@@ -1430,7 +1442,6 @@ app.put('/api/usuarios/:id', async (req, res) => {
         let query;
         let values;
 
-        // Si se proporciona contraseña, actualizarla también
         if (contraseña) {
             const hashedPassword = await bcrypt.hash(contraseña, 10);
             query = `
@@ -1444,7 +1455,6 @@ app.put('/api/usuarios/:id', async (req, res) => {
             `;
             values = [nombre, apellido, correo, hashedPassword, idRol, id];
         } else {
-            // Si no se proporciona contraseña, no actualizarla
             query = `
                 UPDATE tbUsuario 
                 SET Nombre_Usuario = ?, 
@@ -1471,14 +1481,6 @@ app.put('/api/usuarios/:id', async (req, res) => {
     }
 });
 
-
-
-
-
-
-
-
-// Endpoint para obtener las secciones/grupos
 app.get('/api/seccion-grupos', async (req, res) => {
     const db = new DBConnection();
     try {
@@ -1493,7 +1495,6 @@ app.get('/api/seccion-grupos', async (req, res) => {
     }
 });
 
-// Endpoint para obtener niveles
 app.get('/nivel', async (req, res) => {
     const db = new DBConnection();
     try {
@@ -1508,7 +1509,6 @@ app.get('/nivel', async (req, res) => {
     }
 });
 
-// Endpoint para obtener etapas
 app.get('/etapa', async (req, res) => {
     const db = new DBConnection();
     try {
@@ -1523,7 +1523,6 @@ app.get('/etapa', async (req, res) => {
     }
 });
 
-// Endpoint para agregar una nueva rúbrica o escala
 app.post('/api/rubricas', async (req, res) => {
     const db = new DBConnection();
 
@@ -1556,7 +1555,6 @@ app.post('/api/rubricas', async (req, res) => {
     }
 });
 
-// Endpoint para agregar un nuevo criterio
 app.post('/api/criterios', async (req, res) => {
     const db = new DBConnection();
 
@@ -1568,7 +1566,6 @@ app.post('/api/criterios', async (req, res) => {
         ponderacion_Criterio
     } = req.body;
 
-    // Validar campos obligatorios
     if (!id_Rubrica || !nombre_Criterio) {
         return res.status(400).json({ message: 'id_Rubrica y nombre_Criterio son obligatorios' });
     }
@@ -1597,12 +1594,11 @@ app.post('/api/criterios', async (req, res) => {
     }
 });
 
-// Endpoint para obtener rubricas
 app.get('/api/rubricas', async (req, res) => {
-  const db = new DBConnection();
+    const db = new DBConnection();
 
-  try {
-    const query = `
+    try {
+        const query = `
       SELECT 
         r.id_Rubrica,
         r.nombre_Rubrica,
@@ -1615,15 +1611,15 @@ app.get('/api/rubricas', async (req, res) => {
       ORDER BY r.id_Rubrica DESC
     `;
 
-    const rubricas = await db.query(query, []);
+        const rubricas = await db.query(query, []);
 
-    res.status(200).json(rubricas);
-  } catch (error) {
-    console.error('Error al obtener las rúbricas:', error.message);
-    res.status(500).json({ message: 'Error al obtener las rúbricas' });
-  } finally {
-    db.close();
-  }
+        res.status(200).json(rubricas);
+    } catch (error) {
+        console.error('Error al obtener las rúbricas:', error.message);
+        res.status(500).json({ message: 'Error al obtener las rúbricas' });
+    } finally {
+        db.close();
+    }
 });
 
 app.get('/api/estudiantes', async (req, res) => {
@@ -1671,26 +1667,25 @@ app.get('/api/estudiantes', async (req, res) => {
     }
 });
 
-// Endpoint para eliminar una rúbrica
 app.delete('/api/rubricas/:id', async (req, res) => {
-  const db = new DBConnection();
-  const id = req.params.id;
+    const db = new DBConnection();
+    const id = req.params.id;
 
-  try {
-    const query = `DELETE FROM tbRubrica WHERE id_Rubrica = ?`;
-    const result = await db.query(query, [id]);
+    try {
+        const query = `DELETE FROM tbRubrica WHERE id_Rubrica = ?`;
+        const result = await db.query(query, [id]);
 
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'Rúbrica no encontrada' });
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Rúbrica no encontrada' });
+        }
+
+        res.status(200).json({ message: 'Rúbrica eliminada correctamente' });
+    } catch (error) {
+        console.error('Error al eliminar rúbrica:', error.message);
+        res.status(500).json({ message: 'Error del servidor' });
+    } finally {
+        db.close();
     }
-
-    res.status(200).json({ message: 'Rúbrica eliminada correctamente' });
-  } catch (error) {
-    console.error('Error al eliminar rúbrica:', error.message);
-    res.status(500).json({ message: 'Error del servidor' });
-  } finally {
-    db.close();
-  }
 });
 
 app.get('/api/niveles', async (req, res) => {
@@ -1951,24 +1946,300 @@ app.post('/api/estudiantes/importar', upload.single('excelFile'), async (req, re
             insertados: estudiantes.length,
             errores: errores.length > 0 ? errores : undefined
         });
-    }catch(error){
+    } catch (error) {
         console.error('Error al procesar archivo Excel:', error);
 
-        try{
+        try {
             const fs = require('fs');
-            if(req.file && fs.existsSync(req.file.path)){
+            if (req.file && fs.existsSync(req.file.path)) {
                 fs.unlinkSync(req.file.path);
             }
-        }catch(e){
+        } catch (e) {
             console.error('Error al eliminar archivo temporal:', e);
         }
-        res.status(500).json({message: 'Error del servidor'});
-    }finally{
+        res.status(500).json({ message: 'Error del servidor' });
+    } finally {
         db.close();
     }
 });
 
-// Servidor escuchando en el puerto definido
+app.post('/api/actualizar-actividad', verificarToken, async (req, res) => {
+    const db = new DBConnection();
+    try {
+        const usuarioId = req.usuario.id;
+
+        await db.query(
+            'UPDATE tbUsuario SET Ultima_Actividad = NOW() WHERE Id_Usuario = ?',
+            [usuarioId]
+        );
+
+        res.status(200).json({ message: 'Actividad actualizada' });
+    } catch (error) {
+        console.error('Error actualizando actividad: ', error);
+        res.status(500).json({ message: 'Error del servidor' });
+    } finally {
+        db.close();
+    }
+});
+
+app.post('/api/limpiar-usuarios-inactivos', verificarToken, async (req, res) => {
+    const db = new DBConnection();
+    try {
+        if (req.usuario.idRol !== 1) {
+            return res.status(403).json({ message: 'Acceso denegado. Solo administradores pueden realizar esta acción.' });
+        }
+
+        const resultado = await db.query(`
+            UPDATE tbUsuario 
+            SET Estado_Conexion = FALSE 
+            WHERE Estado_Conexion = TRUE 
+            AND (Ultima_Actividad IS NULL OR Ultima_Actividad < DATE_SUB(NOW(), INTERVAL 10 MINUTE))
+        `);
+
+        res.status(200).json({
+            message: 'Usuarios inactivos limpiados exitosamente',
+            usuariosActualizados: resultado.affectedRows
+        });
+    } catch (error) {
+        console.error('Error limpiando usuarios inactivos:', error);
+        res.status(500).json({ message: 'Error del servidor' });
+    } finally {
+        db.close();
+    }
+});
+
+app.get('/usuarios-historial', verificarToken, async (req, res) => {
+    const db = new DBConnection();
+    try {
+        if (req.usuario.idRol !== 1) {
+            return res.status(403).json({ message: 'Acceso denegado. Solo administradores pueden ver el historial.' });
+        }
+
+        await db.query(`
+            UPDATE tbUsuario 
+            SET Estado_Conexion = FALSE 
+            WHERE Estado_Conexion = TRUE 
+            AND (Ultima_Actividad IS NULL OR Ultima_Actividad < DATE_SUB(NOW(), INTERVAL 10 MINUTE))
+        `);
+
+        const query = `
+            SELECT 
+                u.Id_Usuario,
+                u.Nombre_Usuario AS Nombre,
+                u.Apellido_Usuario AS Apellido,
+                r.nombreRol AS Rol,
+                u.FechaHora_Conexion AS FechaConexion,
+                u.Estado_Conexion,
+                u.Ultima_Actividad,
+                TIMESTAMPDIFF(MINUTE, u.Ultima_Actividad, NOW()) AS MinutosSinActividad,
+                TIMESTAMPDIFF(MINUTE, u.FechaHora_Conexion, NOW()) AS MinutosConectado,
+                DATE(u.FechaHora_Conexion) AS FechaConexionSolo
+            FROM tbUsuario u
+            INNER JOIN tbRol r ON u.Id_Rol = r.Id_Rol
+            WHERE u.FechaHora_Conexion IS NOT NULL
+            ORDER BY u.FechaHora_Conexion DESC
+            LIMIT 100
+        `;
+        
+        const historial = await db.query(query);
+        res.json(historial);
+    } catch (err) {
+        console.error('Error obteniendo historial de usuarios:', err.message);
+        res.status(500).send('Error del servidor');
+    } finally {
+        db.close();
+    }
+});
+
+app.get('/usuario-actividad/:id', verificarToken, async (req, res) => {
+    const db = new DBConnection();
+    try {
+        const userId = req.params.id;
+
+        if (req.usuario.idRol !== 1 && req.usuario.id !== parseInt(userId)) {
+            return res.status(403).json({ message: 'Acceso denegado.' });
+        }
+
+        const query = `
+            SELECT 
+                u.Id_Usuario,
+                u.Nombre_Usuario AS Nombre,
+                u.Apellido_Usuario AS Apellido,
+                r.nombreRol AS Rol,
+                u.FechaHora_Conexion AS FechaConexion,
+                u.Estado_Conexion,
+                u.Ultima_Actividad,
+                TIMESTAMPDIFF(MINUTE, u.Ultima_Actividad, NOW()) AS MinutosSinActividad,
+                TIMESTAMPDIFF(MINUTE, u.FechaHora_Conexion, COALESCE(u.Ultima_Actividad, NOW())) AS DuracionSesion
+            FROM tbUsuario u
+            INNER JOIN tbRol r ON u.Id_Rol = r.Id_Rol
+            WHERE u.Id_Usuario = ?
+        `;
+
+        const [usuario] = await db.query(query, [userId]);
+
+        if (!usuario) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        res.json(usuario);
+    } catch (err) {
+        console.error('Error obteniendo actividad del usuario:', err.message);
+        res.status(500).send('Error del servidor');
+    } finally {
+        db.close();
+    }
+});
+
+app.post('/api/registrar-inicio-sesion', verificarToken, async (req, res) => {
+    const db = new DBConnection();
+    try {
+        const usuarioId = req.usuario.id;
+        const ipUsuario = req.ip || req.connection.remoteAddress || 'Desconocida';
+
+        await db.query(`
+            UPDATE tbHistorialConexiones 
+            SET 
+                Fecha_Fin_Sesion = NOW(),
+                Duracion_Sesion = TIMESTAMPDIFF(MINUTE, Fecha_Inicio_Sesion, NOW()),
+                Estado_Sesion = 'cerrada'
+            WHERE Id_Usuario = ? AND Estado_Sesion = 'activa'
+        `, [usuarioId]);
+
+        await db.query(`
+            INSERT INTO tbHistorialConexiones (Id_Usuario, Fecha_Inicio_Sesion, IP_Conexion)
+            VALUES (?, NOW(), ?)
+        `, [usuarioId, ipUsuario]);
+
+        res.status(200).json({ message: 'Sesión registrada exitosamente' });
+    } catch (error) {
+        console.error('Error registrando inicio de sesión:', error);
+        res.status(500).json({ message: 'Error del servidor' });
+    } finally {
+        db.close();
+    }
+});
+
+app.post('/api/cerrar-sesion-historial', verificarToken, async (req, res) => {
+    const db = new DBConnection();
+    try {
+        const usuarioId = req.usuario.id;
+
+        await db.query(`
+            UPDATE tbHistorialConexiones 
+            SET 
+                Fecha_Fin_Sesion = NOW(),
+                Duracion_Sesion = TIMESTAMPDIFF(MINUTE, Fecha_Inicio_Sesion, NOW()),
+                Estado_Sesion = 'cerrada'
+            WHERE Id_Usuario = ? AND Estado_Sesion = 'activa'
+        `, [usuarioId]);
+
+        res.status(200).json({ message: 'Sesión cerrada en historial' });
+    } catch (error) {
+        console.error('Error cerrando sesión en historial:', error);
+        res.status(500).json({ message: 'Error del servidor' });
+    } finally {
+        db.close();
+    }
+});
+
+app.get('/historial-conexiones-detallado', verificarToken, async (req, res) => {
+    const db = new DBConnection();
+    try {
+        if (req.usuario.idRol !== 1) {
+            return res.status(403).json({ message: 'Acceso denegado.' });
+        }
+
+        const { limite = 50, pagina = 1, usuario_id = null } = req.query;
+        const offset = (pagina - 1) * limite;
+
+        let query = `
+            SELECT 
+                h.Id_Historial,
+                h.Id_Usuario,
+                u.Nombre_Usuario AS Nombre,
+                u.Apellido_Usuario AS Apellido,
+                r.nombreRol AS Rol,
+                h.Fecha_Inicio_Sesion,
+                h.Fecha_Fin_Sesion,
+                h.Duracion_Sesion,
+                h.IP_Conexion,
+                h.Estado_Sesion,
+                CASE 
+                    WHEN h.Estado_Sesion = 'activa' THEN TIMESTAMPDIFF(MINUTE, h.Fecha_Inicio_Sesion, NOW())
+                    ELSE h.Duracion_Sesion
+                END AS DuracionActual
+            FROM tbHistorialConexiones h
+            INNER JOIN tbUsuario u ON h.Id_Usuario = u.Id_Usuario
+            INNER JOIN tbRol r ON u.Id_Rol = r.Id_Rol
+        `;
+
+        const params = [];
+        
+        if (usuario_id) {
+            query += ' WHERE h.Id_Usuario = ?';
+            params.push(usuario_id);
+        }
+
+        query += ' ORDER BY h.Fecha_Inicio_Sesion DESC LIMIT ? OFFSET ?';
+        params.push(parseInt(limite), offset);
+
+        const historial = await db.query(query, params);
+
+        let countQuery = 'SELECT COUNT(*) as total FROM tbHistorialConexiones h';
+        if (usuario_id) {
+            countQuery += ' WHERE h.Id_Usuario = ?';
+        }
+        
+        const [{ total }] = await db.query(countQuery, usuario_id ? [usuario_id] : []);
+
+        res.json({
+            historial,
+            total,
+            pagina: parseInt(pagina),
+            limite: parseInt(limite),
+            totalPaginas: Math.ceil(total / limite)
+        });
+    } catch (err) {
+        console.error('Error obteniendo historial detallado:', err.message);
+        res.status(500).send('Error del servidor');
+    } finally {
+        db.close();
+    }
+});
+
+app.post('/api/resetear-historial-conexiones', verificarToken, async (req, res) => {
+    const db = new DBConnection();
+    try {
+        if (req.usuario.idRol !== 1) {
+            return res.status(403).json({ message: 'Acceso denegado. Solo administradores pueden realizar esta acción.' });
+        }
+
+        if (req.body.confirmar !== 'RESETEAR_HISTORIAL') {
+            return res.status(400).json({ 
+                message: 'Para confirmar, envía el parámetro "confirmar" con valor "RESETEAR_HISTORIAL"' 
+            });
+        }
+
+        await db.query(`
+            UPDATE tbUsuario 
+            SET 
+                Estado_Conexion = FALSE,
+                FechaHora_Conexion = NULL,
+                Ultima_Actividad = NULL
+        `);
+
+        res.status(200).json({
+            message: 'Historial de conexiones reseteado exitosamente'
+        });
+    } catch (error) {
+        console.error('Error reseteando historial:', error);
+        res.status(500).json({ message: 'Error del servidor' });
+    } finally {
+        db.close();
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`);
     console.log(`Token JWT expira en: ${JWT_EXPIRES_IN}`);

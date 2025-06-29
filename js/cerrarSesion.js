@@ -1,29 +1,20 @@
-// cerrarSesion.js - Sistema de cierre de sesión mejorado con manejo de expiración
-
-// Variable para almacenar el intervalo de heartbeat
 let heartbeatInterval;
 let sessionWarningShown = false;
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Solo ejecutar si no estamos en la página de login
     if (window.location.pathname === '/index.html' || window.location.pathname === '/') {
         return;
     }
 
-    // Configurar cierre de sesión
     setupLogout();
     
-    // Configurar heartbeat para mantener sesión activa
     setupHeartbeat();
     
-    // Verificar sesión al cargar la página
     checkSession();
     
-    // Configurar advertencia de expiración de sesión
     setupSessionWarning();
 });
 
-// Función para configurar el cierre de sesión
 function setupLogout() {
     const btnCerrarSesion = document.querySelector('.cerrar-sesion');
     const alertDiv = document.getElementById('alert');
@@ -35,7 +26,6 @@ function setupLogout() {
         return;
     }
 
-    // Mostrar alerta al hacer clic en cerrar sesión
     btnCerrarSesion.addEventListener('click', function(e) {
         e.preventDefault();
         if (alertDiv) {
@@ -43,11 +33,9 @@ function setupLogout() {
         }
     });
 
-    // Confirmar cierre de sesión
     if (btnConfirmar) {
         btnConfirmar.addEventListener('click', async function() {
             try {
-                // Deshabilitar botón mientras se procesa
                 btnConfirmar.disabled = true;
                 btnConfirmar.textContent = 'Cerrando sesión...';
 
@@ -62,16 +50,22 @@ function setupLogout() {
                 if (response.ok) {
                     const data = await response.json();
                     console.log('Logout exitoso:', data.message);
+
+                    if(typeof Storage !== "undefined"){
+                        localStorage.clear();
+                        sessionStorage.clear();
+                    }
+
+                    if(typeof intervalUsuariosConectados !== 'undefined' && intervalUsuariosConectados){
+                        clearInterval(intervalUsuariosConectados);
+                    }
                     
-                    // Detener heartbeat
                     if (heartbeatInterval) {
                         clearInterval(heartbeatInterval);
                     }
                     
-                    // Redirigir al login
                     window.location.replace('/index.html');
                 } else if (response.status === 401) {
-                    // Token ya expirado
                     console.log('Sesión ya expirada');
                     window.location.replace('/index.html?expired=true');
                 } else {
@@ -82,14 +76,12 @@ function setupLogout() {
                 console.error('Error al cerrar sesión:', error);
                 alert('Error al cerrar sesión: ' + error.message);
                 
-                // Rehabilitar botón en caso de error
                 btnConfirmar.disabled = false;
                 btnConfirmar.textContent = 'Confirmar';
             }
         });
     }
 
-    // Cancelar cierre de sesión
     if (btnCancelar) {
         btnCancelar.addEventListener('click', function() {
             if (alertDiv) {
@@ -98,7 +90,6 @@ function setupLogout() {
         });
     }
 
-    // Cerrar alerta al hacer clic fuera
     if (alertDiv) {
         alertDiv.addEventListener('click', function(e) {
             if (e.target === alertDiv) {
@@ -108,7 +99,6 @@ function setupLogout() {
     }
 }
 
-// Función para verificar la sesión
 async function checkSession() {
     try {
         const response = await fetch('/api/verificar-sesion', {
@@ -122,7 +112,6 @@ async function checkSession() {
         if (!response.ok) {
             if (response.status === 401) {
                 console.log('Sesión no válida o expirada');
-                // Solo redirigir si no estamos ya en la página de login
                 if (!window.location.pathname.includes('index.html')) {
                     window.location.replace('/index.html?expired=true');
                 }
@@ -130,16 +119,13 @@ async function checkSession() {
         }
     } catch (error) {
         console.error('Error verificando sesión:', error);
-        // Solo redirigir si no estamos ya en la página de login
         if (!window.location.pathname.includes('index.html')) {
             window.location.replace('/index.html');
         }
     }
 }
 
-// Función para configurar el heartbeat
 function setupHeartbeat() {
-    // Enviar heartbeat cada 5 minutos para mantener la sesión activa
     heartbeatInterval = setInterval(async () => {
         try {
             const response = await fetch('/api/heartbeat', {
@@ -151,30 +137,25 @@ function setupHeartbeat() {
             });
 
             if (!response.ok && response.status === 401) {
-                // Sesión expirada
                 clearInterval(heartbeatInterval);
                 window.location.replace('/index.html?expired=true');
             }
         } catch (error) {
             console.error('Error en heartbeat:', error);
         }
-    }, 5 * 60 * 1000); // 5 minutos
+    }, 5 * 60 * 1000); 
 }
 
-// Función para mostrar advertencia antes de que expire la sesión
 function setupSessionWarning() {
-    // Mostrar advertencia 5 minutos antes de que expire la sesión (a los 25 minutos)
     setTimeout(() => {
         if (!sessionWarningShown) {
             sessionWarningShown = true;
             showSessionWarning();
         }
-    }, 25 * 60 * 1000); // 25 minutos
+    }, 25 * 60 * 1000); 
 }
 
-// Función para mostrar el modal de advertencia
 function showSessionWarning() {
-    // Crear modal de advertencia si no existe
     let warningModal = document.getElementById('session-warning-modal');
     
     if (!warningModal) {
@@ -204,10 +185,8 @@ function showSessionWarning() {
         `;
         document.body.appendChild(warningModal);
         
-        // Agregar eventos a los botones
         document.getElementById('continue-session').addEventListener('click', async () => {
             try {
-                // Renovar token
                 const response = await fetch('/api/renovar-token', {
                     method: 'POST',
                     credentials: 'include',
@@ -220,10 +199,8 @@ function showSessionWarning() {
                     warningModal.remove();
                     sessionWarningShown = false;
                     
-                    // Reiniciar el temporizador de advertencia
                     setupSessionWarning();
                     
-                    // Mostrar mensaje de confirmación
                     showNotification('Sesión renovada exitosamente', 'success');
                 } else {
                     throw new Error('No se pudo renovar la sesión');
@@ -241,7 +218,6 @@ function showSessionWarning() {
     }
 }
 
-// Función para mostrar notificaciones
 function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.style.cssText = `
@@ -258,7 +234,6 @@ function showNotification(message, type = 'info') {
     `;
     notification.textContent = message;
     
-    // Agregar animación CSS
     const style = document.createElement('style');
     style.textContent = `
         @keyframes slideIn {
@@ -276,14 +251,12 @@ function showNotification(message, type = 'info') {
     
     document.body.appendChild(notification);
     
-    // Remover después de 3 segundos
     setTimeout(() => {
         notification.style.animation = 'slideIn 0.3s ease-out reverse';
         setTimeout(() => notification.remove(), 300);
     }, 3000);
 }
 
-// Detectar actividad del usuario para renovar token automáticamente
 let lastActivity = Date.now();
 let activityCheckInterval;
 
@@ -291,17 +264,14 @@ function resetActivityTimer() {
     lastActivity = Date.now();
 }
 
-// Eventos que indican actividad del usuario
 ['mousedown', 'keypress', 'scroll', 'touchstart'].forEach(event => {
     document.addEventListener(event, resetActivityTimer, true);
 });
 
-// Verificar actividad cada minuto
 activityCheckInterval = setInterval(() => {
     const timeSinceLastActivity = Date.now() - lastActivity;
     const twentyMinutes = 20 * 60 * 1000;
     
-    // Si ha habido actividad en los últimos 20 minutos, renovar token
     if (timeSinceLastActivity < twentyMinutes && !sessionWarningShown) {
         fetch('/api/renovar-token', {
             method: 'POST',
@@ -312,7 +282,6 @@ activityCheckInterval = setInterval(() => {
         }).then(response => {
             if (response.ok) {
                 console.log('Token renovado automáticamente por actividad');
-                // Reiniciar temporizador de advertencia
                 sessionWarningShown = false;
                 setupSessionWarning();
             }
@@ -320,9 +289,8 @@ activityCheckInterval = setInterval(() => {
             console.error('Error renovando token:', error);
         });
     }
-}, 60 * 1000); // Cada minuto
+}, 60 * 1000); 
 
-// Limpiar intervalos cuando se cierra la página
 window.addEventListener('beforeunload', function() {
     if (heartbeatInterval) {
         clearInterval(heartbeatInterval);
@@ -331,13 +299,11 @@ window.addEventListener('beforeunload', function() {
         clearInterval(activityCheckInterval);
     }
     
-    // Enviar señal de desconexión si el navegador lo permite
     if (navigator.sendBeacon) {
         navigator.sendBeacon('/api/logout', JSON.stringify({}));
     }
 });
 
-// Manejar errores de red globalmente
 window.addEventListener('unhandledrejection', function(event) {
     if (event.reason && event.reason.message && 
         (event.reason.message.includes('401') || event.reason.message.includes('Token'))) {
@@ -346,13 +312,11 @@ window.addEventListener('unhandledrejection', function(event) {
     }
 });
 
-// Interceptar todas las peticiones fetch para manejar 401
 const originalFetch = window.fetch;
 window.fetch = function(...args) {
     return originalFetch.apply(this, args)
         .then(response => {
             if (response.status === 401 && !window.location.pathname.includes('index.html')) {
-                // Token expirado
                 window.location.replace('/index.html?expired=true');
             }
             return response;

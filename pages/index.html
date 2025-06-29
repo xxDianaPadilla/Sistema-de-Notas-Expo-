@@ -9,7 +9,6 @@
 </head>
 <body>
     <div class="background">
-        <!-- Círculos decorativos -->
         <div class="circle circle-1"></div>
         <div class="circle circle-2"></div>
         <div class="circle circle-3"></div>
@@ -52,7 +51,6 @@
             <h1>¡Bienvenido al Sistema de Notas PTC!</h1>
             <p>Accede al sistema con tus credenciales.</p>
             
-            <!-- Mensaje de error/información -->
             <div id="message" style="display: none; padding: 10px; margin-bottom: 15px; border-radius: 5px; text-align: center;"></div>
             
             <form id="loginForm">
@@ -73,7 +71,6 @@
     </div>
 
     <script>
-        // Función para mostrar mensajes
         function showMessage(message, type = 'error') {
             const messageDiv = document.getElementById('message');
             messageDiv.textContent = message;
@@ -81,13 +78,11 @@
             messageDiv.style.backgroundColor = type === 'error' ? '#f44336' : '#4CAF50';
             messageDiv.style.color = 'white';
             
-            // Ocultar mensaje después de 5 segundos
             setTimeout(() => {
                 messageDiv.style.display = 'none';
             }, 5000);
         }
 
-        // Función para alternar la visibilidad de la contraseña
         function togglePassword() {
             const passwordInput = document.getElementById("password");
             const passwordIcon = document.getElementById("password-icon");
@@ -101,17 +96,14 @@
             }
         }
 
-        // Verificar si el usuario ya está autenticado al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Página de login cargada');
             
-            // Verificar si venimos de una sesión expirada
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('expired') === 'true') {
                 showMessage('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.', 'info');
             }
             
-            // Verificar si ya hay una sesión activa
             fetch('/api/verificar-sesion', {
                 method: 'GET',
                 credentials: 'include',
@@ -131,7 +123,6 @@
             });
         });
 
-        // Manejar el envío del formulario
         document.getElementById("loginForm").addEventListener("submit", async function(event) {
             event.preventDefault();
 
@@ -139,20 +130,17 @@
             const password = document.getElementById("password").value;
             const loginBtn = document.getElementById("loginBtn");
 
-            // Validaciones
             if (!username || !password) {
                 showMessage("Por favor, completa todos los campos.");
                 return;
             }
 
-            // Validar formato de email
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(username)) {
                 showMessage("Por favor, ingresa un correo electrónico válido.");
                 return;
             }
 
-            // Deshabilitar botón y mostrar estado de carga
             const originalText = loginBtn.textContent;
             loginBtn.textContent = 'Iniciando sesión...';
             loginBtn.disabled = true;
@@ -176,25 +164,20 @@
                 console.log('Respuesta del servidor:', response.status);
 
                 if (response.ok) {
-                    // Login exitoso
                     console.log('Login exitoso:', data.message);
                     showMessage('¡Inicio de sesión exitoso! Redirigiendo...', 'success');
                     
-                    // Limpiar formulario
                     document.getElementById("loginForm").reset();
                     
-                    // Pequeña espera para mostrar el mensaje
                     setTimeout(() => {
                         window.location.replace('/dashboard.html');
                     }, 1000);
                 } else {
-                    // Error en login
                     throw new Error(data.message || 'Error al iniciar sesión');
                 }
             } catch (error) {
                 console.error("Error durante el login:", error);
                 
-                // Mostrar mensaje de error específico
                 if (error.message.includes('Credenciales inválidas')) {
                     showMessage("Correo o contraseña incorrectos. Por favor, verifica tus credenciales.");
                 } else if (error.message.includes('requeridos')) {
@@ -203,13 +186,11 @@
                     showMessage(error.message || "Error al iniciar sesión. Por favor, intenta nuevamente.");
                 }
             } finally {
-                // Rehabilitar botón
                 loginBtn.textContent = originalText;
                 loginBtn.disabled = false;
             }
         });
 
-        // Prevenir el envío del formulario con Enter si hay campos vacíos
         document.getElementById("loginForm").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 const username = document.getElementById("username").value.trim();

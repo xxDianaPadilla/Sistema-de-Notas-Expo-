@@ -1,18 +1,79 @@
-// Verificar autenticación al cargar la página
+let intervalUsuariosConectados = null;
+let usuariosConectadosCache = [];
+
 document.addEventListener('DOMContentLoaded', async function() {
-    // Inicializar autenticación
     const usuario = await auth.inicializarAuth();
     
     if (!usuario) {
-        // Si no hay usuario, la función ya redirigió al login
         return;
     }
     
-    // Configurar la página con los datos del usuario
     configurarDashboard(usuario);
+    inicializarSistemaUsuariosConectados(usuario);
+
+    await registrarInicioSesion();
 });
 
-/*Formato de fecha y hora*/
+async function registrarInicioSesion() {
+    try {
+        await auth.fetchAutenticado('/api/registrar-inicio-sesion', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                ip_conexion: await obtenerIP()
+            })
+        });
+        console.log('Inicio de sesión registrado en historial');
+    } catch (error) {
+        console.error('Error registrando inicio de sesión:', error);
+    }
+}
+
+async function obtenerIP() {
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+    } catch (error) {
+        console.log('No se pudo obtener IP externa, usando local');
+        return 'localhost';
+    }
+}
+
+function inicializarSistemaUsuariosConectados(usuario) {
+    const rolesPermitidos = [1, 2, 3, 4]; 
+
+    if (rolesPermitidos.includes(usuario.idRol)) {
+        // Cargar usuarios conectados inmediatamente
+        cargarUsuariosConectados();
+
+        // Actualizar cada 10 segundos (más frecuente para mejor sincronización)
+        intervalUsuariosConectados = setInterval(() => {
+            cargarUsuariosConectados();
+        }, 10000);
+
+        // Limpiar usuarios inactivos cada 2 minutos
+        setInterval(() => {
+            limpiarUsuariosInactivos();
+        }, 120000);
+    }
+
+    configurarActualizacionActividad();
+}
+
+async function limpiarUsuariosInactivos() {
+    try {
+        await auth.fetchAutenticado('/api/limpiar-usuarios-inactivos', {
+            method: 'POST'
+        });
+        console.log('Usuarios inactivos limpiados');
+    } catch (error) {
+        console.error('Error limpiando usuarios inactivos:', error);
+    }
+}
+
 const dateElement = document.querySelector('.date');
 const timeElement = document.querySelector('.time');
 
@@ -40,7 +101,6 @@ function updateDateTime() {
 setInterval(updateDateTime, 1000);
 updateDateTime();
 
-/*Función para cambiar el saludo según la hora*/
 function updateGreeting(nombreUsuario) {
     const greetingElement = document.getElementById("saludo");
     const currentDate = new Date();
@@ -63,7 +123,6 @@ function updateGreeting(nombreUsuario) {
     greetingElement.textContent = `¡${greeting}, ${nombreUsuario}! ${emoji}`;
 }
 
-/*Cambiar color dependiendo el progreso*/
 const stageElement = document.querySelector('.stage');
 
 function obtenerColor(etapa){
@@ -98,7 +157,6 @@ async function actualizarEtapaActual(){
 
         if(etapaActual){
             stageElement.textContent = etapaActual.porcentaje_etapa;
-
             stageElement.style.color = obtenerColor(etapaActual.porcentaje_etapa);
 
             if(etapaActual.porcentaje_etapa === 'Anteproyecto'){
@@ -123,94 +181,304 @@ async function actualizarEtapaActual(){
     }
 }
 
-// Función para configurar el dashboard con los datos del usuario
 function configurarDashboard(usuario) {
-    // Actualizar saludo con el nombre del usuario
     updateGreeting(usuario.nombre);
-    
-    // Actualizar etapa actual
     actualizarEtapaActual();
-    
-    // Configurar permisos según el rol
     configurarPermisosPorRol(usuario.idRol);
     
-    // Cargar usuarios conectados si es administrador
     if (usuario.idRol === 1) {
         cargarUsuariosConectados();
+        configurarBotonesAdmin();
     }
 }
 
-// Configurar elementos según el rol del usuario
+function configurarBotonesAdmin() {
+    const usuariosSection = document.querySelector('.usuarios');
+    if (usuariosSection) {
+        const historialBtn = document.createElement('button');
+        historialBtn.textContent = 'Ver Historial Completo';
+        historialBtn.className = 'btn-historial';
+        historialBtn.addEventListener('click', mostrarHistorialDetallado);
+        usuariosSection.appendChild(historialBtn);
+    }
+}
+
+async function mostrarHistorialDetallado() {
+    try {
+        const response = await auth.fetchAutenticado('/historial-conexiones-detallado?limite=20');
+        const data = await response.json();
+        
+        mostrarModalHistorial(data.historial);
+    } catch (error) {
+        console.error('Error cargando historial detallado:', error);
+        alert('Error al cargar el historial');
+    }
+}
+
+function mostrarModalHistorial(historial) {
+    const modal = document.createElement('div');
+    modal.className = 'modal-historial';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Historial de Conexiones</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="historial-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Rol</th>
+                                <th>Inicio Sesión</th>
+                                <th>Fin Sesión</th>
+                                <th>Duración</th>
+                                <th>IP</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${historial.map(item => `
+                                <tr>
+                                    <td>${item.Nombre} ${item.Apellido}</td>
+                                    <td>${item.Rol}</td>
+                                    <td>${formatearFecha(item.Fecha_Inicio_Sesion)}</td>
+                                    <td>${item.Fecha_Fin_Sesion ? formatearFecha(item.Fecha_Fin_Sesion) : 'Activa'}</td>
+                                    <td>${item.DuracionActual || 0} min</td>
+                                    <td>${item.IP_Conexion}</td>
+                                    <td><span class="estado-${item.Estado_Sesion}">${item.Estado_Sesion}</span></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    const closeBtn = modal.querySelector('.close');
+    closeBtn.addEventListener('click', () => {
+        document.body.removeChild(modal);
+    });
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            document.body.removeChild(modal);
+        }
+    });
+}
+
+function formatearFecha(fecha) {
+    if (!fecha) return 'N/A';
+    return new Date(fecha).toLocaleString('es-ES');
+}
+
 function configurarPermisosPorRol(rolId) {
-    // Obtener botones de acciones
     const btnVerProyectos = document.getElementById('ver-proyectos');
     const btnCrearEvaluacion = document.getElementById('crear-evaluacion');
     const btnGenerarReporte = document.getElementById('generar-reporte');
     
-    // Configurar visibilidad según rol
     switch(rolId) {
-        case 1: // Administrador - acceso total
-            // Todos los botones visibles
+        case 1: 
             break;
             
-        case 2: // Estudiante
+        case 2: 
             if (btnCrearEvaluacion) btnCrearEvaluacion.style.display = 'none';
             if (btnGenerarReporte) btnGenerarReporte.style.display = 'none';
             break;
             
-        case 3: // Docente
-            // Puede ver proyectos y crear evaluaciones
+        case 3: 
             if (btnGenerarReporte) btnGenerarReporte.style.display = 'none';
             break;
             
-        case 4: // Evaluador
-            // Puede ver proyectos y crear evaluaciones
+        case 4: 
             if (btnGenerarReporte) btnGenerarReporte.style.display = 'none';
             break;
     }
 }
 
-// Cargar usuarios conectados
 async function cargarUsuariosConectados() {
     try {
         const response = await auth.fetchAutenticado('/usuarios-conectados');
+
+        if(!response.ok){
+            throw new Error(`Error al obtener usuarios conectados: ${response.status}`);
+        }
+
         const usuarios = await response.json();
         
+        console.log('Usuarios conectados recibidos:', usuarios); // Debug
+
         const connectedUsersSection = document.querySelector('.connected-users');
+        if(!connectedUsersSection) return;
+
+        // Verificar si hay cambios reales en los datos
+        const nuevosUsuariosStr = JSON.stringify(usuarios);
+        const usuariosAnterioresStr = JSON.stringify(usuariosConectadosCache);
+        
+        if (nuevosUsuariosStr === usuariosAnterioresStr) {
+            return; // No hay cambios, no actualizar UI
+        }
+
+        usuariosConectadosCache = usuarios;
         
         if (usuarios && usuarios.length > 0) {
-            // Filtrar usuarios con estado de conexión activo
-            const usuariosActivos = usuarios.filter(u => u.Estado_Conexion);
-            
-            if (usuariosActivos.length > 0) {
-                connectedUsersSection.innerHTML = usuariosActivos.map(usuario => `
-                    <div class="user-item">
-                        <span class="user-status-indicator"></span>
-                        <span>${usuario.Nombre} ${usuario.Apellido} - ${usuario.Rol}</span>
+            // Ordenar usuarios por última actividad (más activos primero)
+            const usuariosOrdenados = usuarios.sort((a, b) => {
+                const actividadA = new Date(a.Ultima_Actividad || a.FechaConexion || 0);
+                const actividadB = new Date(b.Ultima_Actividad || b.FechaConexion || 0);
+                return actividadB - actividadA;
+            });
+
+            connectedUsersSection.innerHTML = usuariosOrdenados.map(usuario => {
+                const tiempoConexion = calcularTiempoConexion(usuario.FechaConexion);
+                const estadoActividad = determinarEstadoActividad(usuario.Ultima_Actividad);
+
+                return `
+                    <div class="user-item" data-user-id="${usuario.Id_Usuario}">
+                        <span class="user-status-indicator ${estadoActividad.clase}"></span>
+                        <div class="user-info">
+                            <div class="user-name">${usuario.Nombre} ${usuario.Apellido}</div>
+                            <div class="user-role">${usuario.Rol}</div>
+                            <div class="user-connection-time">${tiempoConexion}</div>
+                        </div>
+                        <span class="user-activity-status">${estadoActividad.texto}</span>
                     </div>
-                `).join('');
-            } else {
-                connectedUsersSection.innerHTML = '<p>No hay ningún usuario en línea.</p>';
+                `;
+            }).join('');
+
+            const contadorElement = document.querySelector('.usuarios h4');
+            if(contadorElement){
+                contadorElement.textContent = `Usuarios Conectados (${usuarios.length})`;
             }
         } else {
-            connectedUsersSection.innerHTML = '<p>No hay ningún usuario en línea.</p>';
+           mostrarSinUsuarios(connectedUsersSection);
         }
     } catch (error) {
         console.error('Error cargando usuarios conectados:', error);
+        const connectedUsersSection = document.querySelector('.connected-users');
+        if(connectedUsersSection){
+            connectedUsersSection.innerHTML = '<p class="error-message">Error al cargar usuarios conectados</p>';
+        }
     }
 }
 
-// Configurar botones de acción
+function mostrarSinUsuarios(contenedor){
+    contenedor.innerHTML = '<p class="no-users-message">No hay usuarios conectados actualmente.</p>';
+
+    const contadorElement = document.querySelector('.usuarios h4');
+    if(contadorElement){
+        contadorElement.textContent = 'Usuarios Conectados (0)';
+    }
+}
+
+function calcularTiempoConexion(fechaConexion){
+    if(!fechaConexion) return 'Tiempo desconocido';
+
+    const ahora = new Date();
+    const conexion = new Date(fechaConexion);
+    const diferencia = ahora - conexion;
+
+    const minutos = Math.floor(diferencia / (1000 * 60));
+    const horas = Math.floor(minutos / 60);
+
+    if(horas > 0){
+        return `Conectado hace ${horas}h ${minutos % 60}m`;
+    }else if(minutos > 0){
+        return `Conectado hace ${minutos}m`;
+    }else{
+        return 'Recién conectado';
+    }
+}
+
+function determinarEstadoActividad(ultimaActividad){
+    if(!ultimaActividad){
+        return {clase: 'inactive', texto: 'Sin actividad'};
+    }
+
+    const ahora = new Date();
+    const actividad = new Date(ultimaActividad);
+    const diferenciaMinutos = (ahora - actividad) / (1000 * 60);
+
+    if(diferenciaMinutos <= 1){
+        return {clase: 'very-active', texto: 'Muy activo'};
+    }else if(diferenciaMinutos <= 3){
+        return {clase: 'active', texto: 'Activo'};
+    }else if(diferenciaMinutos <= 7){
+        return {clase: 'idle', texto: 'Inactivo'};
+    }else if(diferenciaMinutos <= 15){
+        return {clase: 'away', texto: 'Ausente'};
+    }else{
+        return {clase: 'inactive', texto: 'Desconectado'};
+    }
+}
+
+async function actualizarActividadUsuario(){
+    try {
+        await auth.fetchAutenticado('/api/actualizar-actividad', {
+            method: 'POST'
+        });
+        console.log('Actividad actualizada'); // Debug
+    } catch (error) {
+        console.error('Error actualizando actividad: ', error);
+    }
+}
+
+function configurarActualizacionActividad(){
+    let tiempoUltimaActividad = Date.now();
+
+    const eventosActividad = ['click', 'keypress', 'scroll', 'mousemove'];
+
+    eventosActividad.forEach(evento => {
+        document.addEventListener(evento, () => {
+            const ahora = Date.now();
+
+            // Actualizar actividad cada minuto de actividad del usuario
+            if(ahora - tiempoUltimaActividad > 60000){
+                tiempoUltimaActividad = ahora;
+                actualizarActividadUsuario();
+            }
+        });
+    });
+
+    // También actualizar actividad automáticamente cada 2 minutos
+    setInterval(() => {
+        actualizarActividadUsuario();
+    }, 120000);
+}
+
+window.addEventListener('beforeunload', async () => {
+    if(intervalUsuariosConectados){
+        clearInterval(intervalUsuariosConectados);
+    }
+    
+    try {
+        // Usar navigator.sendBeacon para mejor confiabilidad al cerrar
+        const data = JSON.stringify({ accion: 'cerrar_sesion' });
+        const success = navigator.sendBeacon('/api/cerrar-sesion-historial', data);
+        
+        if (!success) {
+            // Fallback si sendBeacon falla
+            await auth.fetchAutenticado('/api/cerrar-sesion-historial', {
+                method: 'POST'
+            });
+        }
+    } catch (error) {
+        console.error('Error cerrando sesión en historial:', error);
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Botón Ver Proyectos
     const btnVerProyectos = document.getElementById('ver-proyectos');
     if (btnVerProyectos) {
         btnVerProyectos.addEventListener('click', function() {
             window.location.href = '/projects.html';
         });
     }
-    
-    // Botón Crear Evaluación
+
     const btnCrearEvaluacion = document.getElementById('crear-evaluacion');
     if (btnCrearEvaluacion) {
         btnCrearEvaluacion.addEventListener('click', function() {
@@ -218,7 +486,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Botón Generar Reporte
     const btnGenerarReporte = document.getElementById('generar-reporte');
     if (btnGenerarReporte) {
         btnGenerarReporte.addEventListener('click', function() {
@@ -226,7 +493,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Botón Leer Más
     const btnLeerMas = document.getElementById('leer-mas');
     if (btnLeerMas) {
         btnLeerMas.addEventListener('click', function() {
@@ -259,25 +525,72 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Actualizar etapa cada minuto
 setInterval(actualizarEtapaActual, 60000);
 
-// Agregar estilos para el indicador de usuarios conectados
 const style = document.createElement('style');
 style.textContent = `
-    .user-item {
-        display: flex;
-        align-items: center;
-        padding: 5px 0;
-    }
     
     .user-status-indicator {
-        width: 8px;
-        height: 8px;
-        background-color: #4CAF50;
+        width: 12px;
+        height: 12px;
         border-radius: 50%;
-        margin-right: 10px;
+        margin-right: 12px;
+        flex-shrink: 0;
+        border: 2px solid white;
+        box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+    }
+    
+    .user-status-indicator.very-active {
+        background-color: #4CAF50;
         animation: pulse 2s infinite;
+    }
+    
+    .user-status-indicator.active {
+        background-color: #8BC34A;
+    }
+    
+    .user-status-indicator.idle {
+        background-color: #FFC107;
+    }
+    
+    .user-status-indicator.away {
+        background-color: #FF9800;
+    }
+    
+    .user-status-indicator.inactive {
+        background-color: #9E9E9E;
+    }
+    
+    .user-info {
+        flex-grow: 1;
+    }
+    
+    .user-name {
+        font-weight: 600;
+        font-size: 14px;
+        color: #333;
+        margin-bottom: 2px;
+    }
+    
+    .user-role {
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 2px;
+    }
+    
+    .user-connection-time {
+        font-size: 11px;
+        color: #999;
+    }
+    
+    .user-activity-status {
+        font-size: 12px;
+        color: #777;
+        font-weight: 500;
+        margin-left: 10px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(0,0,0,0.05);
     }
     
     @keyframes pulse {
@@ -285,10 +598,48 @@ style.textContent = `
             box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
         }
         70% {
-            box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+            box-shadow: 0 0 0 8px rgba(76, 175, 80, 0);
         }
         100% {
             box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
         }
     }
+    
+    .no-users-message, .error-message {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+        padding: 20px;
+        border-radius: 8px;
+        background: #f8f9fa;
+    }
+    
+    .error-message {
+        color: #f44336;
+        background: #ffebee;
+    }
+    
+    .connected-users {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    .connected-users::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .connected-users::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+    
+    .connected-users::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 3px;
+    }
+    
+    .connected-users::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
 `;
+document.head.appendChild(style);

@@ -34,41 +34,42 @@ html {
     box-sizing: border-box;
 }
 
-main{
+main {
     margin-left: 250px;
     padding: 40px;
     /* Esto hace que no exceda la altura visible de la ventana */
     max-height: 100vh;
-    /* Esto activa el scroll vertical :) */ 
+    /* Esto activa el scroll vertical :) */
     overflow-y: auto;
-    /* Esto evita el scroll horizontal :)*/ 
-    overflow-x: hidden; 
+    /* Esto evita el scroll horizontal :)*/
+    overflow-x: hidden;
     /* Esto asegura que el padding no expanda el tamaño del contenedor */
     box-sizing: border-box;
 }
 
 .containerUp {
-    display: flex; 
+    display: flex;
     justify-content: space-between;
-    align-items: flex-start; 
+    align-items: flex-start;
 }
 
 /*Bienvenida con nombre y fecha*/
 .header {
     background-color: #f2f2f2;
     padding: 20px;
-    border-radius: 10px; 
-    position: relative; 
-    margin-bottom: 20px; 
+    border-radius: 10px;
+    position: relative;
+    margin-bottom: 20px;
     width: 600px;
     height: 160px;
-    overflow: hidden; 
+    overflow: hidden;
     z-index: 1;
 }
 
-.header h1, .header p {
+.header h1,
+.header p {
     margin: 0;
-    color: #1D1D1B; 
+    color: #1D1D1B;
 }
 
 .header h1 {
@@ -89,11 +90,11 @@ main{
 }
 
 .header .icon {
-    position: absolute; 
-    bottom: -105px; 
-    right: -80px; 
-    width: 300px; 
-    height: 300px; 
+    position: absolute;
+    bottom: -105px;
+    right: -80px;
+    width: 300px;
+    height: 300px;
     z-index: 1;
     pointer-events: none;
 }
@@ -102,19 +103,20 @@ main{
 .estadoPTC {
     background-color: #f2f2f2;
     padding: 20px;
-    border-radius: 10px; 
-    position: relative; 
-    margin-bottom: 20px; 
+    border-radius: 10px;
+    position: relative;
+    margin-bottom: 20px;
     width: 400px;
     height: 160px;
-    justify-content: center; 
-    align-items: center; 
-    text-align: center; 
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
-.estadoPTC h1, .estadoPTC p {
+.estadoPTC h1,
+.estadoPTC p {
     margin: 0;
-    color: #1D1D1B; 
+    color: #1D1D1B;
 }
 
 .estadoPTC h1 {
@@ -127,38 +129,38 @@ main{
 }
 
 .estadoPTC .icon {
-    position: absolute; 
-    bottom: 140px; 
-    right: 20px; 
-    width: 45px; 
-    height: 45px; 
+    position: absolute;
+    bottom: 140px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
 }
 
 
-.containerMiddle h3{
+.containerMiddle h3 {
     font-size: 20px;
     font-weight: normal;
     color: #5A5A5A;
 }
 
 .containerMiddle2 {
-    display: flex; 
+    display: flex;
     justify-content: space-between;
-    align-items: flex-start; 
+    align-items: flex-start;
 }
 
-.description{
+.description {
     margin-top: 10px;
     background-color: #f2f2f2;
     padding: 20px;
-    border-radius: 10px; 
-    position: relative; 
-    margin-bottom: 20px; 
+    border-radius: 10px;
+    position: relative;
+    margin-bottom: 20px;
     width: 500px;
     height: 250px;
-    justify-content: center; 
-    align-items: center; 
-    text-align: center; 
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .description p {
@@ -169,7 +171,7 @@ main{
     text-align: justify;
 }
 
-.btnMas{
+.btnMas {
     margin-top: 20px;
     font-family: 'Poppins', 'SansSerif';
     background-color: #1D1D1B;
@@ -183,55 +185,86 @@ main{
     font-weight: bold;
 }
 
-.btnMas:hover{
+.btnMas:hover {
     background-color: #383835;
 }
 
-.connected-users{
+.connected-users {
     margin-top: 10px;
     background-color: #f2f2f2;
     padding: 20px;
-    border-radius: 10px; 
-    position: relative; 
-    margin-bottom: 20px; 
+    border-radius: 10px;
+    position: relative;
+    margin-bottom: 20px;
     width: 550px;
     height: 250px;
-    justify-content: center; 
-    align-items: center; 
-    text-align: center; 
-    
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    max-height: 300px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
 
-.connected-users p{
+.connected-users p {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); 
-    margin: 0; 
+    transform: translate(-50%, -50%);
+    margin: 0;
 }
 
-.container2{
-    display: flex; 
+.connected-users::-webkit-scrollbar {
+    width: 6px;
+}
+
+.connected-users::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.connected-users::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    margin: 8px 0;
+    background-color: #e0dfd5;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    width: 500px;
+}
+
+.container2 {
+    display: flex;
     justify-content: space-between;
-    align-items: flex-start; 
+    align-items: flex-start;
 }
-.container2 h4{
+
+.container2 h4 {
     font-size: 20px;
     font-weight: normal;
     color: #5A5A5A;
 }
 
-.containerDown h3{
+.containerDown h3 {
     font-size: 20px;
     font-weight: normal;
     color: #5A5A5A;
 }
 
-.actions{
+.actions {
     margin-top: 10px;
-    display: flex; 
+    display: flex;
     justify-content: space-between;
-    align-items: flex-start; 
+    align-items: flex-start;
 }
 
 .btn-action {
@@ -239,43 +272,43 @@ main{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center; 
+    text-align: center;
     padding: 15px;
-    width: 330px; 
-    height: 140px; 
+    width: 330px;
+    height: 140px;
     background-color: transparent;
-    border: 2px solid #1D1D1B; 
-    border-radius: 10px; 
-    font-size: 22px; 
-    font-weight: bold; 
-    cursor: pointer; 
+    border: 2px solid #1D1D1B;
+    border-radius: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .btn-action img {
-    width: 80px; 
+    width: 80px;
     height: auto;
     margin-bottom: 8px;
 }
 
 .btn-action:hover {
-    background-color: #f2f2f2; 
-    border-color: #1D1D1B; 
+    background-color: #f2f2f2;
+    border-color: #1D1D1B;
     color: #1D1D1B;
 }
 
-.connected-users{
+.connected-users {
     display: flex;
     flex-direction: column;
     gap: 10px;
     overflow-y: auto;
     overflow-x: hidden;
-    max-height: 100%; 
-    padding-top: 35px;
+    max-height: 100%;
+    padding-top: 60px;
 }
 
 /* Estilos actualizados para las tarjetas de usuario */
-.user-card{
+.user-card {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -298,19 +331,157 @@ main{
     display: flex;
     flex-direction: column;
     gap: 4px;
+    flex-grow: 1;
+    min-width: 0;
 }
 
-.user-info strong{
+.user-name {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-role {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-bottom: 2px;
+}
+
+.user-connection-time {
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+.user-activity-status {
+    font-size: 11px;
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+.no-users-message,
+.error-message {
+    text-align: center;
+    padding: 20px;
+    opacity: 0.8;
+    font-style: italic;
+}
+
+.error-message {
+    color: #ffcdd2;
+}
+
+.estadisticas-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #007bff;
+    min-width: 120px;
+    text-align: center;
+}
+
+.stat-item h5 {
+    margin: 0 0 5px 0;
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.btn-historial {
+    background: #28a745;
+    display: none;
+}
+
+@keyframes pulse-green {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 255, 136, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
+    }
+}
+
+@keyframes pulse-active {
+    0% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 8px rgba(76, 175, 80, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+    }
+}
+
+@keyframes pulse-idle {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 6px rgba(255, 193, 7, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+    }
+}
+
+@media (max-width: 768px) {
+    .user-item {
+        padding: 10px;
+    }
+
+    .user-name {
+        font-size: 13px;
+    }
+
+    .user-role,
+    .user-connection-time {
+        font-size: 11px;
+    }
+
+    .user-activity-status {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+}
+
+.user-info strong {
     font-size: 14px;
     color: #1D1D1B;
 }
 
-.user-info span{
+.user-info span {
     font-size: 12px;
     color: #5A5A5A;
 }
 
-.user-status{
+.user-status {
     display: flex;
     align-items: center;
 }
@@ -361,10 +532,12 @@ main{
         transform: translate(-50%, -50%) scale(1);
         opacity: 1;
     }
+
     70% {
         transform: translate(-50%, -50%) scale(1.5);
         opacity: 0;
     }
+
     100% {
         transform: translate(-50%, -50%) scale(1.5);
         opacity: 0;
@@ -391,7 +564,7 @@ main{
 }
 
 /* Tooltip mejorado para mostrar última actividad */
-.status-dot:hover::after{
+.status-dot:hover::after {
     content: attr(title);
     position: absolute;
     top: -35px;
@@ -417,7 +590,10 @@ main{
         padding: 20px;
     }
 
-    .header, .estadoPTC, .description, .connected-users {
+    .header,
+    .estadoPTC,
+    .description,
+    .connected-users {
         width: 100%;
     }
 
@@ -443,7 +619,9 @@ main{
         align-items: flex-start;
     }
 
-    .containerMiddle, .containerMiddle2, .container2 {
+    .containerMiddle,
+    .containerMiddle2,
+    .container2 {
         flex-direction: column;
         align-items: flex-start;
     }
@@ -459,8 +637,9 @@ main{
 
 @media (max-width: 480px) {
 
-    *{
-        box-sizing: border-box; /*Le da un margen parejo a todo*/
+    * {
+        box-sizing: border-box;
+        /*Le da un margen parejo a todo*/
     }
 
     /* Ajusta el tamaño de las fuentes más para pantallas muy pequeñas */
