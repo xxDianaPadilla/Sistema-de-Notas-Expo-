@@ -2240,6 +2240,35 @@ app.post('/api/resetear-historial-conexiones', verificarToken, async (req, res) 
     }
 });
 
+app.delete('/api/eliminar-todos-estudiantes-proyectos', async (req, res) => {
+    const db = new DBConnection();
+
+    try {
+        await db.query('START TRANSACTION');
+
+        const estudiantesResult = await db.query('DELETE FROM tbEstudiantes');
+
+        const proyectosResult = await db.query('DELETE FROM tbProyectos');
+        
+        await db.query('COMMIT');
+
+        console.log(`Eliminados ${estudiantesResult.affectedRows} estudiantes y ${proyectosResult.affectedRows} proyectos`);
+
+        res.status(200).json({
+            message: 'Todos los estudiantes y proyectos han sido eliminados correctamente',
+            estudiantesEliminados: estudiantesResult.affectedRows,
+            proyectosEliminados: proyectosResult.affectedRows
+        });
+    } catch (error) {
+        await db.query('ROLLBACK');
+        console.error('Error al eliminar estudiantes y proyectos: ', error);
+        res.status(500).json({
+            message: 'Error al eliminar los estudiantes y proyectos',
+            error: error.message
+        });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`);
     console.log(`Token JWT expira en: ${JWT_EXPIRES_IN}`);

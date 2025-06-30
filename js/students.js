@@ -16,7 +16,111 @@ document.addEventListener("DOMContentLoaded", () => {
     const levelSelect = document.getElementById('editStudentLevel');
     const especialidadGroup = document.getElementById('especialidadGroup');
 
-    // Resaltar la sección activa al cargar la página
+    document.getElementById('btn-delete-students').addEventListener('click', function () {
+        Swal.fire({
+            title: '⚠️ ¡ATENCIÓN!',
+            html: `
+            <div style="text-align: left; margin: 20px 0;">
+                <p><strong>Esta acción eliminará TODOS los datos:</strong></p>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li>Todos los estudiantes registrados</li>
+                    <li>Todos los proyectos existentes</li>
+                </ul>
+                <p style="color: #d33; font-weight: bold;">⚠️ Esta acción NO se puede deshacer</p>
+                <p>¿Está completamente seguro de que desea continuar?</p>
+            </div>
+        `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar todo',
+            cancelButtonText: 'Cancelar',
+            focusCancel: true,
+            reverseButton: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Confirmación final',
+                    text: 'Escriba "ELIMINAR TODO" para confirmar',
+                    input: 'text',
+                    inputPlaceholder: 'Escriba: ELIMINAR TODO',
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Proceder',
+                    cancelButtonText: 'Cancelar',
+                    inputValidator: (value) => {
+                        if (value !== 'ELIMINAR TODO') {
+                            return 'Debe escribir exactamente "ELIMINAR TODO" para continuar';
+                        }
+                    }
+                }).then((finalResult) => {
+                    if (finalResult.isConfirmed) {
+                        eliminarTodosLosEstudiantesYProyectos();
+                    }
+                });
+            }
+        });
+    });
+
+    function eliminarTodosLosEstudiantesYProyectos() {
+        Swal.fire({
+            title: 'Eliminando datos...',
+            html: 'Por favor espere mientras se eliminan todos los estudiantes y proyectos.',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false,
+            willOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        fetch('/api/eliminar-todos-estudiantes-proyectos', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta del servidor');
+                }
+                return response.json();
+            })
+            .then(data => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Eliminación completada',
+                    html: `
+                <div style="text-align: left;">
+                    <p><strong>Datos eliminados exitosamente:</strong></p>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li>Estudiantes eliminados: ${data.estudiantesEliminados}</li>
+                        <li>Proyectos eliminados: ${data.proyectosEliminados}</li>
+                    </ul>
+                </div>
+            `,
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    if (typeof loadStudents === 'function') {
+                        loadStudents(currentTab, 0);
+                    } else {
+                        location.reload();
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error al eliminar estudiantes y proyectos: ', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Ocurrió un error el eliminar los datos. Por favor, intente nuevamente.',
+                    confirmButtonText: 'Aceptar'
+                });
+            });
+    }
+
     if (window.location.pathname.includes('students.html')) {
         tipoCat2.classList.add('active');
         tipoCat1.classList.remove('active');
@@ -25,18 +129,16 @@ document.addEventListener("DOMContentLoaded", () => {
         tipoCat2.classList.remove('active');
     }
 
-    // Agregar evento de clic para tipoCat1
     tipoCat1.addEventListener('click', () => {
         tipoCat1.classList.add('active');
         tipoCat2.classList.remove('active');
-        location.href = '/users.html'; // Navegar a usuarios
+        location.href = '/users.html';
     });
 
-    // Agregar evento de clic para tipoCat2
     tipoCat2.addEventListener('click', () => {
         tipoCat2.classList.add('active');
         tipoCat1.classList.remove('active');
-        location.href = '/students.html'; // Navegar a estudiantes
+        location.href = '/students.html';
     });
 
     let currentTab = 'bachillerato';
@@ -573,6 +675,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 title: 'Éxito',
                 text: 'Estudiante guardado correctamente',
             });
+            loadStudents();
         } catch (error) {
             console.error('Error:', error);
             Swal.fire({

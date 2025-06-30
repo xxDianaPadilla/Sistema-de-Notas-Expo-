@@ -121,7 +121,18 @@
         <div id="roles">
             <p class="role tipoBachillerato active">Bachillerato</p>
             <p class="role tipoTercerCiclo">Tercer ciclo</p>
-            <button id="newUser2">Agregar alumno<img src="/mas.png" width="16px"></button>
+
+            <div class="buttons-container">
+                <button id="btn-delete-students">
+                    <span>Eliminar alumnos</span>
+                    <img src="/deleteForever.png" width="16" alt="Eliminar">
+                </button>
+
+                <button id="newUser2">
+                    <span>Agregar alumno</span>
+                    <img src="/mas.png" width="16" alt="Agregar">
+                </button>
+            </div>
         </div>
 
         <div class="filter-controls">
@@ -148,7 +159,7 @@
 
         <div id="cardContainer2"></div>
     </main>
-<script src="/auth.js"></script>
+    <script src="/auth.js"></script>
     <script src="/menu.js"></script>
     <script src="/students.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

@@ -1,4 +1,6 @@
-.filter-controls{
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+.filter-controls {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
@@ -8,7 +10,7 @@
     gap: 20px;
 }
 
-.filter-dropdown{
+.filter-dropdown {
     padding: 8px 15px;
     background-color: #ffffff;
     color: #333;
@@ -17,7 +19,7 @@
     cursor: pointer;
 }
 
-.search-box{
+.search-box {
     padding: 8px 15px;
     background-color: #ffffff;
     color: #333;
@@ -38,7 +40,7 @@
     margin-bottom: 10px;
 }
 
-.student-card{
+.student-card {
     display: grid;
     grid-template-columns: 1fr 160px 160px;
     align-items: center;
@@ -48,39 +50,39 @@
     transition: background-color 0.3s;
 }
 
-.student-card:hover{
+.student-card:hover {
     background-color: #A3A3A380;
 }
 
-.student-info{
+.student-info {
     font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.student-id{
+.student-id {
     color: #444;
     text-align: right;
     padding-right: 20px;
     font-weight: normal;
 }
 
-.filter-group{
+.filter-group {
     display: none;
 }
 
-.filter-group.active{
+.filter-group.active {
     display: block;
 }
 
-.action-buttons{
+.action-buttons {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
 }
 
-.btn{
+.btn {
     padding: 6px 12px;
     border: none;
     border-radius: 4px;
@@ -93,25 +95,25 @@
     min-width: 80px;
 }
 
-.btn-edit{
+.btn-edit {
     background-color: #3498db;
     color: #ffffff;
 }
 
-.btn-edit:hover{
+.btn-edit:hover {
     background-color: #2980b9;
 }
 
-.btn-delete{
+.btn-delete {
     background-color: #e74c3c;
     color: #ffffff;
 }
 
-.btn-delete:hover{
+.btn-delete:hover {
     background-color: #c0392b;
 }
 
-.modal{
+.modal {
     display: none;
     position: fixed;
     z-index: 1000;
@@ -122,7 +124,7 @@
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-.modal-content{
+.modal-content {
     background-color: #ffffff;
     margin: 10% auto;
     margin-top: 14.5px;
@@ -133,7 +135,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.close{
+.close {
     color: #aaa;
     float: right;
     font-size: 28px;
@@ -141,40 +143,41 @@
     cursor: pointer;
 }
 
-.close:hover{
+.close:hover {
     color: #000;
 }
 
-.form-group{
+.form-group {
     margin-bottom: 15px;
 }
 
-.form-group label{
+.form-group label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
 }
 
-.form-group input, .form-group select{
+.form-group input,
+.form-group select {
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
 }
 
-.form-group input[readonly]{
+.form-group input[readonly] {
     background-color: #f5f5f5;
     cursor: not-allowed;
 }
 
-.form-actions{
+.form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
     margin-top: 20px;
 }
 
-.info{
+.info {
     font-size: 12px;
     color: #666;
     margin-top: 5px;
@@ -182,35 +185,108 @@
 
 .question-text {
     margin-bottom: 15px;
-  }
-  
-  .button-container {
+}
+
+.button-container {
     margin-top: 20px;
     margin-left: 20px;
-  }
-  
-  .form-button {
+}
+
+.form-button {
     border: none;
     padding: 8px 16px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
     color: white;
-  }
-  
-  .primary-button {
+}
+
+.primary-button {
     background-color: #007bff;
     margin-right: 15px;
-  }
-  
-  .success-button {
+}
+
+.success-button {
     background-color: #28a745;
-  }
-  
-  .primary-button:hover {
+}
+
+.primary-button:hover {
     background-color: #0069d9;
-  }
-  
-  .success-button:hover {
+}
+
+.success-button:hover {
     background-color: #218838;
-  }
+}
+
+.buttons-container {
+    display: flex;
+    gap: 12px;
+}
+
+button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+}
+
+button:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+#btn-delete-students {
+    background-color: #ef4444;
+    color: white;
+}
+
+#btn-delete-students:hover {
+    background-color: #dc2626;
+}
+
+#btn-delete-students:focus {
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.5);
+}
+
+#newUser2 {
+    background-color: #10b981;
+    color: white;
+}
+
+#newUser2:hover {
+    background-color: #059669;
+}
+
+#newUser2:focus {
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.5);
+}
+
+button img {
+    width: 16px;
+    height: 16px;
+}
+
+@media (max-width: 768px) {
+    #roles {
+        flex-direction: column;
+        gap: 16px;
+        align-items: stretch;
+    }
+
+    .roles-tabs {
+        justify-content: center;
+    }
+
+    .buttons-container {
+        justify-content: center;
+    }
+}

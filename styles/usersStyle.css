@@ -142,7 +142,7 @@ main {
 #newUser {
     width: 10vw;
     background-color: #4CAF50;
-    font-family: poppinsMedium;
+    font-family: 'Poppins', sans-serif;
     border: none;
     border-radius: 10px;
     color: #fff;
@@ -157,7 +157,7 @@ main {
 #newUser2 {
     width: 10vw;
     background-color: #4CAF50;
-    font-family: poppinsMedium;
+    font-family: 'Poppins', sans-serif;
     border: none;
     border-radius: 10px;
     color: #fff;
