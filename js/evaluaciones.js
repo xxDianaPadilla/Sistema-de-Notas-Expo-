@@ -258,7 +258,7 @@ function mostrarRubricas(rubricas) {
 
     // Asignamos los atributos para poder usarlos en el evento
     card.dataset.id = rubrica.id_Rubrica;
-    card.dataset.tipo = rubrica.Id_TipoEvaluacion;
+    card.dataset.tipo = rubrica.id_TipoEvaluacion;
 
     card.innerHTML = `
     <div>
@@ -281,13 +281,14 @@ function mostrarRubricas(rubricas) {
     card.addEventListener("click", (e) => {
       if (e.target.classList.contains("btnEliminar")) return;
 
-      const id = card.dataset.id;
+      const idRubric = card.dataset.id;
       const tipo = parseInt(card.dataset.tipo);
+      console.log({message: idRubric})
 
       if (tipo === 1) {
-        window.location.href = `escala.html?id=${id}`;
+        window.location.href = `escala.html?id=${idRubric}`;
       } else if (tipo === 2) {
-        window.location.href = `newRubric.html?id=${id}`;
+        window.location.href = `newRubric.html?id=${idRubric}`;
       } else {
         alert("Tipo de evaluación no reconocido.");
       }

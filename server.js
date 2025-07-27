@@ -627,6 +627,7 @@ app.post('/creacionProyectos', async (req, res) => {
     }
 });
 
+// crear rubrica
 app.post('/crearRubrica', async (req, res) => {
     const { nombreRubrica, tipoEvaluacion, criterios } = req.body;
 
@@ -1594,6 +1595,7 @@ app.post('/api/criterios', async (req, res) => {
     }
 });
 
+// Obtener rubricas
 app.get('/api/rubricas', async (req, res) => {
     const db = new DBConnection();
 
@@ -1602,6 +1604,7 @@ app.get('/api/rubricas', async (req, res) => {
       SELECT 
         r.id_Rubrica,
         r.nombre_Rubrica,
+        r.id_TipoEvaluacion,
         r.Año,
         e.porcentaje_etapa,
         t.nombre_TipoEvaluacion
@@ -1617,6 +1620,93 @@ app.get('/api/rubricas', async (req, res) => {
     } catch (error) {
         console.error('Error al obtener las rúbricas:', error.message);
         res.status(500).json({ message: 'Error al obtener las rúbricas' });
+    } finally {
+        db.close();
+    }
+});
+
+// GET /api/criterios/:idRubrica - Obtener criterios de una rúbrica
+app.get('/api/criterios/:idRubrica', async (req, res) => {
+    const db = new DBConnection();
+    const { idRubrica } = req.params;
+
+    try {
+        const query = `
+            SELECT 
+                id_Criterio,
+                nombre_Criterio,
+                descripcion_Criterio,
+                puntaje_Criterio,
+                ponderacion_Criterio
+            FROM tbCriterios 
+            WHERE id_Rubrica = ?
+            ORDER BY id_Criterio ASC
+        `;
+
+        const criterios = await db.query(query, [idRubrica]);
+        res.status(200).json(criterios);
+    } catch (error) {
+        console.error('Error al obtener criterios:', error.message);
+        res.status(500).json({ message: 'Error al obtener criterios' });
+    } finally {
+        db.close();
+    }
+});
+
+// PUT /api/criterios/:id - Actualizar criterio existente
+app.put('/api/criterios/:id', async (req, res) => {
+    const db = new DBConnection();
+    const { id } = req.params;
+    const { nombre_Criterio, descripcion_Criterio, puntaje_Criterio, ponderacion_Criterio } = req.body;
+
+    try {
+        const query = `
+            UPDATE tbCriterios 
+            SET nombre_Criterio = ?, 
+                descripcion_Criterio = ?, 
+                puntaje_Criterio = ?, 
+                ponderacion_Criterio = ?
+            WHERE id_Criterio = ?
+        `;
+
+        await db.query(query, [nombre_Criterio, descripcion_Criterio, puntaje_Criterio, ponderacion_Criterio, id]);
+        res.status(200).json({ message: 'Criterio actualizado exitosamente' });
+    } catch (error) {
+        console.error('Error al actualizar criterio:', error.message);
+        res.status(500).json({ message: 'Error al actualizar criterio' });
+    } finally {
+        db.close();
+    }
+});
+
+// Eliminar criterios
+app.delete('/api/criterios/:id', async (req, res) => {
+    const db = new DBConnection();
+    const id = req.params.id;
+
+    try {
+        const query = `DELETE FROM tbCriterios WHERE id_Criterio = ?`;
+        const result = await db.query(query, [id]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ 
+                success: false,
+                message: 'Criterio no encontrado' 
+            });
+        }
+
+        res.status(200).json({ 
+            success: true,
+            message: 'Criterio eliminado exitosamente',
+            id_Criterio: id
+        });
+    } catch (error) {
+        console.error('Error al eliminar criterio:', error.message);
+        
+        res.status(500).json({ 
+            success: false,
+            message: 'Error del servidor' 
+        });
     } finally {
         db.close();
     }

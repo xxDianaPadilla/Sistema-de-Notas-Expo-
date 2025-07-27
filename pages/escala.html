@@ -1,76 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPTC | Nueva Escala</title>
-    <link rel="icon" href="/logoRedondo.png" type="icon/png">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SPTC | Escalas</title>
+    <link rel="icon" href="/logoRedondo.png" type="icon/png" />
     <!--Estilo propio-->
-    <link rel="stylesheet" href="/newRubric.css">
+    <link rel="stylesheet" href="/newRubric.css" />
 
     <!--Estilo menú-->
-    <link rel="stylesheet" href="/menu.css">
-</head>
+    <link rel="stylesheet" href="/menu.css" />
+  </head>
 
-<body>
+  <body>
     <!--Menú lateral-->
     <aside class="menu-lateral">
-        <div class="logo">
-            <img src="/logoRedondo.png" alt="Logo Salesianos Ricaldone">
-            <br>
-            <h2>
-                <span class="logoSalesianos">Salesianos</span>
-                <span class="logoRical">Ricaldone</span>
-            </h2>
+      <div class="logo">
+        <img src="/logoRedondo.png" alt="Logo Salesianos Ricaldone" />
+        <br />
+        <h2>
+          <span class="logoSalesianos">Salesianos</span>
+          <span class="logoRical">Ricaldone</span>
+        </h2>
+      </div>
+      <nav>
+        <ul>
+          <li>
+            <a href="/dashboard.html" class="inicio"
+              ><img src="/homeIcon.svg" alt="home" /> Inicio</a
+            >
+          </li>
+          <li>
+            <a href="/users.html" class="users"
+              ><img src="/usersIcon.svg" alt="users" /> Usuarios</a
+            >
+          </li>
+          <li>
+            <a href="/projects.html" class="projects"
+              ><img src="/projectsIcon.svg" alt="projects" /> Proyectos</a
+            >
+          </li>
+          <li>
+            <a href="/evaluation.html" class="evaluaciones"
+              ><img src="/evaluacionesIcon.svg" alt="evaluaciones" />
+              Evaluaciones</a
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="barra-progreso">
+        <h3>Progreso Expo</h3>
+        <div class="barra">
+          <div class="progreso" id="progreso"></div>
         </div>
-        <nav>
-            <ul>
-                <li><a href="/dashboard.html" class="inicio"><img src="/homeIcon.svg" alt="home"> Inicio</a></li>
-                <li><a href="/users.html" class="users"><img src="/usersIcon.svg" alt="users"> Usuarios</a></li>
-                <li><a href="/projects.html" class="projects"><img src="/projectsIcon.svg" alt="projects"> Proyectos</a></li>
-                <li><a href="/evaluation.html" class="evaluaciones"><img src="/evaluacionesIcon.svg" alt="evaluaciones"> Evaluaciones</a></li>
-            </ul>
-        </nav>
-        <div class="barra-progreso">
-            <h3>Progreso Expo</h3>
-            <div class="barra">
-                <div class="progreso" id="progreso"></div>
-            </div>
-            <span id="porcentaje"></span>
-        </div>
-        <button class="cerrar-sesion"><img src="/logout.svg" alt="home"> Cerrar Sesión</button>
+        <span id="porcentaje"></span>
+      </div>
+      <button class="cerrar-sesion">
+        <img src="/logout.svg" alt="home" /> Cerrar Sesión
+      </button>
     </aside>
 
     <!--Alerta para cerrar sesión-->
     <div class="alert" id="alert">
-        <div class="alert-box">
-            <p>¿Estás seguro de que quieres cerrar sesión?</p>
-            <div class="alert-buttons">
-                <button id="btnConfirmar">Sí</button>
-                <button id="btnCancelar">No</button>
-            </div>
+      <div class="alert-box">
+        <p>¿Estás seguro de que quieres cerrar sesión?</p>
+        <div class="alert-buttons">
+          <button id="btnConfirmar">Sí</button>
+          <button id="btnCancelar">No</button>
         </div>
+      </div>
     </div>
 
     <main>
-        <div class="newTable">
-        <h1>Crear Nueva Escala Estimativa</h1>
+      <div class="newTable">
+        <h1>Gestionar Escala Estimativa</h1>
 
         <form id="formTabla">
-            <label for="filas">Cantidad de filas:</label>
-            <input type="number" id="filas" min="1" required>
-
-            <label for="columnas" style="display: none;">Cantidad de columnas:</label>
-            <input type="number" id="columnas" value="7" style="display: none;">
+          <label for="filas">Cantidad de filas:</label>
+          <input type="number" id="filas" min="1" required />
+          <label
+            id="labelPonderacionRestante"
+            style="font-weight: bold; margin-top: 5px; display: block"
+          >
+            Ponderación restante: 10
+          </label>
+          <label for="columnas" style="display: none"
+            >Cantidad de columnas:</label
+          >
+          <input type="number" id="columnas" value="7" style="display: none" />
         </form>
 
         <div class="rubric"><div id="tablaContenedor"></div></div>
-    </div></main>
+      </div>
+    </main>
 
-    
     <script src="/auth.js"></script>
     <script src="/menu.js"></script>
     <script src="/Scale/newScale.js"></script>
-</body>
+  </body>
 </html>
