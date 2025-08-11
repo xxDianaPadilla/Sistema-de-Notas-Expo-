@@ -224,7 +224,7 @@ SELECT * FROM tbRubrica;
 
 -- Tabla de Criterios
 CREATE TABLE tbCriterios (
-    id_Criterio INT PRIMARY KEY,
+    id_Criterio INT AUTO_INCREMENT PRIMARY KEY,
     id_Rubrica INT,
     nombre_Criterio TEXT,
     descripcion_Criterio TEXT,
@@ -308,3 +308,23 @@ INNER JOIN
    tbEstadoProyectos
 ON
    tbProyectos.id_estado = tbEstadoProyectos.id_estado;
+
+-- Tabla para evaluar
+CREATE TABLE tbEvaluaciones (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  id_proyecto INT,
+  id_rubrica INT,
+  fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (id_proyecto) REFERENCES proyectos(id),
+  FOREIGN KEY (id_rubrica) REFERENCES rubricas(id)
+);
+
+-- Detalle evaluación por criterio
+CREATE TABLE tbDetalleEvaluaciones (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  id_evaluacion INT,
+  id_criterio INT,
+  puntaje_obtenido DECIMAL(5,2),
+  FOREIGN KEY (id_evaluacion) REFERENCES evaluaciones(id),
+  FOREIGN KEY (id_criterio) REFERENCES criterios(id)
+);

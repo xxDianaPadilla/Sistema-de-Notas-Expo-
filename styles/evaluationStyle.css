@@ -82,9 +82,8 @@ main{
     padding: 20px;
     border-radius: 10px; 
     position: relative; 
-    margin-bottom: 20px; 
     width: auto;
-    height: 500px;
+    height: auto;
 }
 
 /*Subrayado del texto*/
