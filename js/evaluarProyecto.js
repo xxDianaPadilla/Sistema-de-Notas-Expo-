@@ -93,10 +93,11 @@ async function cargarRubricasParaEvaluacion() {
     rubricas.forEach((rubrica) => {
       const option = document.createElement('option');
       option.value = JSON.stringify({
-        id: rubrica.id_Rubrica,
+        idRubrica: rubrica.id_Rubrica,
         nombre: rubrica.nombre_Rubrica,
         idNivel: rubrica.Id_Nivel,
-        idEspecialidad: rubrica.Id_Especialidad
+        idEspecialidad: rubrica.Id_Especialidad,
+        idTipoEvaluacion: rubrica.id_TipoEvaluacion
       });
       option.textContent = rubrica.nombre_Rubrica;
       select.appendChild(option);
@@ -128,10 +129,10 @@ async function confirmarSeleccionRubrica() {
   const rubricaData = JSON.parse(rubricaSeleccionada);
   
   const idNivel = rubricaData.idNivel;
-const idEspecialidad = rubricaData.idEspecialidad;
+  const idEspecialidad = rubricaData.idEspecialidad;
 
-console.log("Nivel seleccionado:", idNivel);
-console.log("Especialidad seleccionada:", idEspecialidad);
+  console.log("Nivel seleccionado:", idNivel);
+  console.log("Especialidad seleccionada:", idEspecialidad);
 
   // Cerrar la alerta actual
   cerrarAlertaEvaluarProyecto();
@@ -255,19 +256,100 @@ async function mostrarProyectosCompatibles(rubricaData) {
     });
 
     // Event listeners para botones de evaluar
-    document.querySelectorAll('.btn-evaluar-proyecto').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const proyectoData = JSON.parse(e.target.getAttribute('data-proyecto'));
-        const rubricaData = JSON.parse(e.target.getAttribute('data-rubrica'));
-        
-        // Guardar datos para la página de evaluación
-        localStorage.setItem('proyectoParaEvaluar', JSON.stringify(proyectoData));
-        localStorage.setItem('rubricaParaEvaluar', JSON.stringify(rubricaData));
-        
-        // Redirigir a la página de evaluación
-        window.location.href = '/evaluarProyecto.html';
+document.querySelectorAll('.btn-evaluar-proyecto').forEach(btn => {
+  btn.addEventListener('click', async (e) => {
+    const proyectoData = JSON.parse(e.target.getAttribute('data-proyecto'));
+    const rubricaData = JSON.parse(e.target.getAttribute('data-rubrica'));
+    
+    // Mostrar loading mientras procesamos
+    const btnOriginalText = e.target.textContent;
+    e.target.disabled = true;
+    e.target.textContent = 'Procesando...';
+    
+    try {
+      // 1. Crear el registro de evaluación
+      console.log('Creando evaluación para:', {
+        idProyecto: proyectoData.id_Proyecto,
+        idRubrica: rubricaData.idRubrica
       });
-    });
+
+      const evaluacionResponse = await fetch('http://localhost:5501/api/evaluaciones', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          idProyecto: proyectoData.id_Proyecto,
+          idRubrica: rubricaData.idRubrica
+        })
+      });
+
+      if (!evaluacionResponse.ok) {
+        throw new Error(`Error al crear evaluación: ${evaluacionResponse.status}`);
+      }
+
+      const evaluacionData = await evaluacionResponse.json();
+      console.log('Evaluación creada exitosamente:', evaluacionData);
+
+      // 2. Cargar criterios de la rúbrica
+      console.log(`Cargando criterios para la rúbrica ID: ${rubricaData.idRubrica}`);
+      
+      const criterios = await cargarCriteriosRubrica(rubricaData.idRubrica);
+      
+      if (criterios.length === 0) {
+        alert('Esta rúbrica no tiene criterios definidos. No se puede realizar la evaluación.');
+        e.target.disabled = false;
+        e.target.textContent = btnOriginalText;
+        return;
+      }
+      
+      // 3. Determinar la página de destino según el tipo de evaluación
+      const tipoEvaluacion = rubricaData.idTipoEvaluacion;
+      let paginaDestino;
+      let tipoTexto;
+      
+      if (tipoEvaluacion === 1) {
+        paginaDestino = '/escalaEvaluar.html';
+        tipoTexto = 'Escala';
+      } else if (tipoEvaluacion === 2) {
+        paginaDestino = '/rubricaEvaluar.html';
+        tipoTexto = 'Rúbrica';
+      } else {
+        // Valor por defecto si no se reconoce el tipo
+        paginaDestino = '/evaluarProyecto.html';
+        tipoTexto = 'Desconocido';
+      }
+      
+      console.log('Tipo de evaluación detectado:', tipoEvaluacion);
+      console.log('Redirigiendo a:', paginaDestino);
+
+      // 4. Guardar todos los datos necesarios para la página de evaluación
+      const datosEvaluacion = {
+        idEvaluacion: evaluacionData.idEvaluacion,
+        proyecto: proyectoData,
+        rubrica: rubricaData,
+        criterios: criterios,
+        tipoEvaluacion: tipoEvaluacion
+      };
+
+      localStorage.setItem('datosEvaluacion', JSON.stringify(datosEvaluacion));
+      
+      console.log('Datos guardados para evaluación:', datosEvaluacion);
+      
+      // 5. Mostrar mensaje de confirmación antes de redirigir
+      alert(`Evaluación creada con ID: ${evaluacionData.idEvaluacion}.\nSe cargaron ${criterios.length} criterios.\nTipo de evaluación: ${tipoTexto}\nRedirigiendo...`);
+      
+      // 6. Redirigir a la página correspondiente
+      window.location.href = paginaDestino;
+      
+    } catch (error) {
+      console.error('Error en el proceso de evaluación:', error);
+      alert('Error al procesar la evaluación: ' + error.message);
+      e.target.disabled = false;
+      e.target.textContent = btnOriginalText;
+    }
+  });
+});
 
     // Cerrar al hacer clic en el overlay
     overlay.addEventListener('click', function(e) {
@@ -280,6 +362,27 @@ async function mostrarProyectosCompatibles(rubricaData) {
   } catch (error) {
     console.error('Error al cargar proyectos:', error);
     alert('Error al cargar los proyectos compatibles');
+  }
+}
+
+// Nueva función para cargar criterios de una rúbrica específica
+async function cargarCriteriosRubrica(idRubrica) {
+  try {
+    console.log(`Cargando criterios para la rúbrica ID: ${idRubrica}`);
+    
+    const response = await fetch(`http://localhost:5501/api/criterios/rubrica/${idRubrica}`);
+    
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+    
+    const criterios = await response.json();
+    console.log('Criterios cargados exitosamente:', criterios);
+    return criterios;
+    
+  } catch (error) {
+    console.error('Error al cargar criterios de la rúbrica:', error);
+    throw error;
   }
 }
 

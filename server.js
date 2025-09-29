@@ -1921,6 +1921,356 @@ app.delete("/api/criterios/:id", async (req, res) => {
   }
 });
 
+// Crear una evaluación nueva
+app.post("/api/evaluaciones", async (req, res) => {
+  const db = new DBConnection();
+  try {
+    const { idProyecto, idRubrica } = req.body;
+    
+    console.log('Creando evaluación:', { idProyecto, idRubrica });
+    
+    const query = "INSERT INTO tbEvaluaciones (id_Proyecto, id_Rubrica) VALUES (?, ?)";
+    const result = await db.query(query, [idProyecto, idRubrica]);
+    
+    // El insertId puede estar en result directamente o en result.insertId
+    const idEvaluacion = result.insertId || result[0]?.insertId || result.id;
+    
+    console.log('Evaluación creada con ID:', idEvaluacion);
+    
+    res.json({ idEvaluacion, idProyecto, idRubrica });
+  } catch (error) {
+    console.error("Error al crear evaluación:", error);
+    res.status(500).json({ error: "Error al crear evaluación: " + error.message });
+  } finally {
+    db.close();
+  }
+});
+
+// Guardar detalle de evaluación (criterios y puntajes)
+app.post("/api/detalleEvaluacion", async (req, res) => {
+  const db = new DBConnection();
+  try {
+    const { idEvaluacion, detalles } = req.body;
+
+    if (!idEvaluacion || !detalles || detalles.length === 0) {
+      return res.status(400).json({ error: "Datos incompletos" });
+    }
+
+    console.log('Guardando detalles para evaluación:', idEvaluacion);
+
+    for (const det of detalles) {
+      const query = "INSERT INTO tbDetalleEvaluaciones (id_Evaluacion, id_Criterio, puntaje_obtenido) VALUES (?, ?, ?)";
+      await db.query(query, [idEvaluacion, det.idCriterio, det.puntaje]);
+    }
+
+    console.log('Detalles guardados exitosamente');
+    res.json({ success: true, message: "Detalles guardados correctamente" });
+  } catch (error) {
+    console.error("Error al guardar detalles:", error);
+    res.status(500).json({ error: "Error al guardar detalles de la evaluación: " + error.message });
+  } finally {
+    db.close();
+  }
+});
+
+// Endpoint para obtener criterios de una rúbrica
+app.get("/api/criterios/rubrica/:idRubrica", async (req, res) => {
+  const db = new DBConnection();
+  try {
+    const { idRubrica } = req.params;
+    
+    console.log('Cargando criterios para rúbrica ID:', idRubrica);
+    
+    const query = "SELECT * FROM tbCriterios WHERE id_Rubrica = ? ORDER BY id_Criterio ASC";
+    const criterios = await db.query(query, [idRubrica]);
+    
+    console.log('Criterios encontrados:', criterios.length);
+    
+    res.json(criterios);
+  } catch (error) {
+    console.error("Error al obtener criterios:", error);
+    res.status(500).json({ error: "Error al obtener criterios: " + error.message });
+  } finally {
+    db.close();
+  }
+});
+
+// Endpoint adicional para verificar que una evaluación existe
+app.get("/api/evaluaciones/:idEvaluacion", async (req, res) => {
+  const db = new DBConnection();
+  try {
+    const { idEvaluacion } = req.params;
+    
+    const query = `
+      SELECT 
+        e.*,
+        p.nombre_Proyecto,
+        r.nombre_Rubrica
+      FROM tbEvaluaciones e
+      LEFT JOIN tbProyectos p ON e.id_Proyecto = p.id_Proyecto
+      LEFT JOIN tbRubricas r ON e.id_Rubrica = r.id_Rubrica
+      WHERE e.id_Evaluacion = ?
+    `;
+    
+    const evaluacion = await db.query(query, [idEvaluacion]);
+    
+    if (evaluacion.length === 0) {
+      return res.status(404).json({ error: "Evaluación no encontrada" });
+    }
+    
+    res.json(evaluacion[0]);
+  } catch (error) {
+    console.error("Error al obtener evaluación:", error);
+    res.status(500).json({ error: "Error al obtener evaluación: " + error.message });
+  } finally {
+    db.close();
+  }
+});
+
+// Guardar detalle de evaluación (criterios, puntajes y observaciones)
+app.post("/api/detalleEvaluacion", async (req, res) => {
+  const db = new DBConnection();
+  try {
+    const { idEvaluacion, detalles } = req.body;
+
+    console.log('Guardando detalle de evaluación:', { idEvaluacion, detalles });
+
+    // Validar datos de entrada
+    if (!idEvaluacion || !detalles || detalles.length === 0) {
+      return res.status(400).json({ 
+        error: "Datos incompletos", 
+        message: "Se requiere idEvaluacion y al menos un detalle" 
+      });
+    }
+
+    // Verificar que la evaluación existe
+    const evaluacionExiste = await db.query(
+      "SELECT id_Evaluacion FROM tbEvaluaciones WHERE id_Evaluacion = ?",
+      [idEvaluacion]
+    );
+
+    if (evaluacionExiste.length === 0) {
+      return res.status(404).json({ 
+        error: "Evaluación no encontrada",
+        message: `No existe una evaluación con ID: ${idEvaluacion}`
+      });
+    }
+
+    // Verificar si ya existen detalles para esta evaluación
+    const detallesExistentes = await db.query(
+      "SELECT id_Criterio FROM tbDetalleEvaluaciones WHERE id_Evaluacion = ?",
+      [idEvaluacion]
+    );
+
+    if (detallesExistentes.length > 0) {
+      // Eliminar detalles anteriores
+      await db.query(
+        "DELETE FROM tbDetalleEvaluaciones WHERE id_Evaluacion = ?",
+        [idEvaluacion]
+      );
+      console.log(`Eliminados ${detallesExistentes.length} detalles existentes`);
+    }
+
+    let detallesGuardados = 0;
+
+    // Insertar cada detalle
+    for (const detalle of detalles) {
+      const { idCriterio, puntaje, observaciones } = detalle;
+
+      if (!idCriterio) {
+        console.warn(`Detalle inválido ignorado (sin idCriterio):`, detalle);
+        continue;
+      }
+
+      // Verificar que el criterio existe
+      const criterioExiste = await db.query(
+        "SELECT id_Criterio FROM tbCriterios WHERE id_Criterio = ?",
+        [idCriterio]
+      );
+
+      if (criterioExiste.length === 0) {
+        console.warn(`Criterio ${idCriterio} no existe, ignorando detalle`);
+        continue;
+      }
+
+      // Guardar siempre la observación, puntaje 0 si es inválido
+      const puntajeFinal = (puntaje !== undefined && puntaje !== null) ? parseFloat(puntaje) : 0;
+
+      const query = `
+        INSERT INTO tbDetalleEvaluaciones 
+        (id_Evaluacion, id_Criterio, puntaje_obtenido, observaciones) 
+        VALUES (?, ?, ?, ?)
+      `;
+
+      await db.query(query, [idEvaluacion, idCriterio, puntajeFinal, observaciones || '']);
+      detallesGuardados++;
+
+      console.log(`Detalle guardado - Criterio: ${idCriterio}, Puntaje: ${puntajeFinal}, Observaciones: ${observaciones || ''}`);
+    }
+
+    if (detallesGuardados === 0) {
+      return res.status(400).json({ 
+        error: "No se guardó ningún detalle",
+        message: "Todos los detalles proporcionados son inválidos"
+      });
+    }
+
+    console.log(`Se guardaron ${detallesGuardados} detalles exitosamente`);
+
+    res.json({ 
+      success: true, 
+      message: "Detalles guardados correctamente",
+      detallesGuardados: detallesGuardados,
+      idEvaluacion: idEvaluacion
+    });
+
+  } catch (error) {
+    console.error("Error al guardar detalles:", error);
+    res.status(500).json({ 
+      error: "Error al guardar detalles de la evaluación",
+      message: error.message 
+    });
+  } finally {
+    db.close();
+  }
+});
+
+// Endpoint adicional para obtener detalles de una evaluación
+app.get("/api/detalleEvaluacion/:idEvaluacion", async (req, res) => {
+  const db = new DBConnection();
+  try {
+    const { idEvaluacion } = req.params;
+
+    const query = `
+      SELECT 
+        de.id_DetalleEvaluacion,
+        de.id_Evaluacion,
+        de.id_Criterio,
+        de.puntaje_obtenido,
+        c.nombre_Criterio,
+        c.descripcion_Criterio,
+        c.puntaje_Criterio,
+        c.ponderacion_Criterio
+      FROM tbDetalleEvaluaciones de
+      INNER JOIN tbCriterios c ON de.id_Criterio = c.id_Criterio
+      WHERE de.id_Evaluacion = ?
+      ORDER BY c.id_Criterio ASC
+    `;
+
+    const detalles = await db.query(query, [idEvaluacion]);
+
+    if (detalles.length === 0) {
+      return res.status(404).json({ 
+        message: "No se encontraron detalles para esta evaluación" 
+      });
+    }
+
+    // Calcular puntaje total
+    const puntajeTotal = detalles.reduce((sum, detalle) => {
+      return sum + parseFloat(detalle.puntaje_obtenido || 0);
+    }, 0);
+
+    res.json({
+      idEvaluacion: parseInt(idEvaluacion),
+      detalles: detalles,
+      resumen: {
+        totalCriterios: detalles.length,
+        puntajeTotal: puntajeTotal.toFixed(2),
+        promedio: (puntajeTotal / detalles.length).toFixed(2)
+      }
+    });
+
+  } catch (error) {
+    console.error("Error al obtener detalles:", error);
+    res.status(500).json({ 
+      error: "Error al obtener detalles de la evaluación",
+      message: error.message 
+    });
+  } finally {
+    db.close();
+  }
+});
+
+// Endpoint para obtener resumen completo de evaluación
+app.get("/api/evaluaciones/:idEvaluacion/completa", async (req, res) => {
+  const db = new DBConnection();
+  try {
+    const { idEvaluacion } = req.params;
+
+    // Obtener datos básicos de la evaluación
+    const evaluacionQuery = `
+      SELECT 
+        e.id_Evaluacion,
+        e.id_Proyecto,
+        e.id_Rubrica,
+        e.fecha,
+        p.nombre_Proyecto,
+        r.nombre_Rubrica,
+        r.id_TipoEvaluacion
+      FROM tbEvaluaciones e
+      INNER JOIN tbProyectos p ON e.id_Proyecto = p.id_Proyecto
+      INNER JOIN tbRubrica r ON e.id_Rubrica = r.id_Rubrica
+      WHERE e.id_Evaluacion = ?
+    `;
+
+    const evaluacion = await db.query(evaluacionQuery, [idEvaluacion]);
+
+    if (evaluacion.length === 0) {
+      return res.status(404).json({ 
+        error: "Evaluación no encontrada" 
+      });
+    }
+
+    // Obtener detalles de la evaluación
+    const detallesQuery = `
+      SELECT 
+        de.id_DetalleEvaluacion,
+        de.id_Criterio,
+        de.puntaje_obtenido,
+        c.nombre_Criterio,
+        c.descripcion_Criterio,
+        c.puntaje_Criterio,
+        c.ponderacion_Criterio
+      FROM tbDetalleEvaluaciones de
+      INNER JOIN tbCriterios c ON de.id_Criterio = c.id_Criterio
+      WHERE de.id_Evaluacion = ?
+      ORDER BY c.id_Criterio ASC
+    `;
+
+    const detalles = await db.query(detallesQuery, [idEvaluacion]);
+
+    // Calcular estadísticas
+    const puntajeTotal = detalles.reduce((sum, detalle) => {
+      return sum + parseFloat(detalle.puntaje_obtenido || 0);
+    }, 0);
+
+    const puntajeMaximo = detalles.reduce((sum, detalle) => {
+      return sum + parseFloat(detalle.puntaje_Criterio || 10);
+    }, 0);
+
+    res.json({
+      evaluacion: evaluacion[0],
+      detalles: detalles,
+      estadisticas: {
+        totalCriterios: detalles.length,
+        puntajeObtenido: puntajeTotal.toFixed(2),
+        puntajeMaximo: puntajeMaximo.toFixed(2),
+        porcentaje: puntajeMaximo > 0 ? ((puntajeTotal / puntajeMaximo) * 100).toFixed(2) : 0,
+        promedio: detalles.length > 0 ? (puntajeTotal / detalles.length).toFixed(2) : 0
+      }
+    });
+
+  } catch (error) {
+    console.error("Error al obtener evaluación completa:", error);
+    res.status(500).json({ 
+      error: "Error al obtener la evaluación completa",
+      message: error.message 
+    });
+  } finally {
+    db.close();
+  }
+});
+
 // Mostrar proyectos por grado/especialidad
 app.get("/api/proyectos/grado", async (req, res) => {
   const db = new DBConnection();

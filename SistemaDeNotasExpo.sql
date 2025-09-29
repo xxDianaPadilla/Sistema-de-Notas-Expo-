@@ -228,6 +228,7 @@ CREATE TABLE tbDetalleEvaluaciones (
   id_Evaluacion INT,
   id_Criterio INT,
   puntaje_obtenido DECIMAL(5,2),
+  observaciones TEXT,
   FOREIGN KEY (id_Evaluacion) REFERENCES tbEvaluaciones(id_Evaluacion)
     ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (id_Criterio) REFERENCES tbCriterios(id_Criterio)
